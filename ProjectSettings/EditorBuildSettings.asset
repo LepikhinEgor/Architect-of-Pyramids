@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/mainScene.unity
+    guid: 6933ae40a93fc834daa7bba5e8be2279
+  - enabled: 1
+    path: Assets/Scenes/Piramid1.unity
+    guid: 3586e024b001ed14fbf9e5d0ed76eacf
+  - enabled: 1
+    path: Assets/Scenes/SaphireFloors1.unity
+    guid: 7b8dfebe2cb1de047abf5e4907982557
+  - enabled: 1
+    path: Assets/Scenes/EmeraldFloors1.unity
+    guid: 7a247e7febc723345944d2a8c54a30bc
+  - enabled: 1
+    path: Assets/Scenes/GoldenFloors1.unity
+    guid: c550eeda07793ba449681e4c291fc94f
+  - enabled: 1
+    path: Assets/Scenes/RubyFloors1.unity
+    guid: f466edb7fd03e0b45bd6a98c30b8744f
+  - enabled: 1
+    path: Assets/Scenes/SilverFloors1.unity
+    guid: 6f5f305159445534693d4659514c971b
+  - enabled: 1
+    path: Assets/Scenes/TopazFloors1.unity
+    guid: 7329fe971d65db446bea42b9446b1c9e
