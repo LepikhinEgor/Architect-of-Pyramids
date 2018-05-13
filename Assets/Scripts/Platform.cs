@@ -163,7 +163,7 @@ public class Platform : MonoBehaviour {
             piramid.GetComponent<Piramid>().TurnHighLightsOFF();
 
             String str = EdgePositionsToString();
-            Player.ReplacePlatformInXML(1, ID, score, blockMaterialNum, str);
+            Player.ReplacePlatformInXML(Player.currentPiramidID, ID, score, blockMaterialNum, str);
         }
         piramid.GetComponent<Piramid>().RefreshNeighborEdgesCount();
         Debug.Log("UPd");

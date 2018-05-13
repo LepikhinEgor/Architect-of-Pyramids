@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
-
+    public static int currentPiramidID;
     public static int currentMaxScore;
     public static bool isFirst = true;
     GameObject sample;

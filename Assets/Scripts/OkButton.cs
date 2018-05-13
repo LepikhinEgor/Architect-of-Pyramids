@@ -39,6 +39,7 @@ public class OkButton : MonoBehaviour {
             GameObject piramid = GameObject.FindGameObjectWithTag("Piramid");
             piramid.GetComponent<Piramid>().GetPlatfomsInformation();
 
+            Player.currentPiramidID = piramid.GetComponent<Piramid>().ID;
             Player.lives = 3;
 
             if (blockSelection.GetComponent<BlockSelection>().BlockMaterialNum == 0)

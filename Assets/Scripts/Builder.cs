@@ -100,7 +100,8 @@ public class Builder : MonoBehaviour
                 if (tag.Equals("LastBuilder"))
                 {
                     Player.isChoosingPlatform = true;
-                    SceneManager.LoadScene("Piramid1");
+                    string sceneName = "Piramid" + (Player.currentPiramidID).ToString();
+                    SceneManager.LoadScene(sceneName);
                 }
 
                 block = newBlock;
