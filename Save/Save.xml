@@ -1,10 +1,10 @@
 <Information>
   <Piramid1>
-    <Platform ID="0" Score="147" BlockMaterialNum="1" EdgePositions="111111" />
-    <Platform ID="1" Score="124" BlockMaterialNum="1" EdgePositions="111111" />
-    <Platform ID="2" Score="306" BlockMaterialNum="2" EdgePositions="111111" />
-    <Platform ID="3" Score="287" BlockMaterialNum="2" EdgePositions="111111" />
-    <Platform ID="4" Score="120" BlockMaterialNum="1" EdgePositions="111111" />
-    <Platform ID="5" Score="113" BlockMaterialNum="1" EdgePositions="111111" />
+    <Platform ID="0" Score="0" BlockMaterialNum="0" EdgePositions="000000" />
+    <Platform ID="1" Score="0" BlockMaterialNum="0" EdgePositions="000000" />
+    <Platform ID="2" Score="0" BlockMaterialNum="0" EdgePositions="000000" />
+    <Platform ID="3" Score="17" BlockMaterialNum="0" EdgePositions="110001" />
+    <Platform ID="4" Score="0" BlockMaterialNum="0" EdgePositions="000000" />
+    <Platform ID="5" Score="0" BlockMaterialNum="0" EdgePositions="000000" />
   </Piramid1>
 </Information>

@@ -13,6 +13,7 @@ public class PerfectTimer : MonoBehaviour
     }
     void Awake()
     {
+        timer = 0;
     }
 
     // Update is called once per frame

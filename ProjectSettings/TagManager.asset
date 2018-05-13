@@ -27,6 +27,8 @@ TagManager:
   - BlockActiveSpriteBack
   - BlockSprite
   - ScoreLine
+  - Block
+  - PerfectTimer
   layers:
   - Default
   - TransparentFX
