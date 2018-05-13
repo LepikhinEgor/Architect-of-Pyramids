@@ -169,7 +169,7 @@ public class Platform : MonoBehaviour {
         Debug.Log("UPd");
     }
 
-
+   
     //Вставка блока на платформу через параметры
     public void InsertBlock(){
         isBusy = true;

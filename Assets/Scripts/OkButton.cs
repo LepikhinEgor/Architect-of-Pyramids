@@ -34,6 +34,7 @@ public class OkButton : MonoBehaviour {
         {
             Player.currentBlockMaterialNum = blockSelection.GetComponent<BlockSelection>().BlockMaterialNum;
             Player.score = 0;
+            Player.PerfectCoef = 1;
 
             GameObject piramid = GameObject.FindGameObjectWithTag("Piramid");
             piramid.GetComponent<Piramid>().GetPlatfomsInformation();

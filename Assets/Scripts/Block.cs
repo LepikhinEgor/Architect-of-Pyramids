@@ -129,7 +129,7 @@ public class Block : MonoBehaviour
     {
         if (player.IsWindy)
             rigidBodyBlock.AddForce(transform.right * 2F, ForceMode2D.Force);
-        if (transform.position.y + 0.6F < ParentBuilder.transform.position.y)
+        if (transform.position.y + 0.6F < ParentBuilder.transform.position.y && isFly)
         {
             //блок упал
             cam1.GetComponent<CameraController>().isFollow = false;
@@ -137,11 +137,13 @@ public class Block : MonoBehaviour
             transform.rotation = ParentBuilder.transform.rotation;
             if (Player.lives > 0)
             {
-                //возвращение блока в руки строителю с небольшим раскачиванием
-                Vector3 aSmallSwing = ParentBuilder.transform.position;
-                aSmallSwing.x += 0.1F;
-                transform.position = aSmallSwing;
+                parentBuilder.isKeep = true;
+                parentBuilder.CarryBlock();
+                swingAngle = 0.2F;
+                swingSpeed = swingAngle * 1.5F;
+                maxRotationAngle = 40;
                 cam1.GetComponent<CameraController>().isFollow = true;
+                isFly = false;
             }
         }
         if (isFly)
@@ -151,10 +153,11 @@ public class Block : MonoBehaviour
         }
         if (maxRotationAngle != 0)
         {
+            float swingCoef = 90F;
             Vector3 back = Vector3.back;
-            back.z *= SwingSpeed;
+            back.z *= SwingSpeed*Time.deltaTime * swingCoef;
             Vector3 forward = Vector3.forward;
-            forward.z *= SwingSpeed;
+            forward.z *= SwingSpeed * Time.deltaTime * swingCoef;
             if (parentBuilder.isSwingRight)
             {
                 if (transform.rotation.z > -swingAngle)
@@ -177,10 +180,10 @@ public class Block : MonoBehaviour
         Vector3 position = transform.position;
 
         int k;
-        if (Math.Abs(transform.rotation.z) < 0.2F)
+        if (Math.Abs(transform.rotation.z) < 0.15F)
             k = 20;
         else
-            k = 12;
+            k = 15;
         position.x += -transform.rotation.z * Time.deltaTime * k;//умножаем на 15 для более сильноо смещения вбок
         transform.position = position;
     }

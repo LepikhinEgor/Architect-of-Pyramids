@@ -6,14 +6,14 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/mainScene.unity
-    guid: 6933ae40a93fc834daa7bba5e8be2279
-  - enabled: 1
     path: Assets/Scenes/Piramid1.unity
     guid: 3586e024b001ed14fbf9e5d0ed76eacf
   - enabled: 1
     path: Assets/Scenes/SaphireFloors1.unity
     guid: 7b8dfebe2cb1de047abf5e4907982557
+  - enabled: 1
+    path: Assets/Scenes/mainScene.unity
+    guid: 6933ae40a93fc834daa7bba5e8be2279
   - enabled: 1
     path: Assets/Scenes/EmeraldFloors1.unity
     guid: 7a247e7febc723345944d2a8c54a30bc

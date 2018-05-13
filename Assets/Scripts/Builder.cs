@@ -17,7 +17,7 @@ public class Builder : MonoBehaviour
     [SerializeField]
     private Vector3 direction;
     private Block block;
-    private bool isKeep = false;
+    public bool isKeep = false;
 
     private SpriteRenderer sprite;
     private Player player;
@@ -25,18 +25,22 @@ public class Builder : MonoBehaviour
 
     private Collider2D tmpCollider; //для поиска коллайдеров
 
+    private float deltaPosX, previousPosX;
+
     private void Awake()
     {
-
+        //block = GameObject.FindGameObjectWithTag("Block").GetComponent<Block>();
         throwForse = 11.7F;
         speed = 4.0F;
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         sprite = GetComponentInChildren<SpriteRenderer>();
+        previousPosX = transform.position.x;
 
     }
 
     private void Update()
     {
+        //Debug.Log(Player.perfectTimer.Timer);
         if (!isKeep)
             CatchBlock(); // проверка, нет ли блока над строителем
         if (isKeep)
@@ -45,11 +49,11 @@ public class Builder : MonoBehaviour
             CarryBlock();
             Run();
         }
-        if (Input.GetButtonDown("Jump") && isKeep)
+        if (isKeep && (Input.GetButtonDown("Jump") || (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)))
         {
+            isKeep = false;
             block.rigidBodyBlock.velocity = Vector3.zero;
             block.ThrowUp(throwForse);
-            isKeep = false;
             block.rigidBodyBlock.gravityScale = 2;
         }
     }
@@ -72,12 +76,15 @@ public class Builder : MonoBehaviour
             if (!tmpCollider.GetComponent<Block>() && direction.x < 0)
                 direction.x = -direction.x;
         transform.position = Vector3.MoveTowards(transform.position, transform.position + direction, speed * Time.deltaTime);
+
+        deltaPosX = System.Math.Abs(transform.position.x - previousPosX);
+        previousPosX = transform.position.x;
         //sprite.flipX = direction.x > 0; //поворот при движении в другую сторону
     }
 
 
     public void CatchBlock()
-    {
+    { 
         Vector3 leftCorner = transform.position;
         leftCorner.x -= catchSkill;
         Vector3 rightCorner = transform.position;
@@ -88,6 +95,7 @@ public class Builder : MonoBehaviour
             Block newBlock = findedCollider.GetComponent<Block>();
             if (newBlock.rigidBodyBlock.velocity.y <= 0)
             {
+                isKeep = true;
                 int coef = 1;
                 if (tag.Equals("LastBuilder"))
                 {
@@ -99,7 +107,7 @@ public class Builder : MonoBehaviour
                 if (System.Math.Abs(newBlock.transform.position.x - transform.position.x) < catchSkill / 2 && block.ParentBuilder != this)
                 {
                     Debug.Log("Add time for Perfect Timer");
-                    player.perfectTimer.Timer = 7;
+                    Player.perfectTimer.Timer = 7;
                     block.SetStrandartMaskPosition();
                     block.blockSpriteActive.SetActive(true);
                     block.blockSpriteActiveBack.SetActive(true);
@@ -110,34 +118,41 @@ public class Builder : MonoBehaviour
                 if (block.ParentBuilder != this)
                 {
                     player.LevelNum++;
-                    if (player.perfectTimer.Timer > 0)
-                        player.PerfectCoef++;
-                    Player.score += coef * player.PerfectCoef;
+                    if (Player.perfectTimer.Timer > 0)
+                        Player.PerfectCoef++;
+                    Player.score += coef * Player.PerfectCoef;
                     GameObject scoreLine = GameObject.FindGameObjectWithTag("ScoreLine");
                     float val = (float)(Player.score) / ((float)(Player.currentMaxScore)/2F);
-                    Debug.Log(val);
                     scoreLine.GetComponent<Slider>().value = val;
                 }
                 block.ParentBuilder = this;
 
                 Debug.Log("Is Catched");
-                isKeep = true;
+                string blockOffset = "Block offset to builder by " + (System.Math.Abs(newBlock.transform.position.x - transform.position.x)).ToString();
+                Debug.Log(blockOffset);
                 block.IsFly = false;
                 block.rigidBodyBlock.velocity = Vector3.zero;
-                block.MaxRotationAngle = 45;
+                block.MaxRotationAngle = 40;
                 block.IsSwing = true;
 
-                if (player.perfectTimer.Timer > 0)
+                PerfectTimer pt = GameObject.FindGameObjectWithTag("PerfectTimer").GetComponent<PerfectTimer>();
+                if (pt.Timer > 0)
                 {
                     block.SwingAngle = System.Math.Abs(newBlock.transform.position.x - transform.position.x) * 0.2F;
                     //Player.score += 2 * player.PerfectCoef;
                 }
                 else
                 {
-                    block.SwingAngle = System.Math.Abs(newBlock.transform.position.x - transform.position.x) * 0.5F;
+                    block.SwingAngle = System.Math.Abs(newBlock.transform.position.x - transform.position.x) * 0.4F;
                     //Player.score += 1;
                 }
-                block.SwingSpeed = block.SwingAngle * 2.5F;
+
+                float swingSpeedCoef = 2F;
+                if (pt.Timer > 0)
+                    block.SwingSpeed = block.SwingAngle* swingSpeedCoef;
+                else
+                    block.SwingSpeed = block.SwingAngle;
+                string score = "Score: " + (Player.score).ToString(); 
                 Debug.Log(Player.score);
             }
 
@@ -146,14 +161,15 @@ public class Builder : MonoBehaviour
     }
     public void CarryBlock()
     {
-        Vector3 blockPos = transform.position;
-        blockPos.y += 0.5F;
-        blockPos.z += 1;
+        Vector3 newBlockPos = transform.position;
+        //float offset = System.Math.Abs(newBlockPos.x - transform.position.x);
+        newBlockPos.y += 0.5F;
+        newBlockPos.z += 1;
         if (direction.x > 0)
-            blockPos.x += 0.06F;
+            newBlockPos.x += deltaPosX;
         else
-            blockPos.x -= 0.06F;
-        block.transform.position = blockPos;
+            newBlockPos.x -= deltaPosX;
+        block.transform.position = newBlockPos;
         block.rigidBodyBlock.gravityScale = 0;
     }
 }

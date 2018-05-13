@@ -44,12 +44,7 @@ public class Player : MonoBehaviour
     public static int score = 0;
 
     [SerializeField]
-    private int perfectCoef = 1;
-    public int PerfectCoef
-    {
-        set { perfectCoef = value; }
-        get { return perfectCoef; }
-    }
+    public static int PerfectCoef = 1;
 
     [SerializeField]
     private bool isWindy = false;
@@ -59,7 +54,7 @@ public class Player : MonoBehaviour
         get { return isWindy; }
     }
 
-    public PerfectTimer perfectTimer;
+    public static PerfectTimer perfectTimer;
     private Block block;
 
     private float lightSpeed = 0.2F;
@@ -69,8 +64,11 @@ public class Player : MonoBehaviour
     }
     private void Start()
     {
-        if (!File.Exists("Save/Save.xml"))
-            CreateXML();
+        if (!File.Exists(Application.persistentDataPath + "/Save/Save.xml"))
+        {
+            Debug.Log("FFFF");
+            CreateXML(); }
+
         if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("mainScene")
             || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("SaphireFloors1")
             || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("EmeraldFloors1")
@@ -81,17 +79,17 @@ public class Player : MonoBehaviour
         {
 
             block = FindObjectOfType<Block>();
-            perfectTimer = FindObjectOfType<PerfectTimer>();
+            perfectTimer = GameObject.FindGameObjectWithTag("PerfectTimer").GetComponent<PerfectTimer>();
             GameObject scoreLine = GameObject.FindGameObjectWithTag("ScoreLine");
             scoreLine.GetComponent<Slider>().value = 0;
         }
         
 
-        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("Piramid1"))
+        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("Piramid1") ||
+            SceneManager.GetActiveScene() == SceneManager.GetSceneByName("Piramid2"))
         {
+
             blockSelection = GameObject.FindGameObjectWithTag("BlockSelection");
-            nextBlockBtn = GameObject.FindGameObjectWithTag("NextBlock");
-            previousBlockBtn = GameObject.FindGameObjectWithTag("PreviousBlock");
             okButton = GameObject.FindGameObjectWithTag("OK");
             cancelButton = GameObject.FindGameObjectWithTag("Cancel");
 
@@ -167,10 +165,10 @@ public class Player : MonoBehaviour
 
         for (int i = 2; i <= (floorsNum + 1); i++) //начинается сразу с x2, заканчивается x(n+1)
             maxScore += i;
-        Debug.Log(maxScore);
         maxScore *= 2;
         maxScore = maxScore + (int)(maxScore * 3 * 0.05);
         currentMaxScore = maxScore;
+        Debug.Log(maxScore);
     }
 
     public int CalcGENbyScore()
@@ -194,8 +192,6 @@ public class Player : MonoBehaviour
     public void HideSelectBlockUI()
     {
         blockSelection.SetActive(false);
-        nextBlockBtn.SetActive(false);
-        previousBlockBtn.SetActive(false);
         okButton.SetActive(false);
         cancelButton.SetActive(true);
         sample.SetActive(true);
@@ -203,8 +199,6 @@ public class Player : MonoBehaviour
     public void ShowSelectBlockUI()
     {
         blockSelection.SetActive(true);
-        nextBlockBtn.SetActive(true);
-        previousBlockBtn.SetActive(true);
         okButton.SetActive(true);
         cancelButton.SetActive(false);
         sample.SetActive(false);
@@ -216,8 +210,8 @@ public class Player : MonoBehaviour
         isFirst = false;
         XmlDocument xmlSave = new XmlDocument();
 
-        if (File.Exists("Save/Save.xml"))
-            xmlSave.Load("Save/Save.xml");
+        if (File.Exists(Application.persistentDataPath + "/Save/Save.xml"))
+            xmlSave.Load(Application.persistentDataPath + "/Save/Save.xml");
         else
             Debug.Log("Cannot read file, when replace platform");
 
@@ -236,7 +230,7 @@ public class Player : MonoBehaviour
             }
         }
 
-        xmlSave.Save("Save/Save.xml");
+        xmlSave.Save(Application.persistentDataPath + "/Save/Save.xml");
 
     }
 
@@ -252,36 +246,56 @@ public class Player : MonoBehaviour
 
         piramid = xmlSave.CreateElement("Piramid1");
         informationNode.AppendChild(piramid);
-
-        for (int i = 0; i < 6; i++)
+        piramid = xmlSave.CreateElement("Piramid2");
+        informationNode.AppendChild(piramid);
+        piramid = xmlSave.CreateElement("Piramid3");
+        informationNode.AppendChild(piramid);
+        for (int i = 1; i <= 3; i++)
         {
-            newNode = xmlSave.CreateElement("Platform");
-            newAttribute = xmlSave.CreateAttribute("ID");
-            newAttribute.Value = i.ToString();
-            newNode.Attributes.Append(newAttribute);
+            string piramidName = "Piramid" + i.ToString();
+            piramid = xmlSave.GetElementsByTagName(piramidName)[0];
+            int platformsNum = 0;
+            switch (i)
+            {
+                case 1: platformsNum = 6;break;
+                case 2: platformsNum = 10; break;
+                case 3: platformsNum = 21; break;
+            }
+            for (int j = 0; j < platformsNum; j++)
+            {
+                newNode = xmlSave.CreateElement("Platform");
+                newAttribute = xmlSave.CreateAttribute("ID");
+                newAttribute.Value = j.ToString();
+                newNode.Attributes.Append(newAttribute);
 
-            newAttribute = xmlSave.CreateAttribute("Score");
-            newAttribute.Value = "0";
-            newNode.Attributes.Append(newAttribute);
+                newAttribute = xmlSave.CreateAttribute("Score");
+                newAttribute.Value = "0";
+                newNode.Attributes.Append(newAttribute);
 
-            newAttribute = xmlSave.CreateAttribute("BlockMaterialNum");
-            newAttribute.Value = "0";
-            newNode.Attributes.Append(newAttribute);
+                newAttribute = xmlSave.CreateAttribute("BlockMaterialNum");
+                newAttribute.Value = "0";
+                newNode.Attributes.Append(newAttribute);
 
-            newAttribute = xmlSave.CreateAttribute("EdgePositions");
-            newAttribute.Value = "000000";
-            newNode.Attributes.Append(newAttribute);
+                newAttribute = xmlSave.CreateAttribute("EdgePositions");
+                newAttribute.Value = "000000";
+                newNode.Attributes.Append(newAttribute);
 
-            piramid.AppendChild(newNode);
+                piramid.AppendChild(newNode);
+            }
         }
-        xmlSave.Save("Save/Save.xml");
+        System.IO.Directory.CreateDirectory(Application.persistentDataPath + "/Save");
+        xmlSave.Save(Application.persistentDataPath + "/Save/Save.xml");
     }
 
     public static PlatformInformation[] LoadDataFromXML(int piramidID)
     {
         int size = 0;
-        if (piramidID == 1)
-            size = 6;
+        switch (piramidID)
+        {
+            case 1: size = 6;break;
+            case 2: size = 10; break;
+            case 3: size = 21; break;
+        }
 
         PlatformInformation[] platformsInformation = new PlatformInformation[size]; ;
         for (int i = 0; i < platformsInformation.Length; i++)
@@ -293,11 +307,11 @@ public class Player : MonoBehaviour
         String tmp = "Piramid";
         tmp += piramidID.ToString();
 
-        if (File.Exists("Save/Save.xml"))
+        if (File.Exists(Application.persistentDataPath + "/Save/Save.xml"))
         {
-            xmlSave.Load("Save/Save.xml");
+            xmlSave.Load(Application.persistentDataPath + "/Save/Save.xml");
 
-            XmlNode piramid = xmlSave.GetElementsByTagName("Piramid1")[0];
+            XmlNode piramid = xmlSave.GetElementsByTagName(tmp)[0];
 
             foreach (XmlNode platform in piramid.ChildNodes)
             {
