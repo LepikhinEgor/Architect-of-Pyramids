@@ -41,6 +41,7 @@ public class Piramid : MonoBehaviour
 
             isFirst = false;
         }
+        Player.currentPiramidID = ID;
     }
     void Start()
     {

@@ -280,21 +280,41 @@ public class Platform : MonoBehaviour {
     //возвращает количество хороших соседних граней
     public int FindNeighborEdgesCount()
     {
+        float offsetX1 = 0, offsetX2 = 0;
+        float offsetY = 0;
+        switch(Player.currentPiramidID)
+        {
+            case 1:
+                offsetX1 = 1.3F;
+                offsetX2 = 0.6F;
+                offsetY = 0.9F;
+                break;
+            case 2:
+                offsetX1 = 1.1F;
+                offsetX2 = 0.6F;
+                offsetY = 0.8F;
+                break;
+            case 3:
+                offsetX1 = 1F;
+                offsetX2 = 0.45F;
+                offsetY = 0.65F;
+                break;
+        }
         int neighborEdgesNum = 0;
         Vector3[] checkPos = new Vector3[6];
         checkPos[0] = checkPos[1] =checkPos[2]=checkPos[3]=checkPos[4]=checkPos[5] = transform.position;
-        checkPos[0].x += 1.3F;
+        checkPos[0].x += offsetX1;
         checkPos[0].y += 0F;
-        checkPos[1].x += 0.6F;
-        checkPos[1].y += -0.9F;
-        checkPos[2].x += -0.6F;
-        checkPos[2].y += -0.9F;
-        checkPos[3].x += -1.3F;
+        checkPos[1].x += offsetX2;
+        checkPos[1].y -= offsetY;
+        checkPos[2].x -= offsetX2;
+        checkPos[2].y -= offsetY;
+        checkPos[3].x -= offsetX1;
         checkPos[3].y += 0F;
-        checkPos[4].x += -0.6F;
-        checkPos[4].y += 0.9F;
-        checkPos[5].x += 0.6F;
-        checkPos[5].y += 0.9F;
+        checkPos[4].x -= offsetX2;
+        checkPos[4].y += offsetY;
+        checkPos[5].x += offsetX2;
+        checkPos[5].y += offsetY;
         Collider2D tmpCollider;
         for (int i = 0; i < checkPos.Length; i++)
         {

@@ -86,7 +86,8 @@ public class Player : MonoBehaviour
         
 
         if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("Piramid1") ||
-            SceneManager.GetActiveScene() == SceneManager.GetSceneByName("Piramid2"))
+            SceneManager.GetActiveScene() == SceneManager.GetSceneByName("Piramid2") ||
+            SceneManager.GetActiveScene() == SceneManager.GetSceneByName("Piramid3"))
         {
 
             blockSelection = GameObject.FindGameObjectWithTag("BlockSelection");
