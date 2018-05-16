@@ -60,8 +60,8 @@ public class OkButton : MonoBehaviour {
                 else
                                 if (blockSelection.GetComponent<BlockSelection>().BlockMaterialNum == 5)
                                     SceneManager.LoadScene("TopazFloors1");
-                else
-                    SceneManager.LoadScene("mainScene");
+                //else
+                   // SceneManager.LoadScene("mainScene");
             }
         }
 

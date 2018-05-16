@@ -156,6 +156,7 @@ MonoBehaviour:
   isSwingRight: 0
   speed: 3
   direction: {x: -1, y: 0, z: 0}
+  isKeep: 0
 --- !u!1 &38753164
 GameObject:
   m_ObjectHideFlags: 0
@@ -346,6 +347,7 @@ MonoBehaviour:
   isSwingRight: 1
   speed: 3
   direction: {x: 1, y: 0, z: 0}
+  isKeep: 0
 --- !u!1 &60833471
 GameObject:
   m_ObjectHideFlags: 0
@@ -815,6 +817,7 @@ MonoBehaviour:
   isSwingRight: 1
   speed: 3
   direction: {x: 1, y: 0, z: 0}
+  isKeep: 0
 --- !u!1 &230275016
 GameObject:
   m_ObjectHideFlags: 0
@@ -1010,6 +1013,7 @@ MonoBehaviour:
   isSwingRight: 0
   speed: 3
   direction: {x: -1, y: 0, z: 0}
+  isKeep: 0
 --- !u!1 &294277257
 GameObject:
   m_ObjectHideFlags: 0
@@ -1127,6 +1131,7 @@ MonoBehaviour:
   isSwingRight: 1
   speed: 3
   direction: {x: 1, y: 0, z: 0}
+  isKeep: 0
 --- !u!1 &334548331
 GameObject:
   m_ObjectHideFlags: 0
@@ -1171,6 +1176,7 @@ MonoBehaviour:
   isSwingRight: 1
   speed: 3
   direction: {x: 1, y: 0, z: 0}
+  isKeep: 0
 --- !u!1 &395507123
 GameObject:
   m_ObjectHideFlags: 0
@@ -1215,6 +1221,7 @@ MonoBehaviour:
   isSwingRight: 0
   speed: 3
   direction: {x: -1, y: 0, z: 0}
+  isKeep: 0
 --- !u!1 &399192677
 GameObject:
   m_ObjectHideFlags: 0
@@ -1332,6 +1339,7 @@ MonoBehaviour:
   isSwingRight: 1
   speed: 3
   direction: {x: 1, y: 0, z: 0}
+  isKeep: 0
 --- !u!1 &472589068
 GameObject:
   m_ObjectHideFlags: 0
@@ -1608,7 +1616,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 566607730}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.53, y: 17.93, z: 0}
+  m_LocalPosition: {x: -4.18, y: 17.93, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 230275017}
@@ -1756,6 +1764,7 @@ MonoBehaviour:
   isSwingRight: 0
   speed: 3
   direction: {x: -1, y: 0, z: 0}
+  isKeep: 0
 --- !u!1 &671615169
 GameObject:
   m_ObjectHideFlags: 0
@@ -2019,6 +2028,7 @@ MonoBehaviour:
   isSwingRight: 0
   speed: 3
   direction: {x: -1, y: 0, z: 0}
+  isKeep: 0
 --- !u!1 &748580569
 GameObject:
   m_ObjectHideFlags: 0
@@ -2490,6 +2500,7 @@ MonoBehaviour:
   isSwingRight: 0
   speed: 3
   direction: {x: -1, y: 0, z: 0}
+  isKeep: 0
 --- !u!1 &934842134
 GameObject:
   m_ObjectHideFlags: 0
@@ -2607,6 +2618,7 @@ MonoBehaviour:
   isSwingRight: 0
   speed: 3
   direction: {x: -1, y: 0, z: 0}
+  isKeep: 0
 --- !u!1 &981190952
 GameObject:
   m_ObjectHideFlags: 0
@@ -2877,6 +2889,7 @@ MonoBehaviour:
   isSwingRight: 0
   speed: 3
   direction: {x: -1, y: 0, z: 0}
+  isKeep: 0
 --- !u!1 &1070585933
 GameObject:
   m_ObjectHideFlags: 0
@@ -3067,6 +3080,7 @@ MonoBehaviour:
   isSwingRight: 0
   speed: 3
   direction: {x: -1, y: 0, z: 0}
+  isKeep: 0
 --- !u!1 &1098846851
 GameObject:
   m_ObjectHideFlags: 0
@@ -3384,6 +3398,7 @@ MonoBehaviour:
   isSwingRight: 1
   speed: 3
   direction: {x: 1, y: 0, z: 0}
+  isKeep: 0
 --- !u!1 &1247254444
 GameObject:
   m_ObjectHideFlags: 0
@@ -3428,6 +3443,7 @@ MonoBehaviour:
   isSwingRight: 1
   speed: 3
   direction: {x: 1, y: 0, z: 0}
+  isKeep: 0
 --- !u!1 &1260051052
 GameObject:
   m_ObjectHideFlags: 0
@@ -3884,7 +3900,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1473882322}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.21, y: 18.2, z: 0}
+  m_LocalPosition: {x: 2.81, y: 18.2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 230275017}
@@ -4173,6 +4189,7 @@ MonoBehaviour:
   isSwingRight: 0
   speed: 3
   direction: {x: -1, y: 0, z: 0}
+  isKeep: 0
 --- !u!1 &1586266583
 GameObject:
   m_ObjectHideFlags: 0
@@ -4987,6 +5004,7 @@ MonoBehaviour:
   isSwingRight: 1
   speed: 3
   direction: {x: 1, y: 0, z: 0}
+  isKeep: 0
 --- !u!1 &2045489679
 GameObject:
   m_ObjectHideFlags: 0
@@ -5172,3 +5190,4 @@ MonoBehaviour:
   isSwingRight: 1
   speed: 3
   direction: {x: 1, y: 0, z: 0}
+  isKeep: 0

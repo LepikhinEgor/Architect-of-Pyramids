@@ -5,6 +5,7 @@ using UnityEngine;
 public class BloсkSprite : MonoBehaviour {
     [SerializeField]
     public int ID;
+    public bool isUnlocked;
 	// Use this for initialization
 	void Start () {
 		

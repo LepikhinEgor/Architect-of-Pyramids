@@ -32,6 +32,9 @@ TagManager:
   - SmallPiramid
   - MediumPiramid
   - LargePiramid
+  - Back
+  - Lock
+  - UIScore
   layers:
   - Default
   - TransparentFX

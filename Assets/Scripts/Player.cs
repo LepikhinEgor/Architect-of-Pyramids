@@ -13,14 +13,16 @@ public class Player : MonoBehaviour
     public static int currentMaxScore;
     public static bool isFirst = true;
     GameObject sample;
-    GameObject nextBlockBtn;
-    GameObject previousBlockBtn;
-    GameObject blockSelection;
+    GameObject backButton;
+    static GameObject blockSelection;
     GameObject okButton;
     GameObject cancelButton;
 
     GameObject piramid;
 
+    public static int Pir1TotalScore = 0;
+    public static int Pir2TotalScore = 0;
+    public static int Pir3TotalScore = 0;
 
     [SerializeField]
     public static bool isChoosingPlatform = false;
@@ -61,6 +63,9 @@ public class Player : MonoBehaviour
     private bool isLight = false;
     private void Awake()
     {
+        Pir1TotalScore = LoadPiramidTotalScoreFromXML(1);
+        Pir2TotalScore = LoadPiramidTotalScoreFromXML(2);
+        Pir3TotalScore = LoadPiramidTotalScoreFromXML(3);
     }
     private void Start()
     {
@@ -77,7 +82,6 @@ public class Player : MonoBehaviour
             || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("SilverFloors1")
             || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("TopazFloors1"))
         {
-
             block = FindObjectOfType<Block>();
             perfectTimer = GameObject.FindGameObjectWithTag("PerfectTimer").GetComponent<PerfectTimer>();
             GameObject scoreLine = GameObject.FindGameObjectWithTag("ScoreLine");
@@ -89,7 +93,10 @@ public class Player : MonoBehaviour
             SceneManager.GetActiveScene() == SceneManager.GetSceneByName("Piramid2") ||
             SceneManager.GetActiveScene() == SceneManager.GetSceneByName("Piramid3"))
         {
+            GameObject scoreUI = GameObject.FindGameObjectWithTag("UIScore");
+            scoreUI.GetComponent<Text>().text = (LoadPiramidTotalScoreFromXML(currentPiramidID)).ToString();
 
+            backButton = GameObject.FindGameObjectWithTag("Back");
             blockSelection = GameObject.FindGameObjectWithTag("BlockSelection");
             okButton = GameObject.FindGameObjectWithTag("OK");
             cancelButton = GameObject.FindGameObjectWithTag("Cancel");
@@ -169,7 +176,6 @@ public class Player : MonoBehaviour
         maxScore *= 2;
         maxScore = maxScore + (int)(maxScore * 3 * 0.05);
         currentMaxScore = maxScore;
-        Debug.Log(maxScore);
     }
 
     public int CalcGENbyScore()
@@ -192,6 +198,10 @@ public class Player : MonoBehaviour
     }
     public void HideSelectBlockUI()
     {
+        backButton.SetActive(false);
+        //информация для blockSelection, так как при скрытии UI при запуске он не успевает сам инициилизироваться
+        blockSelection.GetComponent<BlockSelection>().blockColors =  GameObject.FindGameObjectsWithTag("BlockColor");
+        blockSelection.GetComponent<BlockSelection>().piramid = GameObject.FindGameObjectWithTag("Piramid");
         blockSelection.SetActive(false);
         okButton.SetActive(false);
         cancelButton.SetActive(true);
@@ -199,12 +209,17 @@ public class Player : MonoBehaviour
     }
     public void ShowSelectBlockUI()
     {
+        backButton.SetActive(true);
         blockSelection.SetActive(true);
         okButton.SetActive(true);
         cancelButton.SetActive(false);
         sample.SetActive(false);
     }
 
+    public static void RefreshBlocksLock()
+    {
+        blockSelection.GetComponent<BlockSelection>().RefreshBlocksLock();
+    }
     public static void ReplacePlatformInXML(int piramidID, int ID, int score, int blockMaterialNum, String edgePositions)
     {
 
@@ -337,5 +352,28 @@ public class Player : MonoBehaviour
         }
 
         return platformsInformation;
+    }
+
+    public static int LoadPiramidTotalScoreFromXML(int piramidID)
+    {
+        XmlDocument xmlSave = new XmlDocument();
+
+        String tmp = "Piramid";
+        tmp += piramidID.ToString();
+
+        int totalScore = 0;
+        if (File.Exists(Application.persistentDataPath + "/Save/Save.xml"))
+        {
+            xmlSave.Load(Application.persistentDataPath + "/Save/Save.xml");
+
+            XmlNode piramid = xmlSave.GetElementsByTagName(tmp)[0];
+
+            foreach (XmlNode platform in piramid.ChildNodes)
+            {
+                totalScore += Convert.ToInt32(platform.Attributes[1].Value);
+            }
+        }
+
+        return totalScore;
     }
 }

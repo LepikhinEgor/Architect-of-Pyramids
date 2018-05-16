@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 
 public class Block : MonoBehaviour
 {
@@ -129,7 +129,7 @@ public class Block : MonoBehaviour
     {
         if (player.IsWindy)
             rigidBodyBlock.AddForce(transform.right * 2F, ForceMode2D.Force);
-        if (transform.position.y + 0.6F < ParentBuilder.transform.position.y && isFly)
+        if (isFly && transform.position.y + 0.6F < ParentBuilder.transform.position.y)
         {
             //блок упал
             cam1.GetComponent<CameraController>().isFollow = false;
@@ -137,6 +137,7 @@ public class Block : MonoBehaviour
             transform.rotation = ParentBuilder.transform.rotation;
             if (Player.lives > 0)
             {
+                rigidBodyBlock.velocity = Vector3.zero;
                 parentBuilder.isKeep = true;
                 parentBuilder.CarryBlock();
                 swingAngle = 0.2F;
@@ -144,6 +145,12 @@ public class Block : MonoBehaviour
                 maxRotationAngle = 40;
                 cam1.GetComponent<CameraController>().isFollow = true;
                 isFly = false;
+            }
+            else
+            {
+                string sceneName = "Piramid" + (Player.currentPiramidID).ToString();
+                Player.score = 0;
+                SceneManager.LoadScene(sceneName);
             }
         }
         if (isFly)

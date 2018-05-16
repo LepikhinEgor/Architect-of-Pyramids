@@ -7,17 +7,17 @@ public class PiramidButton : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
-	}
+
+    }
 
 
     private void OnMouseDown()
     {
         if (tag.Equals("SmallPiramid"))
             SceneManager.LoadScene("Piramid1");
-        if (tag.Equals("MediumPiramid"))
+        if (tag.Equals("MediumPiramid") && Player.Pir1TotalScore > 700)
             SceneManager.LoadScene("Piramid2");
-        if (tag.Equals("LargePiramid"))
+        if (tag.Equals("LargePiramid") && Player.Pir2TotalScore > 1500)
             SceneManager.LoadScene("Piramid3");
 
     }

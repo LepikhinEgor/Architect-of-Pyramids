@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.UI;
 
 public class Platform : MonoBehaviour {
 
@@ -138,6 +139,7 @@ public class Platform : MonoBehaviour {
     void Start () {
         if (!tag.Equals("Sample"))
             FillPlatformOldData();
+        //piramid.GetComponent<Piramid>().FillPlatformsFromXML();
     }
 
     // Update is called once per frame
@@ -166,6 +168,9 @@ public class Platform : MonoBehaviour {
             Player.ReplacePlatformInXML(Player.currentPiramidID, ID, score, blockMaterialNum, str);
         }
         piramid.GetComponent<Piramid>().RefreshNeighborEdgesCount();
+        Player.RefreshBlocksLock();
+        GameObject scoreUI = GameObject.FindGameObjectWithTag("UIScore");
+        scoreUI.GetComponent<Text>().text = (piramid.GetComponent<Piramid>().totalScore).ToString();
         Debug.Log("UPd");
     }
 

@@ -13,7 +13,7 @@ public class Piramid : MonoBehaviour
     [SerializeField]
     public int totalScore = 0;
 
-    static bool isFirst = true;
+    public static bool isFirst = true;
     public static bool[][] platformsEdgePositions;
     public static int[] platformsBlockMaterialNums;
     public static int[] platformsScore;
@@ -26,7 +26,9 @@ public class Piramid : MonoBehaviour
 
     private void Awake()
     {
-        //platformsIsBusy2 = platformsIsBusy;
+        Player.currentPiramidID = ID;
+        Debug.Log("PiramidAwake");
+        totalScore = Player.LoadPiramidTotalScoreFromXML(ID);
         platforms = GameObject.FindGameObjectsWithTag("Platform");
         if (isFirst)//чтобы не пересоздавались при загрузке этой же сцены дважды
         {
@@ -41,7 +43,6 @@ public class Piramid : MonoBehaviour
 
             isFirst = false;
         }
-        Player.currentPiramidID = ID;
     }
     void Start()
     {
@@ -60,11 +61,20 @@ public class Piramid : MonoBehaviour
 
     public void GetPlatfomsInformation()
     {
+        int curTotalScore = 0;
         foreach (GameObject pl in platforms)
         {
             platformsEdgePositions[pl.GetComponent<Platform>().ID] = pl.GetComponent<Platform>().GoodEdgePositions;
             platformsBlockMaterialNums[pl.GetComponent<Platform>().ID] = pl.GetComponent<Platform>().BlockMaterialNum;
             platformsScore[pl.GetComponent<Platform>().ID] = pl.GetComponent<Platform>().Score;
+            curTotalScore += pl.GetComponent<Platform>().Score;
+            totalScore = curTotalScore;
+            switch (Player.currentPiramidID)
+            {
+                case 1: Player.Pir1TotalScore = totalScore;break;
+                case 2: Player.Pir2TotalScore = totalScore; break;
+                case 3: Player.Pir3TotalScore = totalScore; break;
+            }
             platformsIsBusy[pl.GetComponent<Platform>().ID] = pl.GetComponent<Platform>().IsBusy;
         }
     }
@@ -87,6 +97,7 @@ public class Piramid : MonoBehaviour
 
     public void RefreshTotalScore()
     {
+        totalScore = 0;
         foreach (GameObject pl in platforms)
             totalScore += pl.GetComponent<Platform>().Score;
     }

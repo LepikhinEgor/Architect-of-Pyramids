@@ -31,7 +31,7 @@ public class Builder : MonoBehaviour
     {
         //block = GameObject.FindGameObjectWithTag("Block").GetComponent<Block>();
         throwForse = 11.7F;
-        speed = 4.0F;
+        speed = 3.5F;
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         sprite = GetComponentInChildren<SpriteRenderer>();
         previousPosX = transform.position.x;
@@ -105,7 +105,7 @@ public class Builder : MonoBehaviour
                 }
 
                 block = newBlock;
-                if (System.Math.Abs(newBlock.transform.position.x - transform.position.x) < catchSkill / 2 && block.ParentBuilder != this)
+                if (System.Math.Abs(newBlock.transform.position.x - transform.position.x) < catchSkill / 1.8 && block.ParentBuilder != this)
                 {
                     Debug.Log("Add time for Perfect Timer");
                     Player.perfectTimer.Timer = 7;
