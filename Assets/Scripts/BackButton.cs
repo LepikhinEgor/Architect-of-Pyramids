@@ -13,6 +13,7 @@ public class BackButton : MonoBehaviour {
     private void OnMouseDown()
     {
         Piramid.isFirst = true;
+        Player.currentBlockMaterialNum = 0;
         SceneManager.LoadScene("Piramids");
     }
 

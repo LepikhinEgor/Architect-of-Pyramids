@@ -15,9 +15,9 @@ public class PiramidButton : MonoBehaviour {
     {
         if (tag.Equals("SmallPiramid"))
             SceneManager.LoadScene("Piramid1");
-        if (tag.Equals("MediumPiramid") && Player.Pir1TotalScore > 700)
+        if (tag.Equals("MediumPiramid") && Player.Pir1TotalScore > 1000)
             SceneManager.LoadScene("Piramid2");
-        if (tag.Equals("LargePiramid") && Player.Pir2TotalScore > 1500)
+        if (tag.Equals("LargePiramid") && Player.Pir2TotalScore > 4000)
             SceneManager.LoadScene("Piramid3");
 
     }

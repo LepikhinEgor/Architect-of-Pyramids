@@ -6,6 +6,10 @@ using System;
 
 public class BlockSelection : MonoBehaviour {
 
+    float blockDeltaPos = 0;
+    private bool isDamping = false;
+    int dampingFrameNum;
+    int currentDampingFrame;
     private static float lastMouseXPos;
     private float currentMouseXpos;
     private float deltaXPos;
@@ -32,6 +36,8 @@ public class BlockSelection : MonoBehaviour {
     // Use this for initialization
     private void Awake()
     {
+        dampingFrameNum = 10;
+        currentDampingFrame = dampingFrameNum;
         blockMaterialNum = 0;
     }
     void Start () {
@@ -41,6 +47,9 @@ public class BlockSelection : MonoBehaviour {
         blockColors = GameObject.FindGameObjectsWithTag("BlockColor");
         foreach (GameObject blockColor in blockColors)
         {
+            Vector3 blockColorPos = blockColor.transform.position;
+            blockColorPos.x -= Player.currentBlockMaterialNum * 1.4F;
+            blockColor.transform.position = blockColorPos;
             if (Math.Abs(blockColor.transform.position.x) < 0.2F)
             {
                 Vector3 tmp = blockColor.transform.localScale;
@@ -68,6 +77,7 @@ public class BlockSelection : MonoBehaviour {
 
             foreach (GameObject blockColor in blockColors)
             {
+
                 Vector3 tmp = blockColor.transform.position;
                 tmp.x += deltaXPos;
                 blockColor.transform.position = tmp;
@@ -96,37 +106,92 @@ public class BlockSelection : MonoBehaviour {
 
         if (Input.GetMouseButtonUp(0))
         {
-            float minDeltaX = 100;
-            for (int i = 0; i < blockColors.Length; i++)
-                if (Math.Abs(blockColors[i].transform.position.x) < Math.Abs(minDeltaX))
-                {
-                    minDeltaX = blockColors[i].transform.position.x;
-                }
+            isDamping = true;
+            blockDeltaPos = deltaXPos;
+            Debug.Log(deltaXPos);
+            if (Math.Abs(deltaXPos) < 0.1F)
+                dampingFrameNum = currentDampingFrame = 4;
+            if (Math.Abs(deltaXPos) > 0.1F && Math.Abs(deltaXPos) < 0.5F)
+                dampingFrameNum = currentDampingFrame = 7;
+            if (Math.Abs(deltaXPos) > 0.5F)
+                dampingFrameNum = currentDampingFrame = 10;
+        }
+        if (isDamping)
+        {
+            DampingScroll();
+        }
+    }
+    public void DampingScroll()
+    {
+        Debug.Log(currentDampingFrame);
+        Vector3 blockColorPos;
 
+        float firstBlockColorPosX = 0;
+        float lastBlockColorPosX  = 8.4F;
+
+        foreach (GameObject blockColor in blockColors)
+        {
+            if (blockColor.GetComponent<BloсkSprite>().ID == 0)
+                firstBlockColorPosX = blockColor.transform.position.x;
+            if (blockColor.GetComponent<BloсkSprite>().ID == 6)
+                lastBlockColorPosX = blockColor.transform.position.x;
+        }
+        bool isEndOfDamping = (firstBlockColorPosX >= 0 && blockDeltaPos > 0) || (lastBlockColorPosX <= 0 && blockDeltaPos < 0);
+        if (!isEndOfDamping)
             foreach (GameObject blockColor in blockColors)
             {
-                Vector3 tmp = blockColor.transform.position;
-                tmp.x -= minDeltaX;
-                blockColor.transform.position = tmp;
-                if (Math.Abs(blockColor.transform.position.x) < 0.5F)
-                {
-                    if (blockColor.GetComponent<BloсkSprite>().isUnlocked)
-                        blockMaterialNum = blockColor.GetComponent<BloсkSprite>().ID;
-                    else
-                        BlockMaterialNum = 100;
-                    piramid.GetComponent<Piramid>().HighlightBlocks(blockMaterialNum);
-                    Vector3 blockColorScale = blockColor.transform.localScale;
-                    blockColorScale.x = 2.2F;
-                    blockColorScale.y = 2.2F;
-                    blockColor.transform.localScale = blockColorScale;
-                }
+                blockColorPos = blockColor.transform.position;
+                blockColorPos.x += blockDeltaPos;
+                blockColor.transform.position = blockColorPos;
+            }
+        else
+        {
+            isDamping = false;
+            currentDampingFrame = dampingFrameNum;
+            SetNearestBlockColor();
+        }
+        currentDampingFrame--;
+        blockDeltaPos -= blockDeltaPos / dampingFrameNum;
+        if (currentDampingFrame == 0)
+        {
+            isDamping = false;
+            currentDampingFrame = dampingFrameNum;
+            SetNearestBlockColor();
+        }
+    }
+
+    public void SetNearestBlockColor()
+    {
+        float minDeltaX = 100;
+        for (int i = 0; i < blockColors.Length; i++)
+            if (Math.Abs(blockColors[i].transform.position.x) < Math.Abs(minDeltaX))
+            {
+                minDeltaX = blockColors[i].transform.position.x;
+            }
+
+        foreach (GameObject blockColor in blockColors)
+        {
+            Vector3 tmp = blockColor.transform.position;
+            tmp.x -= minDeltaX;
+            blockColor.transform.position = tmp;
+            if (Math.Abs(blockColor.transform.position.x) < 0.5F)
+            {
+                if (blockColor.GetComponent<BloсkSprite>().isUnlocked)
+                    blockMaterialNum = blockColor.GetComponent<BloсkSprite>().ID;
                 else
-                {
-                    Vector3 blockColorScale = blockColor.transform.localScale;
-                    blockColorScale.x = 1.8F;
-                    blockColorScale.y = 1.8F;
-                    blockColor.transform.localScale = blockColorScale;
-                }
+                    BlockMaterialNum = 100;
+                piramid.GetComponent<Piramid>().HighlightBlocks(blockMaterialNum);
+                Vector3 blockColorScale = blockColor.transform.localScale;
+                blockColorScale.x = 2.2F;
+                blockColorScale.y = 2.2F;
+                blockColor.transform.localScale = blockColorScale;
+            }
+            else
+            {
+                Vector3 blockColorScale = blockColor.transform.localScale;
+                blockColorScale.x = 1.8F;
+                blockColorScale.y = 1.8F;
+                blockColor.transform.localScale = blockColorScale;
             }
         }
     }
@@ -144,7 +209,7 @@ public class BlockSelection : MonoBehaviour {
                         blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
                         break;
                     case 1:
-                        if (piramid.GetComponent<Piramid>().totalScore > 100)
+                        if (piramid.GetComponent<Piramid>().totalScore > 200)
                         {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
@@ -152,7 +217,7 @@ public class BlockSelection : MonoBehaviour {
                         break;
                     case 2:
                         Debug.Log(blockColor.GetComponent<BloсkSprite>().ID);
-                        if (piramid.GetComponent<Piramid>().totalScore > 300)
+                        if (piramid.GetComponent<Piramid>().totalScore > 600)
                         {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
@@ -176,21 +241,21 @@ public class BlockSelection : MonoBehaviour {
                         }
                         break;
                     case 2:
-                        if (piramid.GetComponent<Piramid>().totalScore > 350)
+                        if (piramid.GetComponent<Piramid>().totalScore > 1000)
                         {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
                         }
                         break;
                     case 3:
-                        if (piramid.GetComponent<Piramid>().totalScore > 500)
+                        if (piramid.GetComponent<Piramid>().totalScore > 2400)
                         {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
                         }
                         break;
                     case 4:
-                        if (piramid.GetComponent<Piramid>().totalScore > 700)
+                        if (piramid.GetComponent<Piramid>().totalScore > 2400)
                         {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
@@ -204,45 +269,45 @@ public class BlockSelection : MonoBehaviour {
                 {
                     case 0:
                         blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
-                        blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
+                        blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
                         break;
                     case 1:
-                        if (piramid.GetComponent<Piramid>().totalScore > 200)
+                        if (piramid.GetComponent<Piramid>().totalScore > 300)
                         {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
                         }
                         break;
                     case 2:
-                        if (piramid.GetComponent<Piramid>().totalScore > 350)
+                        if (piramid.GetComponent<Piramid>().totalScore > 1500)
                         {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
                         }
                         break;
                     case 3:
-                        if (piramid.GetComponent<Piramid>().totalScore > 500)
+                        if (piramid.GetComponent<Piramid>().totalScore > 4000)
                         {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
                         }
                         break;
                     case 4:
-                        if (piramid.GetComponent<Piramid>().totalScore > 700)
+                        if (piramid.GetComponent<Piramid>().totalScore > 4000)
                         {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
                         }
                         break;
                     case 5:
-                        if (piramid.GetComponent<Piramid>().totalScore > 1000)
+                        if (piramid.GetComponent<Piramid>().totalScore > 6000)
                         {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
                         }
                         break;
                     case 6:
-                        if (piramid.GetComponent<Piramid>().totalScore > 1500)
+                        if (piramid.GetComponent<Piramid>().totalScore > 10000)
                         {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
