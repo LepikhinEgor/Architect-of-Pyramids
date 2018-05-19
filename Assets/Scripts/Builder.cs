@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class Builder : MonoBehaviour
 {
+
+    Object perfectCoefPrefab;
     //[SerializeField]
     private float throwForse;
 
@@ -35,6 +37,7 @@ public class Builder : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         sprite = GetComponentInChildren<SpriteRenderer>();
         previousPosX = transform.position.x;
+        perfectCoefPrefab = Resources.Load("Prefabs/PerfectCoefPrefab");
 
     }
 
@@ -120,7 +123,18 @@ public class Builder : MonoBehaviour
                 {
                     player.LevelNum++;
                     if (Player.perfectTimer.Timer > 0)
+                    {
                         Player.PerfectCoef++;
+                        GameObject canvas = GameObject.FindGameObjectWithTag("MainCanvas");
+                        Camera cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+                        Vector3 textPos = RectTransformUtility.WorldToScreenPoint(cam, transform.position);
+                        Instantiate(perfectCoefPrefab, canvas.transform);
+                        GameObject perfCoef = GameObject.FindGameObjectWithTag("PerfectCoef");
+                        perfCoef.GetComponent<PerfectCoef>().SetPosition(textPos);
+
+                        string text = "x" + (Player.PerfectCoef).ToString();
+                        perfCoef.GetComponent<PerfectCoef>().SetText(text);
+                    }
                     Player.score += coef * Player.PerfectCoef;
                     GameObject scoreLine = GameObject.FindGameObjectWithTag("ScoreLine");
                     float val = (float)(Player.score) / ((float)(Player.currentMaxScore)/2F);
@@ -160,6 +174,7 @@ public class Builder : MonoBehaviour
         }
 
     }
+
     public void CarryBlock()
     {
         Vector3 newBlockPos = transform.position;

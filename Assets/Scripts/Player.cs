@@ -376,4 +376,25 @@ public class Player : MonoBehaviour
 
         return totalScore;
     }
+
+    public void ReloadFloors()
+    {
+        Player.score = 0;
+        Player.PerfectCoef = 0;
+        Player.perfectTimer.Timer = 0;
+        Player.lives = 3;
+
+        string sceneName = "";
+        switch(currentBlockMaterialNum)
+        {
+            case 0: sceneName = "SaphireFloors1";break;
+            case 1: sceneName = "RubyFloors1"; break;
+            case 2: sceneName = "EmeraldFloors1"; break;
+            case 3: sceneName = "SilverFloors1"; break;
+            case 4: sceneName = "GoldenFloors1"; break;
+            case 5: sceneName = "TopazFloors1"; break;
+            case 6: sceneName = "AmetistFloors1"; break;
+        }
+        SceneManager.LoadScene(sceneName);
+    }
 }

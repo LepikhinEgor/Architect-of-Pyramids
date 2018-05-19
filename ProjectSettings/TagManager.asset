@@ -35,6 +35,9 @@ TagManager:
   - Back
   - Lock
   - UIScore
+  - MainCanvas
+  - PerfectCoef
+  - Window
   layers:
   - Default
   - TransparentFX
