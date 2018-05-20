@@ -8,7 +8,7 @@ public class BlockSelection : MonoBehaviour {
 
     private UnityEngine.Object prohibitWindowPrefab;
     GameObject prohibitWindow;
-
+    GameObject okButton;
     private bool isScrolling;
     string[] prohibitMessages;
     float mouseYPos;
@@ -68,6 +68,7 @@ public class BlockSelection : MonoBehaviour {
             }
         }
         RefreshBlocksLock();
+        SetNearestBlockColor();
     }
 	
 	// Update is called once per frame
@@ -78,8 +79,11 @@ public class BlockSelection : MonoBehaviour {
             lastMouseXPos = Camera.main.ScreenToWorldPoint(Input.mousePosition).x;
             mouseYPos = Camera.main.ScreenToWorldPoint(Input.mousePosition).y;
             if (mouseYPos > -3 && mouseYPos < -1F)
+            {
                 isScrolling = true;
-            Destroy(prohibitWindow);
+                if (!Player.currPiramidIsLock)
+                    Destroy(prohibitWindow);
+            }
             //Debug.Log(.mouseYPos);
             
         }
@@ -190,15 +194,22 @@ public class BlockSelection : MonoBehaviour {
             if (Math.Abs(blockColor.transform.position.x) < 0.5F)
             {
                 if (blockColor.GetComponent<BloсkSprite>().isUnlocked)
+                {
                     blockMaterialNum = blockColor.GetComponent<BloсkSprite>().ID;
+                    Player.currentBlockMaterialNum = blockColor.GetComponent<BloсkSprite>().ID;
+                }
                 else
                 {
                     BlockMaterialNum = 100;
-                    GameObject canvas = GameObject.FindGameObjectWithTag("MainCanvas");
-                    Instantiate(prohibitWindowPrefab, canvas.transform);
                     prohibitWindow = GameObject.FindGameObjectWithTag("Window");
-                    int id = blockColor.GetComponent<BloсkSprite>().ID;
-                    prohibitWindow.GetComponent<ProhibitWindow>().SetText(prohibitMessages[id]);
+                    if (prohibitWindow == null)
+                    {
+                        GameObject canvas = GameObject.FindGameObjectWithTag("MainCanvas");
+                        Instantiate(prohibitWindowPrefab, canvas.transform);
+                        prohibitWindow = GameObject.FindGameObjectWithTag("Window");
+                        int id = blockColor.GetComponent<BloсkSprite>().ID;
+                        prohibitWindow.GetComponent<ProhibitWindow>().SetText(prohibitMessages[id]);
+                    }
                 }
                 piramid.GetComponent<Piramid>().HighlightBlocks(blockMaterialNum);
                 Vector3 blockColorScale = blockColor.transform.localScale;

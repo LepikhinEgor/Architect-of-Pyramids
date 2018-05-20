@@ -6,8 +6,6 @@ using UnityEngine.UI;
 
 public class Builder : MonoBehaviour
 {
-
-    Object perfectCoefPrefab;
     //[SerializeField]
     private float throwForse;
 
@@ -37,8 +35,6 @@ public class Builder : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         sprite = GetComponentInChildren<SpriteRenderer>();
         previousPosX = transform.position.x;
-        perfectCoefPrefab = Resources.Load("Prefabs/PerfectCoefPrefab");
-
     }
 
     private void Update()
@@ -100,12 +96,6 @@ public class Builder : MonoBehaviour
             {
                 isKeep = true;
                 int coef = 1;
-                if (tag.Equals("LastBuilder"))
-                {
-                    Player.isChoosingPlatform = true;
-                    string sceneName = "Piramid" + (Player.currentPiramidID).ToString();
-                    SceneManager.LoadScene(sceneName);
-                }
 
                 block = newBlock;
                 if (System.Math.Abs(newBlock.transform.position.x - transform.position.x) < catchSkill / 1.8 && block.ParentBuilder != this)
@@ -128,7 +118,7 @@ public class Builder : MonoBehaviour
                         GameObject canvas = GameObject.FindGameObjectWithTag("MainCanvas");
                         Camera cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
                         Vector3 textPos = RectTransformUtility.WorldToScreenPoint(cam, transform.position);
-                        Instantiate(perfectCoefPrefab, canvas.transform);
+                        Instantiate(Player.perfectCoefPrefab, canvas.transform);
                         GameObject perfCoef = GameObject.FindGameObjectWithTag("PerfectCoef");
                         perfCoef.GetComponent<PerfectCoef>().SetPosition(textPos);
 
@@ -160,6 +150,12 @@ public class Builder : MonoBehaviour
                 {
                     block.SwingAngle = System.Math.Abs(newBlock.transform.position.x - transform.position.x) * 0.4F;
                     //Player.score += 1;
+                }
+
+                if (tag.Equals("LastBuilder"))
+                {
+                    Player.score += (int)(Player.score * Player.lives * 0.05);
+                    Player.ShowResultWindow();
                 }
 
                 float swingSpeedCoef = 2F;

@@ -27,8 +27,7 @@ public class OkButton : MonoBehaviour {
 	}
 
     private void OnMouseDown()
-    {
-        GameObject sample = GameObject.FindGameObjectWithTag("Sample");
+    { 
 
         if (tag.Equals("OK") && !Player.isChoosingPlatform)
         {
@@ -64,6 +63,5 @@ public class OkButton : MonoBehaviour {
                    // SceneManager.LoadScene("mainScene");
             }
         }
-
     }
 }

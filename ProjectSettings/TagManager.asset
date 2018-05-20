@@ -38,6 +38,7 @@ TagManager:
   - MainCanvas
   - PerfectCoef
   - Window
+  - ResultWindow
   layers:
   - Default
   - TransparentFX

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class Platform : MonoBehaviour {
 
+
     GameObject piramid;
 
     [SerializeField]

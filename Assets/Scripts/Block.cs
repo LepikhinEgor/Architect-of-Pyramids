@@ -148,9 +148,10 @@ public class Block : MonoBehaviour
             }
             else
             {
-                string sceneName = "Piramid" + (Player.currentPiramidID).ToString();
+                isFly = false;
+                Debug.Log(Player.lives);
                 Player.score = 0;
-                SceneManager.LoadScene(sceneName);
+                Player.ShowResultWindow();
             }
         }
         if (isFly)
