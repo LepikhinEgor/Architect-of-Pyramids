@@ -149,29 +149,32 @@ public class Platform : MonoBehaviour {
 
     private void OnMouseDown()
     {
-        GameObject sample = GameObject.FindGameObjectWithTag("Sample");
-
-        if (sample && sample.GetComponent<Platform>().Score != 0 && neighborEdgesCount >= sample.GetComponent<Platform>().blockMaterialNum)
+        if (Player.isChoosingPlatform)
         {
-            this.InsertBlock(sample);
+            GameObject sample = GameObject.FindGameObjectWithTag("Sample");
 
-            Player.isChoosingPlatform = false;
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            player.GetComponent<Player>().ShowSelectBlockUI();
+            if (sample && sample.GetComponent<Platform>().Score != 0 && neighborEdgesCount >= sample.GetComponent<Platform>().blockMaterialNum)
+            {
+                this.InsertBlock(sample);
 
-            piramid.GetComponent<Piramid>().GetPlatfomsInformation();
-            piramid.GetComponent<Piramid>().RefreshTotalScore();
+                Player.isChoosingPlatform = false;
+                GameObject player = GameObject.FindGameObjectWithTag("Player");
+                player.GetComponent<Player>().ShowSelectBlockUI();
+
+                piramid.GetComponent<Piramid>().GetPlatfomsInformation();
+                piramid.GetComponent<Piramid>().RefreshTotalScore();
+                piramid.GetComponent<Piramid>().RefreshNeighborEdgesCount();
+                piramid.GetComponent<Piramid>().TurnHighLightsOFF();
+
+                String str = EdgePositionsToString();
+                Player.ReplacePlatformInXML(Player.currentPiramidID, ID, score, blockMaterialNum, str);
+            }
             piramid.GetComponent<Piramid>().RefreshNeighborEdgesCount();
-            piramid.GetComponent<Piramid>().TurnHighLightsOFF();
-
-            String str = EdgePositionsToString();
-            Player.ReplacePlatformInXML(Player.currentPiramidID, ID, score, blockMaterialNum, str);
+            Player.RefreshBlocksLock();
+            GameObject scoreUI = GameObject.FindGameObjectWithTag("UIScore");
+            scoreUI.GetComponent<Text>().text = (piramid.GetComponent<Piramid>().totalScore).ToString();
+            Debug.Log("UPd");
         }
-        piramid.GetComponent<Piramid>().RefreshNeighborEdgesCount();
-        Player.RefreshBlocksLock();
-        GameObject scoreUI = GameObject.FindGameObjectWithTag("UIScore");
-        scoreUI.GetComponent<Text>().text = (piramid.GetComponent<Piramid>().totalScore).ToString();
-        Debug.Log("UPd");
     }
 
    

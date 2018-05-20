@@ -9,8 +9,9 @@ public class BlockSelection : MonoBehaviour {
     private UnityEngine.Object prohibitWindowPrefab;
     GameObject prohibitWindow;
 
+    private bool isScrolling;
     string[] prohibitMessages;
-
+    float mouseYPos;
     float blockDeltaPos = 0;
     private bool isDamping = false;
     int dampingFrameNum;
@@ -41,6 +42,7 @@ public class BlockSelection : MonoBehaviour {
     // Use this for initialization
     private void Awake()
     {
+        isScrolling = false;
         prohibitWindowPrefab = Resources.Load("Prefabs/ProhibitWindowPrefab");
         dampingFrameNum = 10;
         currentDampingFrame = dampingFrameNum;
@@ -73,11 +75,16 @@ public class BlockSelection : MonoBehaviour {
 
         if (Input.GetMouseButtonDown(0))
         {
+            lastMouseXPos = Camera.main.ScreenToWorldPoint(Input.mousePosition).x;
+            mouseYPos = Camera.main.ScreenToWorldPoint(Input.mousePosition).y;
+            if (mouseYPos > -3 && mouseYPos < -1F)
+                isScrolling = true;
             Destroy(prohibitWindow);
-            lastMouseXPos = Camera.main.ScreenToWorldPoint(Input.mousePosition).x; ;
+            //Debug.Log(.mouseYPos);
+            
         }
 
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0) && isScrolling)
         {
             currentMouseXpos =  Camera.main.ScreenToWorldPoint(Input.mousePosition).x;
             deltaXPos = currentMouseXpos - lastMouseXPos;
@@ -111,8 +118,9 @@ public class BlockSelection : MonoBehaviour {
             lastMouseXPos = currentMouseXpos;
         }
 
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0) && isScrolling)
         {
+            isScrolling = false;
             isDamping = true;
             blockDeltaPos = deltaXPos;
             if (Math.Abs(deltaXPos) < 0.1F)
@@ -231,7 +239,6 @@ public class BlockSelection : MonoBehaviour {
                             + " more points";
                         break;
                     case 2:
-                        Debug.Log(blockColor.GetComponent<BloсkSprite>().ID);
                         if (piramid.GetComponent<Piramid>().totalScore > 600)
                         {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
@@ -261,7 +268,7 @@ public class BlockSelection : MonoBehaviour {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
                         }
-                        prohibitMessages[1] = "To open this block you need " + (250 - Player.Pir1TotalScore).ToString()
+                        prohibitMessages[1] = "To open this block you need " + (250 - Player.Pir2TotalScore).ToString()
                             + " more points";
                         break;
                     case 2:
@@ -270,7 +277,7 @@ public class BlockSelection : MonoBehaviour {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
                         }
-                        prohibitMessages[2] = "To open this block you need " + (1000 - Player.Pir1TotalScore).ToString()
+                        prohibitMessages[2] = "To open this block you need " + (1000 - Player.Pir2TotalScore).ToString()
                             + " more points";
                         break;
                     case 3:
@@ -279,7 +286,7 @@ public class BlockSelection : MonoBehaviour {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
                         }
-                        prohibitMessages[3] = "To open this block you need " + (2400 - Player.Pir1TotalScore).ToString()
+                        prohibitMessages[3] = "To open this block you need " + (2400 - Player.Pir2TotalScore).ToString()
                             + " more points";
                         break;
                     case 4:
@@ -288,7 +295,7 @@ public class BlockSelection : MonoBehaviour {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
                         }
-                        prohibitMessages[4] = "To open this block you need " + (2400 - Player.Pir1TotalScore).ToString()
+                        prohibitMessages[4] = "To open this block you need " + (2400 - Player.Pir2TotalScore).ToString()
                             + " more points";
                         break;
                 }
@@ -310,7 +317,7 @@ public class BlockSelection : MonoBehaviour {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
                         }
-                        prohibitMessages[1] = "To open this block you need " + (300 - Player.Pir1TotalScore).ToString()
+                        prohibitMessages[1] = "To open this block you need " + (300 - Player.Pir3TotalScore).ToString()
                             + " more points";
                         break;
                     case 2:
@@ -319,7 +326,7 @@ public class BlockSelection : MonoBehaviour {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
                         }
-                        prohibitMessages[2] = "To open this block you need " + (1500 - Player.Pir1TotalScore).ToString()
+                        prohibitMessages[2] = "To open this block you need " + (1500 - Player.Pir3TotalScore).ToString()
                             + " more points";
                         break;
                     case 3:
@@ -328,7 +335,7 @@ public class BlockSelection : MonoBehaviour {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
                         }
-                        prohibitMessages[3] = "To open this block you need " + (4000 - Player.Pir1TotalScore).ToString()
+                        prohibitMessages[3] = "To open this block you need " + (4000 - Player.Pir3TotalScore).ToString()
                             + " more points";
                         break;
                     case 4:
@@ -337,7 +344,7 @@ public class BlockSelection : MonoBehaviour {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
                         }
-                        prohibitMessages[4] = "To open this block you need " + (4000 - Player.Pir1TotalScore).ToString()
+                        prohibitMessages[4] = "To open this block you need " + (4000 - Player.Pir3TotalScore).ToString()
                             + " more points";
                         break;
                     case 5:
@@ -346,7 +353,7 @@ public class BlockSelection : MonoBehaviour {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
                         }
-                        prohibitMessages[5] = "To open this block you need " + (6000 - Player.Pir1TotalScore).ToString()
+                        prohibitMessages[5] = "To open this block you need " + (6000 - Player.Pir3TotalScore).ToString()
                             + " more points";
                         break;
                     case 6:
@@ -355,7 +362,7 @@ public class BlockSelection : MonoBehaviour {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
                         }
-                        prohibitMessages[6] = "To open this block you need " + (10000 - Player.Pir1TotalScore).ToString()
+                        prohibitMessages[6] = "To open this block you need " + (10000 - Player.Pir3TotalScore).ToString()
                             + " more points";
                         break;
                 }

@@ -9,6 +9,18 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
+
+    private UnityEngine.Object prohibitWindowPrefab;
+    GameObject prohibitWindow;
+
+    bool isMoving;
+    Vector3 target, camPos;
+    bool isMovingToNextPiramid = false;
+    bool isMovingToPrevPiramid = false;
+    float lastXPos, currentXPos;
+    Camera cam;
+    float deltaXPos;
+    bool isScrolling;
     public static int currentPiramidID;
     public static int currentMaxScore;
     public static bool isFirst = true;
@@ -93,6 +105,9 @@ public class Player : MonoBehaviour
             SceneManager.GetActiveScene() == SceneManager.GetSceneByName("Piramid2") ||
             SceneManager.GetActiveScene() == SceneManager.GetSceneByName("Piramid3"))
         {
+            prohibitWindowPrefab = Resources.Load("Prefabs/ProhibitWindowPrefab");
+
+            cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
             GameObject scoreUI = GameObject.FindGameObjectWithTag("UIScore");
             scoreUI.GetComponent<Text>().text = (LoadPiramidTotalScoreFromXML(currentPiramidID)).ToString();
 
@@ -129,7 +144,103 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("mainScene")
+        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("Piramid1") ||
+            SceneManager.GetActiveScene() == SceneManager.GetSceneByName("Piramid2") ||
+            SceneManager.GetActiveScene() == SceneManager.GetSceneByName("Piramid3"))
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                lastXPos = Camera.main.ScreenToWorldPoint(Input.mousePosition).x;
+                float mouseYPos = Camera.main.ScreenToWorldPoint(Input.mousePosition).y;
+                //deltaXPos = lastXPos - cam.transform.position.x;
+                deltaXPos = Camera.main.ScreenToWorldPoint(Input.mousePosition).x;
+                if (mouseYPos > -1 && mouseYPos < 5)
+                    isScrolling = true;
+            }
+
+            if (Input.GetMouseButton(0) && isScrolling)
+            {
+                Debug.Log(currentPiramidID);
+                Vector3 camPos = cam.transform.position;
+                float offsetX = cam.ScreenToWorldPoint(Input.mousePosition).x - deltaXPos;
+
+                if (currentPiramidID == 1)
+                {
+                    if (offsetX <= 0 || cam.transform.position.x >= 0)
+                    {
+                        if (camPos.x - offsetX < 0)
+                            camPos.x = 0;
+                        else
+                            camPos.x -= offsetX;
+                        cam.transform.position = camPos;
+                    }
+                    else
+                    {
+                        camPos.x = 0;
+                        cam.transform.position = camPos;
+                    }
+                }
+
+                if (currentPiramidID == 2)
+                {
+                    camPos.x -= offsetX;
+                    cam.transform.position = camPos;
+                }
+
+                if (currentPiramidID == 3)
+                {
+                    if (offsetX >= 0 || cam.transform.position.x <= 0)
+                    {
+                        if (camPos.x - offsetX >= 0)
+                            camPos.x = 0;
+                        else
+                            camPos.x -= offsetX;
+                        cam.transform.position = camPos;
+                    }
+                    else
+                    {
+                        camPos.x = 0;
+                        cam.transform.position = camPos;
+                    }
+                }
+            }
+
+            if (Input.GetMouseButtonUp(0) && isScrolling)
+            {
+                target = cam.transform.position;
+                // target.x = 6;
+                if (currentPiramidID == 1)
+                    if (cam.transform.position.x > 3)
+                    {
+                        target.x = 6;
+                        isMovingToNextPiramid = true;
+                    }
+                if (currentPiramidID == 2)
+                {
+                    if (cam.transform.position.x > 4)
+                    {
+                        target.x = 7.3F;
+                        isMovingToNextPiramid = true;
+                    }
+                    if (cam.transform.position.x < -3)
+                    {
+                        target.x = -6F;
+                        isMovingToPrevPiramid = true;
+                    }
+                }
+                if (currentPiramidID == 3)
+                    if (cam.transform.position.x < -4)
+                    {
+                        target.x = -7.3F;
+                        isMovingToPrevPiramid = true;
+                    }
+                isScrolling = false;
+                isMoving = true;
+            }
+
+        }
+
+            if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("mainScene")
             || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("SaphireFloors1")
             || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("EmeraldFloors1")
             || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("GoldenFloors1")
@@ -164,6 +275,116 @@ public class Player : MonoBehaviour
                 }
             }
         }
+        if (Player.currentPiramidID == 1 && isMoving)
+        {
+            if (isMovingToNextPiramid)
+            {
+                CameraTo(cam.transform.position, target, 10);
+                if (Math.Abs(cam.transform.position.x - target.x) < 1F && prohibitWindow == null)
+                {
+                    GameObject canvas = GameObject.FindGameObjectWithTag("MainCanvas");
+                    Instantiate(prohibitWindowPrefab, canvas.transform);
+                    prohibitWindow = GameObject.FindGameObjectWithTag("Window");
+                    prohibitWindow.GetComponent<ProhibitWindow>().SetText("Loading.....");
+                }
+                if (cam.transform.position == target)
+                {
+                    isMovingToNextPiramid = false;
+                    isMoving = false;
+                    Piramid.isFirst = true;
+                    SceneManager.LoadSceneAsync("Piramid2");
+                }
+            }
+            else
+            {
+                target.x = 0;
+                CameraTo(cam.transform.position, target, 10);
+                if (cam.transform.position == target)
+                    isMoving = false;
+            }
+        }
+
+        if (Player.currentPiramidID == 2 && isMoving)
+        {
+            if (isMovingToNextPiramid)
+            {
+                if (Math.Abs(cam.transform.position.x - target.x) < 1F && prohibitWindow == null)
+                {
+                    GameObject canvas = GameObject.FindGameObjectWithTag("MainCanvas");
+                    Instantiate(prohibitWindowPrefab, canvas.transform);
+                    prohibitWindow = GameObject.FindGameObjectWithTag("Window");
+                    prohibitWindow.GetComponent<ProhibitWindow>().SetText("Loading.....");
+                }
+                CameraTo(cam.transform.position, target, 10);
+                if (cam.transform.position == target)
+                {
+                    isMovingToNextPiramid = false;
+                    isMoving = false;
+                    Piramid.isFirst = true;
+                    SceneManager.LoadScene("Piramid3");
+                }
+            }
+            if (isMovingToPrevPiramid)
+            {
+                if (Math.Abs(cam.transform.position.x - target.x) < 1F && prohibitWindow == null)
+                {
+                    GameObject canvas = GameObject.FindGameObjectWithTag("MainCanvas");
+                    Instantiate(prohibitWindowPrefab, canvas.transform);
+                    prohibitWindow = GameObject.FindGameObjectWithTag("Window");
+                    prohibitWindow.GetComponent<ProhibitWindow>().SetText("Loading.....");
+                }
+                CameraTo(cam.transform.position, target, 10);
+                if (cam.transform.position == target)
+                {
+                    isMovingToNextPiramid = false;
+                    isMoving = false;
+                    Piramid.isFirst = true;
+                    SceneManager.LoadScene("Piramid1");
+                }
+            }
+            if (!isMovingToPrevPiramid && !isMovingToNextPiramid)
+            {
+                target.x = 0;
+                CameraTo(cam.transform.position, target, 10);
+                if (cam.transform.position == target)
+                    isMoving = false;
+            }
+        }
+
+        if (Player.currentPiramidID == 3 && isMoving)
+        {
+            if (isMovingToPrevPiramid)
+            {
+                if (Math.Abs(cam.transform.position.x - target.x) < 1F && prohibitWindow == null)
+                {
+                    GameObject canvas = GameObject.FindGameObjectWithTag("MainCanvas");
+                    Instantiate(prohibitWindowPrefab, canvas.transform);
+                    prohibitWindow = GameObject.FindGameObjectWithTag("Window");
+                    prohibitWindow.GetComponent<ProhibitWindow>().SetText("Loading.....");
+                }
+                CameraTo(cam.transform.position, target, 10);
+                if (cam.transform.position == target)
+                {
+                    isMovingToNextPiramid = false;
+                    isMoving = false;
+                    Piramid.isFirst = true;
+                    SceneManager.LoadScene("Piramid2");
+                }
+            }
+            else
+            {
+                target.x = 0;
+                CameraTo(cam.transform.position, target, 10);
+                if (cam.transform.position == target)
+                    isMoving = false;
+            }
+        }
+    }
+
+    private static void CameraTo(Vector3 oldPos, Vector3 targetPos, float speed)
+    {
+        Camera.main.transform.position = Vector3.Lerp(oldPos, targetPos, 10F * Time.deltaTime);
+        //SceneManager.
     }
 
     public void CalcMaxScore()
@@ -198,7 +419,6 @@ public class Player : MonoBehaviour
     }
     public void HideSelectBlockUI()
     {
-        backButton.SetActive(false);
         //информация для blockSelection, так как при скрытии UI при запуске он не успевает сам инициилизироваться
         blockSelection.GetComponent<BlockSelection>().blockColors =  GameObject.FindGameObjectsWithTag("BlockColor");
         blockSelection.GetComponent<BlockSelection>().piramid = GameObject.FindGameObjectWithTag("Piramid");
@@ -209,7 +429,6 @@ public class Player : MonoBehaviour
     }
     public void ShowSelectBlockUI()
     {
-        backButton.SetActive(true);
         blockSelection.SetActive(true);
         okButton.SetActive(true);
         cancelButton.SetActive(false);
