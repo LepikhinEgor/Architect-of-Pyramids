@@ -78,10 +78,10 @@ public class BlockSelection : MonoBehaviour {
         {
             lastMouseXPos = Camera.main.ScreenToWorldPoint(Input.mousePosition).x;
             mouseYPos = Camera.main.ScreenToWorldPoint(Input.mousePosition).y;
-            if (mouseYPos > -3 && mouseYPos < -1F)
+            if (mouseYPos > -3 && mouseYPos < -1F && !Player.isChoosingPlatform)
             {
                 isScrolling = true;
-                if (!Player.currPiramidIsLock)
+                if (!Player.currPiramidIsLock && prohibitWindow != null)
                     Destroy(prohibitWindow);
             }
             //Debug.Log(.mouseYPos);
@@ -204,6 +204,7 @@ public class BlockSelection : MonoBehaviour {
                     prohibitWindow = GameObject.FindGameObjectWithTag("Window");
                     if (prohibitWindow == null)
                     {
+                        Debug.Log("Window prohibit choose block");
                         GameObject canvas = GameObject.FindGameObjectWithTag("MainCanvas");
                         Instantiate(prohibitWindowPrefab, canvas.transform);
                         prohibitWindow = GameObject.FindGameObjectWithTag("Window");

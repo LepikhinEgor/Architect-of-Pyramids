@@ -25,6 +25,21 @@ public class CancelButton : MonoBehaviour
         if (Player.isChoosingPlatform)
         { 
             Player.isChoosingPlatform = false;
+            if (Player.selectedPlatfomID != -1)
+            {
+                GameObject[] platforms = GameObject.FindGameObjectsWithTag("Platform");
+                GameObject selectedPlatform = new GameObject();
+
+                foreach (GameObject pl in platforms)
+                {
+                    if (pl.GetComponent<Platform>().ID == Player.selectedPlatfomID)
+                        selectedPlatform = pl;
+                }
+
+                Destroy(selectedPlatform.transform.Find("YellowLightPrefab(Clone)").gameObject);
+                selectedPlatform.transform.Find("Select").gameObject.SetActive(true);
+            }
+            Player.selectedPlatfomID = -1;
             player.GetComponent<Player>().ShowSelectBlockUI();
         }
     }

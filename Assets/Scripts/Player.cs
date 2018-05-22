@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
-
+    public static int selectedPlatfomID = -1;
     public static UnityEngine.Object perfectCoefPrefab;
     public static UnityEngine.Object resultWindowPrefab;
 
@@ -147,6 +147,7 @@ public class Player : MonoBehaviour
 
             if (currentPiramidID == 2 && Player.Pir1TotalScore < 1000)
             {
+                Debug.Log("Window prohibit build 2 pyramid");
                 currPiramidIsLock = true;
                 GameObject canvas = GameObject.FindGameObjectWithTag("MainCanvas");
                 Instantiate(prohibitWindowPrefab, canvas.transform);
@@ -160,6 +161,7 @@ public class Player : MonoBehaviour
             Debug.Log(currentPiramidID);
             if (currentPiramidID == 3 && Player.Pir2TotalScore < 4000)
             {
+                Debug.Log("Window prohibit build 3 pyramid");
                 currPiramidIsLock = true;
                 GameObject canvas = GameObject.FindGameObjectWithTag("MainCanvas");
                 Instantiate(prohibitWindowPrefab, canvas.transform);
@@ -187,13 +189,15 @@ public class Player : MonoBehaviour
                 float mouseYPos = Camera.main.ScreenToWorldPoint(Input.mousePosition).y;
                 //deltaXPos = lastXPos - cam.transform.position.x;
                 deltaXPos = Camera.main.ScreenToWorldPoint(Input.mousePosition).x;
-                if (mouseYPos > -1 && mouseYPos < 5)
+                if (mouseYPos > -1 && mouseYPos < 5 && !isChoosingPlatform)
                     isScrolling = true;
+                prohibitWindow = GameObject.FindGameObjectWithTag("Window");
             }
 
             if (Input.GetMouseButton(0) && isScrolling)
             {
-                Debug.Log(currPiramidIsLock);
+                if (!Player.currPiramidIsLock && prohibitWindow != null)
+                    Destroy(prohibitWindow);
                 Vector3 camPos = cam.transform.position;
                 float offsetX = cam.ScreenToWorldPoint(Input.mousePosition).x - deltaXPos;
 
@@ -313,7 +317,7 @@ public class Player : MonoBehaviour
             if (isMovingToNextPiramid)
             {
                 prohibitWindow = GameObject.FindGameObjectWithTag("Window");
-                Debug.Log(prohibitWindow.transform.position);
+                //Debug.Log(prohibitWindow.transform.position);
                 CameraTo(cam.transform.position, target, 10);
                 if (Math.Abs(cam.transform.position.x - target.x) < 1F && prohibitWindow == null)
                 {
@@ -439,8 +443,11 @@ public class Player : MonoBehaviour
     private static void CameraTo(Vector3 oldPos, Vector3 targetPos, float speed)
     {
         float newSpeed = speed;
-        if (Math.Abs(targetPos.x - Camera.main.transform.position.x) < 2F && targetPos.x == 0)
+        if (Math.Abs(targetPos.x - Camera.main.transform.position.x) < 1F && targetPos.x == 0)
+        {
+            blockSelection.GetComponent<BlockSelection>().SetNearestBlockColor();
             newSpeed = 30;
+        }
         Camera.main.transform.position = Vector3.Lerp(oldPos, targetPos, newSpeed * Time.deltaTime);
     }
 
@@ -477,7 +484,7 @@ public class Player : MonoBehaviour
         blockSelection.GetComponent<BlockSelection>().blockColors =  GameObject.FindGameObjectsWithTag("BlockColor");
         blockSelection.GetComponent<BlockSelection>().piramid = GameObject.FindGameObjectWithTag("Piramid");
         blockSelection.SetActive(false);
-        okButton.SetActive(false);
+        okButton.SetActive(true);
         cancelButton.SetActive(true);
         sample.SetActive(true);
     }

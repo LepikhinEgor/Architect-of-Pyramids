@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class Platform : MonoBehaviour {
 
+    UnityEngine.Object yellowLightPrefab;
 
     GameObject piramid;
 
@@ -70,6 +71,8 @@ public class Platform : MonoBehaviour {
     // Use this for initialization
     private void Awake()
     {
+
+        yellowLightPrefab = Resources.Load("Prefabs/YellowLightPrefab");
 
         piramid = GameObject.FindGameObjectWithTag("Piramid");
 
@@ -152,29 +155,24 @@ public class Platform : MonoBehaviour {
     {
         if (Player.isChoosingPlatform)
         {
-            GameObject sample = GameObject.FindGameObjectWithTag("Sample");
+            Instantiate(yellowLightPrefab, transform);
+            transform.Find("Select").gameObject.SetActive(false);
 
-            if (sample && sample.GetComponent<Platform>().Score != 0 && neighborEdgesCount >= sample.GetComponent<Platform>().blockMaterialNum)
+            if (Player.selectedPlatfomID != -1)
             {
-                this.InsertBlock(sample);
+                GameObject[] platforms = GameObject.FindGameObjectsWithTag("Platform");
+                GameObject selectedPlatform = new GameObject();
 
-                Player.isChoosingPlatform = false;
-                GameObject player = GameObject.FindGameObjectWithTag("Player");
-                player.GetComponent<Player>().ShowSelectBlockUI();
+                foreach (GameObject pl in platforms)
+                {
+                    if (pl.GetComponent<Platform>().ID == Player.selectedPlatfomID)
+                        selectedPlatform = pl;
+                }
 
-                piramid.GetComponent<Piramid>().GetPlatfomsInformation();
-                piramid.GetComponent<Piramid>().RefreshTotalScore();
-                piramid.GetComponent<Piramid>().RefreshNeighborEdgesCount();
-                piramid.GetComponent<Piramid>().TurnHighLightsOFF();
-
-                String str = EdgePositionsToString();
-                Player.ReplacePlatformInXML(Player.currentPiramidID, ID, score, blockMaterialNum, str);
+                Destroy(selectedPlatform.transform.Find("YellowLightPrefab(Clone)").gameObject);
+                selectedPlatform.transform.Find("Select").gameObject.SetActive(true);
             }
-            piramid.GetComponent<Piramid>().RefreshNeighborEdgesCount();
-            Player.RefreshBlocksLock();
-            GameObject scoreUI = GameObject.FindGameObjectWithTag("UIScore");
-            scoreUI.GetComponent<Text>().text = (piramid.GetComponent<Piramid>().totalScore).ToString();
-            Debug.Log("UPd");
+            Player.selectedPlatfomID = ID;
         }
     }
 
@@ -340,9 +338,9 @@ public class Platform : MonoBehaviour {
         return neighborEdgesNum;
     }
 
-    private String EdgePositionsToString()
+    public string EdgePositionsToString()
     {
-        String result = "";
+        string result = "";
 
         for (int i = 0; i < goodEdgePositions.Length; i++)
             result += goodEdgePositions[i]? "1":"0";

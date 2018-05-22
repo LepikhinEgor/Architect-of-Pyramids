@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class OkButton : MonoBehaviour {
 
@@ -62,6 +63,45 @@ public class OkButton : MonoBehaviour {
                 //else
                    // SceneManager.LoadScene("mainScene");
             }
+        }
+        if (Player.isChoosingPlatform)
+        {
+            GameObject[] platforms = GameObject.FindGameObjectsWithTag("Platform");
+            GameObject selectedPlatform = new GameObject();
+
+            foreach(GameObject pl in platforms)
+            {
+                if (pl.GetComponent<Platform>().ID == Player.selectedPlatfomID)
+                    selectedPlatform = pl;
+            }
+            Platform platform = selectedPlatform.GetComponent<Platform>();
+            GameObject sample = GameObject.FindGameObjectWithTag("Sample");
+            GameObject piramid = GameObject.FindGameObjectWithTag("Piramid");
+            if (Player.selectedPlatfomID != -1 &&sample && sample.GetComponent<Platform>().Score != 0 && selectedPlatform.GetComponent<Platform>().NeighborEdgesCount >= sample.GetComponent<Platform>().BlockMaterialNum)
+            {
+                Debug.Log(Player.selectedPlatfomID);
+                platform.InsertBlock(sample);
+
+                Player.isChoosingPlatform = false;
+                GameObject player = GameObject.FindGameObjectWithTag("Player");
+                player.GetComponent<Player>().ShowSelectBlockUI();
+
+                piramid.GetComponent<Piramid>().GetPlatfomsInformation();
+                piramid.GetComponent<Piramid>().RefreshTotalScore();
+                piramid.GetComponent<Piramid>().RefreshNeighborEdgesCount();
+
+                string str = selectedPlatform.GetComponent<Platform>().EdgePositionsToString();
+                piramid.GetComponent<Piramid>().RefreshNeighborEdgesCount();
+                Player.RefreshBlocksLock();
+                GameObject scoreUI = GameObject.FindGameObjectWithTag("UIScore");
+                scoreUI.GetComponent<Text>().text = (piramid.GetComponent<Piramid>().totalScore).ToString();
+                Destroy(selectedPlatform.transform.Find("YellowLightPrefab(Clone)").gameObject);
+                selectedPlatform.transform.Find("Select").gameObject.SetActive(true);
+                piramid.GetComponent<Piramid>().TurnHighLightsOFF();
+                Player.selectedPlatfomID = -1;
+                Player.ReplacePlatformInXML(Player.currentPiramidID, platform.ID, platform.Score, platform.BlockMaterialNum, str);
+            }
+            Debug.Log("UPd");
         }
     }
 }

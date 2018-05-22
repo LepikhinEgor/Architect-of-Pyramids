@@ -48,7 +48,7 @@ public class Builder : MonoBehaviour
             CarryBlock();
             Run();
         }
-        if (isKeep && (Input.GetButtonDown("Jump") || (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)))
+        if (!tag.Equals("LastBuilder") && isKeep && (Input.GetButtonDown("Jump") || (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)))
         {
             isKeep = false;
             block.rigidBodyBlock.velocity = Vector3.zero;

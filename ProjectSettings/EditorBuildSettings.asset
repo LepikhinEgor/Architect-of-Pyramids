@@ -5,7 +5,7 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Piramids.unity
     guid: e9a6fa0186fce2d43a45e9f22064ebcb
   - enabled: 1
