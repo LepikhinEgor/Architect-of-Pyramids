@@ -126,9 +126,14 @@ public class Builder : MonoBehaviour
                         perfCoef.GetComponent<PerfectCoef>().SetText(text);
                     }
                     Player.score += coef * Player.PerfectCoef;
-                    GameObject scoreLine = GameObject.FindGameObjectWithTag("ScoreLine");
+                    RectTransform scoreLine = GameObject.FindGameObjectWithTag("ScoreLine").GetComponent<RectTransform>();
                     float val = (float)(Player.score) / ((float)(Player.currentMaxScore)/2F);
-                    scoreLine.GetComponent<Slider>().value = val;
+                    if (val > 1)
+                        val = 1;
+                    float lineLenght = Screen.width * (scoreLine.anchorMax.x - scoreLine.anchorMin.x) * 0.8F;
+                    Vector3 rightLineCorner = scoreLine.GetComponent<RectTransform>().offsetMax;
+                    rightLineCorner.x = 0 - lineLenght + lineLenght*(val);
+                    scoreLine.GetComponent<RectTransform>().offsetMax = rightLineCorner;
                 }
                 block.ParentBuilder = this;
 

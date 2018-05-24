@@ -9,9 +9,12 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
+    public static bool isLoadingScene = false;
     public static int selectedPlatfomID = -1;
     public static UnityEngine.Object perfectCoefPrefab;
     public static UnityEngine.Object resultWindowPrefab;
+    public static UnityEngine.Object blockScorePrefab;
+    public static UnityEngine.Object sampleScorePrefab;
 
     public static bool currPiramidIsLock = false;
     private UnityEngine.Object prohibitWindowPrefab;
@@ -86,7 +89,9 @@ public class Player : MonoBehaviour
     private void Start()
     {
         perfectCoefPrefab = Resources.Load("Prefabs/PerfectCoefPrefab");
-        resultWindowPrefab = Resources.Load("Prefabs/ResultsWindowPrefab"); ;
+        resultWindowPrefab = Resources.Load("Prefabs/ResultsWindowPrefab"); 
+        blockScorePrefab = Resources.Load("Prefabs/BlockScorePrefab");
+        sampleScorePrefab = Resources.Load("Prefabs/SampleScorePrefab");
         if (!File.Exists(Application.persistentDataPath + "/Save/Save.xml"))
         {
             Debug.Log("FFFF");
@@ -102,8 +107,12 @@ public class Player : MonoBehaviour
         {
             block = FindObjectOfType<Block>();
             perfectTimer = GameObject.FindGameObjectWithTag("PerfectTimer").GetComponent<PerfectTimer>();
-            GameObject scoreLine = GameObject.FindGameObjectWithTag("ScoreLine");
-            scoreLine.GetComponent<Slider>().value = 0;
+            RectTransform scoreLine = GameObject.FindGameObjectWithTag("ScoreLine").GetComponent<RectTransform>();
+
+            float lineLenght = Screen.width*(scoreLine.anchorMax.x - scoreLine.anchorMin.x)*0.8F;
+            Vector3 rightLineCorner = scoreLine.GetComponent<RectTransform>().offsetMax;
+            rightLineCorner.x -= lineLenght;
+            scoreLine.GetComponent<RectTransform>().offsetMax = rightLineCorner;
         }
         
 
@@ -145,11 +154,11 @@ public class Player : MonoBehaviour
             if (isChoosingPlatform)
                 HideSelectBlockUI();
 
+            GameObject canvas = GameObject.FindGameObjectWithTag("MainCanvas");
             if (currentPiramidID == 2 && Player.Pir1TotalScore < 1000)
             {
                 Debug.Log("Window prohibit build 2 pyramid");
                 currPiramidIsLock = true;
-                GameObject canvas = GameObject.FindGameObjectWithTag("MainCanvas");
                 Instantiate(prohibitWindowPrefab, canvas.transform);
                 prohibitWindow = GameObject.FindGameObjectWithTag("Window");
                 string message = "To unlock this pyramid you need " + (1000 - Pir1TotalScore).ToString() + " more points in first pyramid";
@@ -159,11 +168,10 @@ public class Player : MonoBehaviour
             else
                 currPiramidIsLock = false;
             Debug.Log(currentPiramidID);
-            if (currentPiramidID == 3 && Player.Pir2TotalScore < 4000)
+            if (currentPiramidID == 3 && Player.Pir2TotalScore < 100)
             {
                 Debug.Log("Window prohibit build 3 pyramid");
                 currPiramidIsLock = true;
-                GameObject canvas = GameObject.FindGameObjectWithTag("MainCanvas");
                 Instantiate(prohibitWindowPrefab, canvas.transform);
                 prohibitWindow = GameObject.FindGameObjectWithTag("Window");
                 string message = "To unlock this pyramid you need " + (4000 - Pir2TotalScore).ToString() + " more points in second pyramid";
@@ -172,6 +180,11 @@ public class Player : MonoBehaviour
             }
             else
                 currPiramidIsLock = false;
+            if (isChoosingPlatform)
+            {
+                Instantiate(sampleScorePrefab, canvas.transform);
+                canvas.transform.Find("SampleScorePrefab(Clone)").gameObject.GetComponent<Text>().text = Player.score.ToString();
+            }
             Debug.Log("start");
         }
         CalcMaxScore();
@@ -200,6 +213,9 @@ public class Player : MonoBehaviour
                     Destroy(prohibitWindow);
                 Vector3 camPos = cam.transform.position;
                 float offsetX = cam.ScreenToWorldPoint(Input.mousePosition).x - deltaXPos;
+
+                if (prohibitWindow != null)
+                    Destroy(prohibitWindow);
 
                 if (currentPiramidID == 1)
                 {
@@ -245,6 +261,7 @@ public class Player : MonoBehaviour
             if (Input.GetMouseButtonUp(0) && isScrolling)
             {
                 target = cam.transform.position;
+                target.z = -20;
                 // target.x = 6;
                 if (currentPiramidID == 1)
                     if (cam.transform.position.x > 3)
@@ -271,19 +288,20 @@ public class Player : MonoBehaviour
                         target.x = -7.3F;
                         isMovingToPrevPiramid = true;
                     }
+                target.z = -20;
                 isScrolling = false;
                 isMoving = true;
             }
 
         }
 
-            if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("mainScene")
-            || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("SaphireFloors1")
-            || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("EmeraldFloors1")
-            || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("GoldenFloors1")
-            || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("rubyFloors1")
-            || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("SilverFloors1")
-            || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("TopazFloors1"))
+        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName("mainScene")
+        || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("SaphireFloors1")
+        || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("EmeraldFloors1")
+        || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("GoldenFloors1")
+        || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("rubyFloors1")
+        || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("SilverFloors1")
+        || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("TopazFloors1"))
         {
             if (isWindy)
                 block.rigidBodyBlock.AddForce(transform.right * 2F, ForceMode2D.Force);
@@ -317,26 +335,14 @@ public class Player : MonoBehaviour
             if (isMovingToNextPiramid)
             {
                 prohibitWindow = GameObject.FindGameObjectWithTag("Window");
-                //Debug.Log(prohibitWindow.transform.position);
+
                 CameraTo(cam.transform.position, target, 10);
-                if (Math.Abs(cam.transform.position.x - target.x) < 1F && prohibitWindow == null)
-                {
-                    if (!currPiramidIsLock && prohibitWindow == null)
-                    {
-                        GameObject canvas = GameObject.FindGameObjectWithTag("MainCanvas");
-                        Instantiate(prohibitWindowPrefab, canvas.transform);
-                        prohibitWindow = GameObject.FindGameObjectWithTag("Window");
-                        prohibitWindow.GetComponent<ProhibitWindow>().SetText("Loading.....");
-                    }
-                    else
-                        prohibitWindow.GetComponent<ProhibitWindow>().SetText("Loading.....");
-                }
-                if (cam.transform.position == target)
-                {
+                if (Math.Abs(cam.transform.position.x - target.x) < 0.5F && prohibitWindow == null)
+                { 
+                    SceneManager.LoadSceneAsync("Piramid2");
+                    isFirst = true;
                     isMovingToNextPiramid = false;
                     isMoving = false;
-                    Piramid.isFirst = true;
-                    SceneManager.LoadSceneAsync("Piramid2");
                 }
             }
             else
@@ -350,52 +356,6 @@ public class Player : MonoBehaviour
 
         if (Player.currentPiramidID == 2 && isMoving)
         {
-            if (isMovingToNextPiramid)
-            {
-                if (Math.Abs(cam.transform.position.x - target.x) < 1F && prohibitWindow == null)
-                {
-                    if (!currPiramidIsLock && prohibitWindow == null)
-                    {
-                        GameObject canvas = GameObject.FindGameObjectWithTag("MainCanvas");
-                        Instantiate(prohibitWindowPrefab, canvas.transform);
-                        prohibitWindow = GameObject.FindGameObjectWithTag("Window");
-                        prohibitWindow.GetComponent<ProhibitWindow>().SetText("Loading.....");
-                    }
-                    else 
-                        prohibitWindow.GetComponent<ProhibitWindow>().SetText("Loading.....");
-                }
-                CameraTo(cam.transform.position, target, 10);
-                if (cam.transform.position == target)
-                {
-                    //isMovingToNextPiramid = false;
-                    isMoving = false;
-                    Piramid.isFirst = true;
-                    SceneManager.LoadScene("Piramid3");
-                }
-            }
-            if (isMovingToPrevPiramid)
-            {
-                if (Math.Abs(cam.transform.position.x - target.x) < 1F && prohibitWindow == null)
-                {
-                    if (!currPiramidIsLock && prohibitWindow == null)
-                    {
-                        GameObject canvas = GameObject.FindGameObjectWithTag("MainCanvas");
-                        Instantiate(prohibitWindowPrefab, canvas.transform);
-                        prohibitWindow = GameObject.FindGameObjectWithTag("Window");
-                        prohibitWindow.GetComponent<ProhibitWindow>().SetText("Loading.....");
-                    }
-                    else 
-                        prohibitWindow.GetComponent<ProhibitWindow>().SetText("Loading.....");
-                }
-                CameraTo(cam.transform.position, target, 10);
-                if (cam.transform.position == target)
-                {
-                    isMovingToNextPiramid = false;
-                    isMoving = false;
-                    Piramid.isFirst = true;
-                    SceneManager.LoadScene("Piramid1");
-                }
-            }
             if (!isMovingToPrevPiramid && !isMovingToNextPiramid)
             {
                 target.x = 0;
@@ -403,31 +363,44 @@ public class Player : MonoBehaviour
                 if (cam.transform.position == target)
                     isMoving = false;
             }
-        }
 
+            if (isMovingToPrevPiramid)
+            {
+                CameraTo(cam.transform.position, target, 10);
+                if (Math.Abs(cam.transform.position.x - target.x) < 0.5F)
+                {
+                    SceneManager.LoadSceneAsync("Piramid1");
+                    isFirst = true;
+                    isMovingToNextPiramid = false;
+                    isMoving = false;
+                }
+            }
+
+            if (isMovingToNextPiramid)
+            {
+                target.x = 7.3F;
+                Debug.Log(cam.transform.position.x);
+                CameraTo(cam.transform.position, target, 10);
+                if (Math.Abs(cam.transform.position.x - target.x) < 0.5F)
+                {
+                    SceneManager.LoadSceneAsync("Piramid3");
+                    isFirst = true;
+                    isMovingToNextPiramid = false;
+                    isMoving = false;
+                }
+            }
+        }
         if (Player.currentPiramidID == 3 && isMoving)
         {
             if (isMovingToPrevPiramid)
             {
-                if (Math.Abs(cam.transform.position.x - target.x) < 1F )
-                {
-                    if (!currPiramidIsLock && prohibitWindow == null)
-                    {
-                        GameObject canvas = GameObject.FindGameObjectWithTag("MainCanvas");
-                        Instantiate(prohibitWindowPrefab, canvas.transform);
-                        prohibitWindow = GameObject.FindGameObjectWithTag("Window");
-                        prohibitWindow.GetComponent<ProhibitWindow>().SetText("Loading.....");
-                    }
-                    else
-                        prohibitWindow.GetComponent<ProhibitWindow>().SetText("Loading.....");
-                }
                 CameraTo(cam.transform.position, target, 10);
-                if (cam.transform.position == target)
+                if (Math.Abs(cam.transform.position.x - target.x) < 0.5F && prohibitWindow == null)
                 {
+                    SceneManager.LoadSceneAsync("Piramid2");
+                    isFirst = true;
                     isMovingToNextPiramid = false;
                     isMoving = false;
-                    Piramid.isFirst = true;
-                    SceneManager.LoadScene("Piramid2");
                 }
             }
             else
@@ -443,6 +416,7 @@ public class Player : MonoBehaviour
     private static void CameraTo(Vector3 oldPos, Vector3 targetPos, float speed)
     {
         float newSpeed = speed;
+        targetPos.z = -20F;
         if (Math.Abs(targetPos.x - Camera.main.transform.position.x) < 1F && targetPos.x == 0)
         {
             blockSelection.GetComponent<BlockSelection>().SetNearestBlockColor();
@@ -493,7 +467,7 @@ public class Player : MonoBehaviour
         blockSelection.SetActive(true);
         okButton.SetActive(true);
         cancelButton.SetActive(false);
-        sample.SetActive(false);
+        //sample.SetActive(false);
     }
 
     public static void RefreshBlocksLock()

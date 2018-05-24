@@ -100,6 +100,10 @@ public class OkButton : MonoBehaviour {
                 piramid.GetComponent<Piramid>().TurnHighLightsOFF();
                 Player.selectedPlatfomID = -1;
                 Player.ReplacePlatformInXML(Player.currentPiramidID, platform.ID, platform.Score, platform.BlockMaterialNum, str);
+                sample.GetComponent<SampleMotion>().SetTarget(selectedPlatform.transform.position);
+                GameObject canvas = GameObject.FindGameObjectWithTag("MainCanvas");
+                Destroy(canvas.transform.Find("SampleScorePrefab(Clone)").gameObject);
+                Destroy(canvas.transform.Find("BlockScorePrefab(Clone)").gameObject);
             }
             Debug.Log("UPd");
         }

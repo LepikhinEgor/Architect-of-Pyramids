@@ -30,8 +30,9 @@ public class Piramid : MonoBehaviour
         Debug.Log("PiramidAwake");
         totalScore = Player.LoadPiramidTotalScoreFromXML(ID);
         platforms = GameObject.FindGameObjectsWithTag("Platform");
-        if (isFirst)//чтобы не пересоздавались при загрузке этой же сцены дважды
+        if (Player.isFirst)//чтобы не пересоздавались при загрузке этой же сцены дважды
         {
+            Debug.Log("Init Piramid");
             platformsEdgePositions = new bool[platforms.Length][];
             for (int i = 0; i < platformsEdgePositions.Length; i++)
             {
@@ -41,6 +42,7 @@ public class Piramid : MonoBehaviour
             platformsScore = new int[platforms.Length];
             platformsIsBusy = new bool[platforms.Length];
 
+            Player.isFirst = false;
             isFirst = false;
         }
     }

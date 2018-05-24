@@ -151,29 +151,41 @@ public class Platform : MonoBehaviour {
 	}
 
 
-    private void OnMouseDown()
+    private void OnMouseUp()
     {
+        GameObject canvas = GameObject.FindGameObjectWithTag("MainCanvas");
+
+        if (Player.selectedPlatfomID != -1)
+        {
+            GameObject[] platforms = GameObject.FindGameObjectsWithTag("Platform");
+            GameObject selectedPlatform = transform.gameObject;
+
+            foreach (GameObject pl in platforms)
+            {
+                if (pl.GetComponent<Platform>().ID == Player.selectedPlatfomID)
+                    selectedPlatform = pl;
+            }
+
+            Destroy(selectedPlatform.transform.Find("YellowLightPrefab(Clone)").gameObject);
+            selectedPlatform.transform.Find("Select").gameObject.SetActive(true);
+
+        }
+        else
+        {
+            Instantiate(Player.blockScorePrefab, canvas.transform);
+        }
+
+        Player.selectedPlatfomID = ID;
+
         if (Player.isChoosingPlatform)
         {
-            Instantiate(yellowLightPrefab, transform);
-            transform.Find("Select").gameObject.SetActive(false);
-
-            if (Player.selectedPlatfomID != -1)
-            {
-                GameObject[] platforms = GameObject.FindGameObjectsWithTag("Platform");
-                GameObject selectedPlatform = new GameObject();
-
-                foreach (GameObject pl in platforms)
-                {
-                    if (pl.GetComponent<Platform>().ID == Player.selectedPlatfomID)
-                        selectedPlatform = pl;
-                }
-
-                Destroy(selectedPlatform.transform.Find("YellowLightPrefab(Clone)").gameObject);
-                selectedPlatform.transform.Find("Select").gameObject.SetActive(true);
-            }
             Player.selectedPlatfomID = ID;
         }
+
+        Instantiate(yellowLightPrefab, transform);
+        transform.Find("Select").gameObject.SetActive(false);
+
+        canvas.transform.Find("BlockScorePrefab(Clone)").gameObject.GetComponent<Text>().text = score.ToString();
     }
 
    
