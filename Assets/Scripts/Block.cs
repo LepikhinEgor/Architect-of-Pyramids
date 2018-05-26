@@ -9,6 +9,10 @@ public class Block : MonoBehaviour
     private Player player;
 
 
+    public AudioClip catchClip;
+    public AudioClip perfectCatchClip;
+    public AudioSource catchSound;
+    public AudioSource perfectCatchSound;
     private Builder parentBuilder;
     public Builder ParentBuilder
     {
@@ -75,10 +79,18 @@ public class Block : MonoBehaviour
         ParentBuilder = builder.GetComponent<Builder>();
         builder = null;
         GetComponentInChildren<SpriteMask>().sprite = Resources.Load<Sprite>("Sprites/mask");
+
+
+        catchClip = Resources.Load<AudioClip>("Sounds/catchSound");
+        perfectCatchClip = Resources.Load<AudioClip>("Sounds/perfectCatchSound");
+
+        perfectCatchSound = gameObject.AddComponent<AudioSource>();
+        perfectCatchSound.clip = perfectCatchClip;
+        catchSound = gameObject.AddComponent<AudioSource>();
+        catchSound.clip = catchClip;
     }
     private void Start()
     {
-        
         switch(Player.currentBlockMaterialNum)
         {
             case 0:

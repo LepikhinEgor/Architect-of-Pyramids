@@ -157,17 +157,16 @@ public class Platform : MonoBehaviour {
 
         if (Player.selectedPlatfomID != -1)
         {
-            GameObject[] platforms = GameObject.FindGameObjectsWithTag("Platform");
-            GameObject selectedPlatform = transform.gameObject;
+            //GameObject[] platforms = GameObject.FindGameObjectsWithTag("Platform");
+            //GameObject selectedPlatform = transform.gameObject;
 
-            foreach (GameObject pl in platforms)
-            {
-                if (pl.GetComponent<Platform>().ID == Player.selectedPlatfomID)
-                    selectedPlatform = pl;
-            }
-
-            Destroy(selectedPlatform.transform.Find("YellowLightPrefab(Clone)").gameObject);
-            selectedPlatform.transform.Find("Select").gameObject.SetActive(true);
+            //foreach (GameObject pl in platforms)
+            //{
+            //    if (pl.GetComponent<Platform>().ID == Player.selectedPlatfomID)
+            //        selectedPlatform = pl;
+            //}
+            Destroy(Player.selectedPlatform.transform.Find("YellowLightPrefab(Clone)").gameObject);
+            Player.selectedPlatform.transform.Find("Select").gameObject.SetActive(true);
 
         }
         else
@@ -176,6 +175,7 @@ public class Platform : MonoBehaviour {
         }
 
         Player.selectedPlatfomID = ID;
+        Player.selectedPlatform = this;
 
         if (Player.isChoosingPlatform)
         {

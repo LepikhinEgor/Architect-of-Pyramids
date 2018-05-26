@@ -109,12 +109,20 @@ public class Builder : MonoBehaviour
                     coef = 2;
                 }
 
+                if (!(Player.perfectTimer.Timer > 0))
+                    block.catchSound.Play();
                 if (block.ParentBuilder != this)
                 {
                     player.LevelNum++;
                     if (Player.perfectTimer.Timer > 0)
                     {
                         Player.PerfectCoef++;
+                        float bellPitch = (float)System.Math.Pow(2, (Player.PerfectCoef -1) / 12.0);
+                        if (bellPitch > 2)
+                            bellPitch = 2;
+
+                        block.perfectCatchSound.pitch = bellPitch;
+                        block.perfectCatchSound.Play();
                         GameObject canvas = GameObject.FindGameObjectWithTag("MainCanvas");
                         Camera cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
                         Vector3 textPos = RectTransformUtility.WorldToScreenPoint(cam, transform.position);

@@ -9,7 +9,10 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
+
+    public static UnityEngine.Object smokePrefab;
     public static bool isLoadingScene = false;
+    public static Platform selectedPlatform;
     public static int selectedPlatfomID = -1;
     public static UnityEngine.Object perfectCoefPrefab;
     public static UnityEngine.Object resultWindowPrefab;
@@ -88,6 +91,7 @@ public class Player : MonoBehaviour
     }
     private void Start()
     {
+        smokePrefab = Resources.Load("Prefabs/SmokePrefab");
         perfectCoefPrefab = Resources.Load("Prefabs/PerfectCoefPrefab");
         resultWindowPrefab = Resources.Load("Prefabs/ResultsWindowPrefab"); 
         blockScorePrefab = Resources.Load("Prefabs/BlockScorePrefab");
@@ -147,6 +151,8 @@ public class Player : MonoBehaviour
                 //piramid.GetComponent<Piramid>().HighlightBlocks(sample.GetComponent<Platform>().BlockMaterialNum);
 
             }
+            else
+                sample.SetActive(false);
 
             piramid.GetComponent<Piramid>().TurnHighLightsOFF();
             piramid.GetComponent<Piramid>().HighlightBlocks(sample.GetComponent<Platform>().BlockMaterialNum);
@@ -155,26 +161,26 @@ public class Player : MonoBehaviour
                 HideSelectBlockUI();
 
             GameObject canvas = GameObject.FindGameObjectWithTag("MainCanvas");
-            if (currentPiramidID == 2 && Player.Pir1TotalScore < 1000)
+            if (currentPiramidID == 2 && Player.Pir1TotalScore < 500)
             {
                 Debug.Log("Window prohibit build 2 pyramid");
                 currPiramidIsLock = true;
                 Instantiate(prohibitWindowPrefab, canvas.transform);
                 prohibitWindow = GameObject.FindGameObjectWithTag("Window");
-                string message = "To unlock this pyramid you need " + (1000 - Pir1TotalScore).ToString() + " more points in first pyramid";
+                string message = "To unlock this pyramid you need " + (500 - Pir1TotalScore).ToString() + " more points in first pyramid";
                 prohibitWindow.GetComponent<ProhibitWindow>().SetText(message);
                 okButton.SetActive(false);
             }
             else
                 currPiramidIsLock = false;
             Debug.Log(currentPiramidID);
-            if (currentPiramidID == 3 && Player.Pir2TotalScore < 100)
+            if (currentPiramidID == 3 && Player.Pir2TotalScore < 1000)
             {
                 Debug.Log("Window prohibit build 3 pyramid");
                 currPiramidIsLock = true;
                 Instantiate(prohibitWindowPrefab, canvas.transform);
                 prohibitWindow = GameObject.FindGameObjectWithTag("Window");
-                string message = "To unlock this pyramid you need " + (4000 - Pir2TotalScore).ToString() + " more points in second pyramid";
+                string message = "To unlock this pyramid you need " + (1000 - Pir2TotalScore).ToString() + " more points in second pyramid";
                 prohibitWindow.GetComponent<ProhibitWindow>().SetText(message);
                 okButton.SetActive(false);
             }
@@ -466,7 +472,7 @@ public class Player : MonoBehaviour
     {
         blockSelection.SetActive(true);
         okButton.SetActive(true);
-        cancelButton.SetActive(false);
+  //      cancelButton.SetActive(false);
         //sample.SetActive(false);
     }
 

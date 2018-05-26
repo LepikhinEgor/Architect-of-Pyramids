@@ -26,6 +26,7 @@ public class Piramid : MonoBehaviour
 
     private void Awake()
     {
+        Player.selectedPlatfomID = -1;
         Player.currentPiramidID = ID;
         Debug.Log("PiramidAwake");
         totalScore = Player.LoadPiramidTotalScoreFromXML(ID);

@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class SampleMotion : MonoBehaviour {
 
+    bool isAnimated;
     float speed;
     float scale;
     Vector3 targetScale;
@@ -48,8 +49,19 @@ public class SampleMotion : MonoBehaviour {
         {
             transform.localScale = Vector3.Lerp(transform.localScale, targetScale, speed * Time.deltaTime);
 
+            if (transform.localScale.x <= scale + 0.04F && !isAnimated)
+            {
+                isAnimated = true;
+                GameObject smokeAnim = (GameObject)Instantiate(Player.smokePrefab, Player.selectedPlatform.transform);
+                Vector3 smokePosition = smokeAnim.transform.position;
+                smokePosition.x = Player.selectedPlatform.transform.position.x;
+                smokePosition.y = Player.selectedPlatform.transform.position.y;
+                smokeAnim.transform.position = smokePosition;
+            }
             if (transform.localScale.x <= scale + 0.005F)
+            {
                 transform.gameObject.SetActive(false);
+            }
         }
 	}
 }

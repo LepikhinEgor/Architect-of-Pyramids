@@ -2712,6 +2712,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 722572acd92b7df4bb6e34a7e3dd4fee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  catchClip: {fileID: 0}
+  perfectCatchClip: {fileID: 0}
+  catchSound: {fileID: 0}
+  perfectCatchSound: {fileID: 0}
   blockSprite: {fileID: 0}
   blockSpriteActive: {fileID: 0}
   blockSpriteActiveBack: {fileID: 0}

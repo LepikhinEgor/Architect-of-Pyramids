@@ -97,6 +97,7 @@ public class OkButton : MonoBehaviour {
                 scoreUI.GetComponent<Text>().text = (piramid.GetComponent<Piramid>().totalScore).ToString();
                 Destroy(selectedPlatform.transform.Find("YellowLightPrefab(Clone)").gameObject);
                 selectedPlatform.transform.Find("Select").gameObject.SetActive(true);
+
                 piramid.GetComponent<Piramid>().TurnHighLightsOFF();
                 Player.selectedPlatfomID = -1;
                 Player.ReplacePlatformInXML(Player.currentPiramidID, platform.ID, platform.Score, platform.BlockMaterialNum, str);

@@ -14,8 +14,7 @@ public class CameraController : MonoBehaviour
 
     private void Awake()
     {
-        if (!target)
-            target = FindObjectOfType<Block>().transform;
+         target = GameObject.FindGameObjectWithTag("Block").transform;
     }
 
     void Update()
