@@ -279,7 +279,7 @@ public class Player : MonoBehaviour
                 {
                     if (cam.transform.position.x > 4)
                     {
-                        target.x = 7.3F;
+                        target.x = 6.3F;
                         isMovingToNextPiramid = true;
                     }
                     if (cam.transform.position.x < -3)
@@ -291,7 +291,7 @@ public class Player : MonoBehaviour
                 if (currentPiramidID == 3)
                     if (cam.transform.position.x < -4)
                     {
-                        target.x = -7.3F;
+                        target.x = -6.3F;
                         isMovingToPrevPiramid = true;
                     }
                 target.z = -20;
@@ -373,7 +373,7 @@ public class Player : MonoBehaviour
             if (isMovingToPrevPiramid)
             {
                 CameraTo(cam.transform.position, target, 10);
-                if (Math.Abs(cam.transform.position.x - target.x) < 0.5F)
+                if (Math.Abs(cam.transform.position.x - target.x) < 0.3F)
                 {
                     SceneManager.LoadSceneAsync("Piramid1");
                     isFirst = true;
@@ -384,10 +384,9 @@ public class Player : MonoBehaviour
 
             if (isMovingToNextPiramid)
             {
-                target.x = 7.3F;
                 Debug.Log(cam.transform.position.x);
                 CameraTo(cam.transform.position, target, 10);
-                if (Math.Abs(cam.transform.position.x - target.x) < 0.5F)
+                if (Math.Abs(cam.transform.position.x - target.x) < 0.3F)
                 {
                     SceneManager.LoadSceneAsync("Piramid3");
                     isFirst = true;
@@ -401,7 +400,7 @@ public class Player : MonoBehaviour
             if (isMovingToPrevPiramid)
             {
                 CameraTo(cam.transform.position, target, 10);
-                if (Math.Abs(cam.transform.position.x - target.x) < 0.5F && prohibitWindow == null)
+                if (Math.Abs(cam.transform.position.x - target.x) < 0.3F && prohibitWindow == null)
                 {
                     SceneManager.LoadSceneAsync("Piramid2");
                     isFirst = true;
