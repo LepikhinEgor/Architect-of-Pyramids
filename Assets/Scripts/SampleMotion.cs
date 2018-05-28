@@ -2,14 +2,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SampleMotion : MonoBehaviour {
 
+    GameObject scoreUI;
     bool isAnimated;
     float speed;
     float scale;
     Vector3 targetScale;
     private bool isMoving;
+
+    public int scoreDifferent;
     // Use this for initialization
 
     private void Awake()
@@ -24,6 +28,7 @@ public class SampleMotion : MonoBehaviour {
         isMoving = true;
     }
     void Start () {
+        scoreUI = GameObject.FindGameObjectWithTag("UIScore");
         scale = 1;
         speed = 3;
         switch (Player.currentPiramidID)
@@ -57,6 +62,25 @@ public class SampleMotion : MonoBehaviour {
                 smokePosition.x = Player.selectedPlatform.transform.position.x;
                 smokePosition.y = Player.selectedPlatform.transform.position.y;
                 smokeAnim.transform.position = smokePosition;
+                GameObject canvas = GameObject.FindGameObjectWithTag("MainCanvas");
+                GameObject scoreDiff = (GameObject)Instantiate(Player.scoreDiffPrefab, canvas.transform);
+                Vector3 textPos = RectTransformUtility.WorldToScreenPoint(Camera.main, transform.position);
+                scoreDiff.transform.position =textPos;
+
+
+                string text = "";
+                if (scoreDifferent < 0)
+                    text = "-" + System.Math.Abs(scoreDifferent).ToString();
+                if (scoreDifferent > 0)
+                    text = "+" + scoreDifferent.ToString();
+                if (scoreDifferent == 0)
+                    text = "0";
+                scoreDiff.GetComponent<Text>().text = text;
+
+                Vector3 targetTextPos = scoreDiff.transform.position;
+                targetTextPos.y += Screen.height / 16;
+                scoreDiff.GetComponent<ScoreDiffMotion>().SetTargetPos(targetTextPos);
+
             }
             if (transform.localScale.x <= scale + 0.005F)
             {

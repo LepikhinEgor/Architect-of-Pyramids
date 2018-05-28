@@ -52,8 +52,27 @@ public class Piramid : MonoBehaviour
         FillPlatformsFromXML();
         GetPlatfomsInformation();
         RefreshNeighborEdgesCount();
+        RefreshPiramidScoreLine();
     }
 
+    public void RefreshPiramidScoreLine()
+    {
+        Debug.Log("FFF");
+        RectTransform scoreLine = GameObject.FindGameObjectWithTag("ScoreLine").GetComponent<RectTransform>();
+        float val = 0;
+        switch (Player.currentPiramidID)
+        {
+            case 1: val = (float)(Player.Pir1TotalScore) / (Player.Pir1TotalScoreMax); break;
+            case 2: val = (float)(Player.Pir2TotalScore) / (Player.Pir2TotalScoreMax); break;
+            case 3: val = (float)(Player.Pir3TotalScore) / (Player.Pir3TotalScoreMax); break;
+        }
+        if (val > 1)
+            val = 1;
+        float lineLenght = Screen.width * (scoreLine.anchorMax.x - scoreLine.anchorMin.x);
+        Vector3 rightLineCorner = scoreLine.GetComponent<RectTransform>().offsetMax;
+        rightLineCorner.x = 0 - lineLenght + lineLenght * (val);
+        scoreLine.GetComponent<RectTransform>().offsetMax = rightLineCorner;
+    }
     public void RefreshNeighborEdgesCount()
     {
         foreach (GameObject pl in platforms)

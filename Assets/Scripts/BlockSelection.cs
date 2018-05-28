@@ -78,7 +78,7 @@ public class BlockSelection : MonoBehaviour {
         {
             lastMouseXPos = Camera.main.ScreenToWorldPoint(Input.mousePosition).x;
             mouseYPos = Camera.main.ScreenToWorldPoint(Input.mousePosition).y;
-            if (mouseYPos > -3 && mouseYPos < -1F && !Player.isChoosingPlatform)
+            if (mouseYPos > transform.position.y - 0.9 && mouseYPos < transform.position.y + 0.9 && !Player.isChoosingPlatform)
             {
                 isScrolling = true;
                 if (!Player.currPiramidIsLock && prohibitWindow != null)
