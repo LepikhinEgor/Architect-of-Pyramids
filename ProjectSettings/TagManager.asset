@@ -39,6 +39,8 @@ TagManager:
   - PerfectCoef
   - Window
   - ResultWindow
+  - WindStart
+  - WindEnd
   layers:
   - Default
   - TransparentFX

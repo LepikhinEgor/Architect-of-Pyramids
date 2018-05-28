@@ -8,7 +8,7 @@ public class Builder : MonoBehaviour
 {
     //[SerializeField]
     private float throwForse;
-
+    Wind wind;
     [SerializeField]
     public bool isSwingRight;
 
@@ -54,6 +54,9 @@ public class Builder : MonoBehaviour
             block.rigidBodyBlock.velocity = Vector3.zero;
             block.ThrowUp(throwForse);
             block.rigidBodyBlock.gravityScale = 2;
+
+            if (wind != null)
+                wind.isActiveWind = true;
         }
     }
     private void Run()
@@ -169,6 +172,21 @@ public class Builder : MonoBehaviour
                 {
                     Player.score += (int)(Player.score * Player.lives * 0.05);
                     Player.ShowResultWindow();
+                }
+
+                if (tag.Equals("WindStart"))
+                {
+                    wind = block.gameObject.AddComponent<Wind>();
+                }
+                wind = block.GetComponent<Wind>();
+
+                if (wind != null)
+                    wind.isActiveWind = false;
+
+                if (tag.Equals("WindEnd"))
+                {
+                    Debug.Log("Destroy Wind");
+                    Destroy(wind);
                 }
 
                 float swingSpeedCoef = 2F;

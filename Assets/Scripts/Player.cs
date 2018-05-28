@@ -319,8 +319,6 @@ public class Player : MonoBehaviour
         || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("SilverFloors1")
         || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("TopazFloors1"))
         {
-            if (isWindy)
-                block.rigidBodyBlock.AddForce(transform.right * 2F, ForceMode2D.Force);
             if (perfectTimer)
             {
                 if (perfectTimer.Timer > 0)
