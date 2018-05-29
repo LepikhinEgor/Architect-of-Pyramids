@@ -262,8 +262,10 @@ public class BlockSelection : MonoBehaviour {
                 }
                 prohibitMessages[3] = "This block will be unlocked during the construction of the second pyramid";
                 prohibitMessages[4] = "This block will be unlocked during the construction of the second pyramid";
-                prohibitMessages[5] = "This block will be unlocked during the construction of the third pyramid";
+                prohibitMessages[5] = "This block will be unlocked during the construction of the second pyramid";
                 prohibitMessages[6] = "This block will be unlocked during the construction of the third pyramid";
+                prohibitMessages[7] = "This block will be unlocked during the construction of the third pyramid";
+                prohibitMessages[8] = "This block will be unlocked during the construction of the third pyramid";
             }
             if (piramid.GetComponent<Piramid>().ID == 2)
             {
@@ -302,17 +304,27 @@ public class BlockSelection : MonoBehaviour {
                             + " more points";
                         break;
                     case 4:
-                        if (piramid.GetComponent<Piramid>().totalScore > 2400)
+                        if (piramid.GetComponent<Piramid>().totalScore > 3000)
                         {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
                         }
-                        prohibitMessages[4] = "To open this block you need " + (2400 - Player.Pir2TotalScore).ToString()
+                        prohibitMessages[4] = "To open this block you need " + (3000 - Player.Pir2TotalScore).ToString()
+                            + " more points";
+                        break;
+                    case 5:
+                        if (piramid.GetComponent<Piramid>().totalScore > 3500)
+                        {
+                            blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
+                            blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
+                        }
+                        prohibitMessages[5] = "To open this block you need " + (3500 - Player.Pir2TotalScore).ToString()
                             + " more points";
                         break;
                 }
-                prohibitMessages[5] = "This block will be unlocked during the construction of the third pyramid";
                 prohibitMessages[6] = "This block will be unlocked during the construction of the third pyramid";
+                prohibitMessages[7] = "This block will be unlocked during the construction of the third pyramid";
+                prohibitMessages[8] = "This block will be unlocked during the construction of the third pyramid";
             }
             if (piramid.GetComponent<Piramid>().ID == 3)
             {
@@ -351,12 +363,12 @@ public class BlockSelection : MonoBehaviour {
                             + " more points";
                         break;
                     case 4:
-                        if (piramid.GetComponent<Piramid>().totalScore > 4000)
+                        if (piramid.GetComponent<Piramid>().totalScore > 5000)
                         {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
                         }
-                        prohibitMessages[4] = "To open this block you need " + (4000 - Player.Pir3TotalScore).ToString()
+                        prohibitMessages[4] = "To open this block you need " + (5000 - Player.Pir3TotalScore).ToString()
                             + " more points";
                         break;
                     case 5:
@@ -369,12 +381,30 @@ public class BlockSelection : MonoBehaviour {
                             + " more points";
                         break;
                     case 6:
+                        if (piramid.GetComponent<Piramid>().totalScore > 8000)
+                        {
+                            blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
+                            blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
+                        }
+                        prohibitMessages[6] = "To open this block you need " + (8000 - Player.Pir3TotalScore).ToString()
+                            + " more points";
+                        break;
+                    case 7:
                         if (piramid.GetComponent<Piramid>().totalScore > 10000)
                         {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
                         }
-                        prohibitMessages[6] = "To open this block you need " + (10000 - Player.Pir3TotalScore).ToString()
+                        prohibitMessages[7] = "To open this block you need " + (10000 - Player.Pir3TotalScore).ToString()
+                            + " more points";
+                        break;
+                    case 8:
+                        if (piramid.GetComponent<Piramid>().totalScore > 12000)
+                        {
+                            blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
+                            blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
+                        }
+                        prohibitMessages[8] = "To open this block you need " + (12000 - Player.Pir3TotalScore).ToString()
                             + " more points";
                         break;
                 }

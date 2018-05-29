@@ -139,13 +139,12 @@ public class Block : MonoBehaviour
 
     void Update()
     {
-        if (player.IsWindy)
-            rigidBodyBlock.AddForce(transform.right * 2F, ForceMode2D.Force);
         if (isFly && transform.position.y + 0.6F < ParentBuilder.transform.position.y)
         {
             //блок упал
             cam1.GetComponent<CameraController>().isFollow = false;
             Player.lives--;
+            parentBuilder.animator.SetBool("IsMoving", true);
             transform.rotation = ParentBuilder.transform.rotation;
             if (Player.lives > 0)
             {

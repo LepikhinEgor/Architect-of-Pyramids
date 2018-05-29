@@ -24,6 +24,7 @@ public class Player : MonoBehaviour
     private UnityEngine.Object prohibitWindowPrefab;
     GameObject prohibitWindow;
 
+    Vector3 blockSelectionPos;
     static bool isMoving;
     Vector3 target, camPos;
     bool isMovingToNextPiramid = false;
@@ -123,7 +124,7 @@ public class Player : MonoBehaviour
             perfectTimer = GameObject.FindGameObjectWithTag("PerfectTimer").GetComponent<PerfectTimer>();
             RectTransform scoreLine = GameObject.FindGameObjectWithTag("ScoreLine").GetComponent<RectTransform>();
 
-            float lineLenght = Screen.width*(scoreLine.anchorMax.x - scoreLine.anchorMin.x)*0.8F;
+            float lineLenght = Screen.width*(scoreLine.anchorMax.x - scoreLine.anchorMin.x);
             Vector3 rightLineCorner = scoreLine.GetComponent<RectTransform>().offsetMax;
             rightLineCorner.x -= lineLenght;
             scoreLine.GetComponent<RectTransform>().offsetMax = rightLineCorner;
@@ -218,7 +219,7 @@ public class Player : MonoBehaviour
                 float mouseYPos = Camera.main.ScreenToWorldPoint(Input.mousePosition).y;
                 //deltaXPos = lastXPos - cam.transform.position.x;
                 deltaXPos = Camera.main.ScreenToWorldPoint(Input.mousePosition).x;
-                if (mouseYPos > -1 && mouseYPos < 5 && !isChoosingPlatform)
+                if (mouseYPos > -1.8 && mouseYPos < 5 && !isChoosingPlatform)
                     isScrolling = true;
                 prohibitWindow = GameObject.FindGameObjectWithTag("Window");
             }
@@ -272,6 +273,9 @@ public class Player : MonoBehaviour
                         cam.transform.position = camPos;
                     }
                 }
+                blockSelectionPos = blockSelection.transform.position;
+                blockSelectionPos.x = cam.transform.position.x;
+                blockSelection.transform.position = blockSelectionPos;
             }
 
             if (Input.GetMouseButtonUp(0) && isScrolling)
@@ -344,6 +348,12 @@ public class Player : MonoBehaviour
                 }
             }
         }
+        //if (isMoving)
+        //{
+        //    blockSelectionPos = blockSelection.transform.position;
+        //    blockSelectionPos.x = target.x;
+        //    blockSelection.transform.position = Vector3.Lerp(blockSelection.transform.position, blockSelectionPos, 10);
+        //}
         if (Player.currentPiramidID == 1 && isMoving)
         {
             if (isMovingToNextPiramid)
@@ -364,7 +374,10 @@ public class Player : MonoBehaviour
                 target.x = 0;
                 CameraTo(cam.transform.position, target, 10);
                 if (cam.transform.position == target)
+                {
                     isMoving = false;
+                    blockSelection.GetComponent<BlockSelection>().SetNearestBlockColor();
+                }
             }
         }
 
@@ -375,7 +388,10 @@ public class Player : MonoBehaviour
                 target.x = 0;
                 CameraTo(cam.transform.position, target, 10);
                 if (cam.transform.position == target)
+                {
                     isMoving = false;
+                    blockSelection.GetComponent<BlockSelection>().SetNearestBlockColor();
+                }
             }
 
             if (isMovingToPrevPiramid)
@@ -421,32 +437,62 @@ public class Player : MonoBehaviour
                 target.x = 0;
                 CameraTo(cam.transform.position, target, 10);
                 if (cam.transform.position == target)
+                {
                     isMoving = false;
+                    blockSelection.GetComponent<BlockSelection>().SetNearestBlockColor();
+                }
             }
         }
     }
 
     private static void CameraTo(Vector3 oldPos, Vector3 targetPos, float speed)
     {
+        Vector3 blockSelectionPos = blockSelection.transform.position;
         float newSpeed = speed;
         targetPos.z = -20F;
-        if (Math.Abs(targetPos.x - Camera.main.transform.position.x) < 1F && targetPos.x == 0)
+        if (Math.Abs(targetPos.x - Camera.main.transform.position.x) < 0.1F && targetPos.x == 0)
         {
-            blockSelection.GetComponent<BlockSelection>().SetNearestBlockColor();
             newSpeed = 30;
+            Camera.main.transform.position = targetPos;
+            //blockSelectionPos = blockSelection.transform.position;
+            blockSelectionPos.x = Camera.main.transform.position.x;
+            blockSelection.transform.position = blockSelectionPos;
         }
-        Camera.main.transform.position = Vector3.Lerp(oldPos, targetPos, newSpeed * Time.deltaTime);
+        else
+        {
+            Camera.main.transform.position = Vector3.Lerp(oldPos, targetPos, newSpeed * Time.deltaTime);
+
+            blockSelectionPos.x = Camera.main.transform.position.x;
+            blockSelection.transform.position = blockSelectionPos;
+        }
+        //blockSelectionPos.x = targetPos.x;
+        //blockSelection.transform.position = Vector3.Lerp(blockSelection.transform.position, blockSelectionPos, newSpeed);
+
     }
 
     public void CalcMaxScore()
     {
-        int floorsNum = (currentBlockMaterialNum + 1) * 6; //считаются все, кроме первого
+        int floorsNum = 0;
+        switch (currentBlockMaterialNum)
+        {
+            case 0: floorsNum = 6; break;
+            case 1: floorsNum = 12; break;
+            case 2: floorsNum = 18; break;
+            case 3: floorsNum = 24; break;
+            case 4: floorsNum = 24; break;
+            case 5: floorsNum = 30; break;
+            case 6: floorsNum = 36; break;
+            case 7: floorsNum = 42; break;
+            case 8: floorsNum = 42; break;
+        }
         int maxScore = 0;
 
         for (int i = 2; i <= (floorsNum + 1); i++) //начинается сразу с x2, заканчивается x(n+1)
             maxScore += i;
         maxScore *= 2;
         maxScore = maxScore + (int)(maxScore * 3 * 0.05);
+        if (currentBlockMaterialNum == 4 || currentBlockMaterialNum == 8)
+            maxScore += (int)(maxScore*0.5);
         currentMaxScore = maxScore;
     }
 

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class Builder : MonoBehaviour
 {
+    public Animator animator;
     //[SerializeField]
     private float throwForse;
     Wind wind;
@@ -29,6 +30,7 @@ public class Builder : MonoBehaviour
 
     private void Awake()
     {
+        animator = GetComponent<Animator>();
         //block = GameObject.FindGameObjectWithTag("Block").GetComponent<Block>();
         throwForse = 11.7F;
         speed = 3.5F;
@@ -50,6 +52,7 @@ public class Builder : MonoBehaviour
         }
         if (!tag.Equals("LastBuilder") && isKeep && (Input.GetButtonDown("Jump") || (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)))
         {
+            animator.SetBool("IsMoving", false);
             isKeep = false;
             block.rigidBodyBlock.velocity = Vector3.zero;
             block.ThrowUp(throwForse);
@@ -71,12 +74,18 @@ public class Builder : MonoBehaviour
         if (tmpCollider)
         {
             if (!tmpCollider.GetComponent<Block>() && direction.x > 0)
+            {
                 direction.x = -direction.x;
+                sprite.flipX = true;
+            }
         }
         tmpCollider = Physics2D.OverlapCircle(checkerPosLeft, 0.3F);
         if (tmpCollider)
             if (!tmpCollider.GetComponent<Block>() && direction.x < 0)
+            {
                 direction.x = -direction.x;
+                sprite.flipX = false;
+            }
         transform.position = Vector3.MoveTowards(transform.position, transform.position + direction, speed * Time.deltaTime);
 
         deltaPosX = System.Math.Abs(transform.position.x - previousPosX);
@@ -141,7 +150,7 @@ public class Builder : MonoBehaviour
                     float val = (float)(Player.score) / ((float)(Player.currentMaxScore)/2F);
                     if (val > 1)
                         val = 1;
-                    float lineLenght = Screen.width * (scoreLine.anchorMax.x - scoreLine.anchorMin.x) * 0.8F;
+                    float lineLenght = Screen.width * (scoreLine.anchorMax.x - scoreLine.anchorMin.x);
                     Vector3 rightLineCorner = scoreLine.GetComponent<RectTransform>().offsetMax;
                     rightLineCorner.x = 0 - lineLenght + lineLenght*(val);
                     scoreLine.GetComponent<RectTransform>().offsetMax = rightLineCorner;
@@ -179,6 +188,8 @@ public class Builder : MonoBehaviour
                     wind = block.gameObject.AddComponent<Wind>();
                 }
                 wind = block.GetComponent<Wind>();
+
+                animator.SetBool("IsMoving", true);
 
                 if (wind != null)
                     wind.isActiveWind = false;
