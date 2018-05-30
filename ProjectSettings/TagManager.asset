@@ -41,6 +41,7 @@ TagManager:
   - ResultWindow
   - WindStart
   - WindEnd
+  - LivesUI
   layers:
   - Default
   - TransparentFX

@@ -104,6 +104,7 @@ public class OkButton : MonoBehaviour {
                 Destroy(canvas.transform.Find("SampleScorePrefab(Clone)").gameObject);
                 Destroy(canvas.transform.Find("BlockScorePrefab(Clone)").gameObject);
 
+                Player.score = 0;
                 piramid.GetComponent<Piramid>().RefreshPiramidScoreLine();
             }
             Debug.Log("UPd");

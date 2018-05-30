@@ -6,6 +6,10 @@ using UnityEngine.UI;
 
 public class Builder : MonoBehaviour
 {
+    Vector3 leftCorner;
+    Vector3 rightCorner;
+    Vector3 checkerPosRight;
+    Vector3 checkerPosLeft;
     public Animator animator;
     //[SerializeField]
     private float throwForse;
@@ -21,7 +25,6 @@ public class Builder : MonoBehaviour
     public bool isKeep = false;
 
     private SpriteRenderer sprite;
-    private Player player;
     private float catchSkill = 0.35F;
 
     private Collider2D tmpCollider; //для поиска коллайдеров
@@ -30,23 +33,37 @@ public class Builder : MonoBehaviour
 
     private void Awake()
     {
+        block = Player.block;
         animator = GetComponent<Animator>();
         //block = GameObject.FindGameObjectWithTag("Block").GetComponent<Block>();
         throwForse = 11.7F;
         speed = 3.5F;
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         sprite = GetComponentInChildren<SpriteRenderer>();
         previousPosX = transform.position.x;
+    }
+    private void Start()
+    {
+        block = Player.block;
     }
 
     private void Update()
     {
+        if (block.IsFly)
+        {
+            if (System.Math.Abs(block.transform.position.y - transform.position.y) < 5)
+            {
+                animator.SetBool("IsAnimation", true);
+            }
+            else
+            {
+                animator.SetBool("IsAnimation", false);
+            }
+        }
         //Debug.Log(Player.perfectTimer.Timer);
         if (!isKeep)
             CatchBlock(); // проверка, нет ли блока над строителем
         if (isKeep)
         {
-
             CarryBlock();
             Run();
         }
@@ -64,10 +81,10 @@ public class Builder : MonoBehaviour
     }
     private void Run()
     {
-        Vector3 checkerPosRight = transform.position;
+        checkerPosRight = transform.position;
         checkerPosRight.x += 0.5F;
         checkerPosRight.y -= 0.5F;
-        Vector3 checkerPosLeft = transform.position;
+        checkerPosLeft = transform.position;
         checkerPosLeft.x -= 0.5F;
         checkerPosLeft.y -= 0.5F;
         tmpCollider = Physics2D.OverlapCircle(checkerPosRight, 0.3F);
@@ -90,15 +107,14 @@ public class Builder : MonoBehaviour
 
         deltaPosX = System.Math.Abs(transform.position.x - previousPosX);
         previousPosX = transform.position.x;
-        //sprite.flipX = direction.x > 0; //поворот при движении в другую сторону
     }
 
 
     public void CatchBlock()
     { 
-        Vector3 leftCorner = transform.position;
+        leftCorner = transform.position;
         leftCorner.x -= catchSkill;
-        Vector3 rightCorner = transform.position;
+        rightCorner = transform.position;
         rightCorner.x += catchSkill;
         Collider2D findedCollider = Physics2D.OverlapArea(leftCorner, rightCorner);
         if (findedCollider != null && findedCollider.GetComponent<Block>())
@@ -125,7 +141,6 @@ public class Builder : MonoBehaviour
                     block.catchSound.Play();
                 if (block.ParentBuilder != this)
                 {
-                    player.LevelNum++;
                     if (Player.perfectTimer.Timer > 0)
                     {
                         Player.PerfectCoef++;

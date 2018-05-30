@@ -53,6 +53,7 @@ public class Piramid : MonoBehaviour
         GetPlatfomsInformation();
         RefreshNeighborEdgesCount();
         RefreshPiramidScoreLine();
+        HighlightBlocks(Player.currentBlockMaterialNum);
     }
 
     public void RefreshPiramidScoreLine()

@@ -6,13 +6,12 @@ using UnityEngine.SceneManagement;
 
 public class Block : MonoBehaviour
 {
-    private Player player;
-
 
     public AudioClip catchClip;
     public AudioClip perfectCatchClip;
     public AudioSource catchSound;
     public AudioSource perfectCatchSound;
+
     private Builder parentBuilder;
     public Builder ParentBuilder
     {
@@ -65,25 +64,19 @@ public class Block : MonoBehaviour
 
     private void Awake()
     {
-        player = FindObjectOfType<Player>();
+        Player.block = this;
         blockSprite = GameObject.FindGameObjectWithTag("BlockSprite");
         blockSpriteActive = GameObject.FindGameObjectWithTag("BlockActiveSprite");
         blockSpriteActiveBack = GameObject.FindGameObjectWithTag("BlockActiveSpriteBack");
-
         
         rigidBodyBlock = GetComponent<Rigidbody2D>();
         cam1 = Camera.main;
 
-        GameObject builder;
-        builder = GameObject.FindGameObjectWithTag("FirstBuilder");
-        ParentBuilder = builder.GetComponent<Builder>();
-        builder = null;
+        ParentBuilder = GameObject.FindGameObjectWithTag("FirstBuilder").GetComponent<Builder>();
         GetComponentInChildren<SpriteMask>().sprite = Resources.Load<Sprite>("Sprites/mask");
-
 
         catchClip = Resources.Load<AudioClip>("Sounds/catchSound");
         perfectCatchClip = Resources.Load<AudioClip>("Sounds/perfectCatchSound");
-
         perfectCatchSound = gameObject.AddComponent<AudioSource>();
         perfectCatchSound.clip = perfectCatchClip;
         catchSound = gameObject.AddComponent<AudioSource>();
@@ -146,6 +139,7 @@ public class Block : MonoBehaviour
             Player.lives--;
             parentBuilder.animator.SetBool("IsMoving", true);
             transform.rotation = ParentBuilder.transform.rotation;
+            Player.ankhLivesUI.text = Player.lives.ToString();
             if (Player.lives > 0)
             {
                 rigidBodyBlock.velocity = Vector3.zero;
