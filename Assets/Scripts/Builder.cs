@@ -34,7 +34,7 @@ public class Builder : MonoBehaviour
     private void Awake()
     {
         block = Player.block;
-        animator = GetComponent<Animator>();
+        animator = transform.Find("Sprite").GetComponent<Animator>();
         //block = GameObject.FindGameObjectWithTag("Block").GetComponent<Block>();
         throwForse = 11.7F;
         speed = 3.5F;
@@ -43,6 +43,21 @@ public class Builder : MonoBehaviour
     }
     private void Start()
     {
+        Vector3 localPos = transform.Find("Sprite").localPosition;
+        if (isSwingRight)
+        {
+            direction.x = 1;
+            sprite.flipX = false;
+            localPos.x *= 1;
+            transform.Find("Sprite").localPosition = localPos;
+        }
+        else
+        {
+            direction.x = -1;
+            sprite.flipX = true;
+            localPos.x *= -1;
+            transform.Find("Sprite").localPosition = localPos;
+        }
         block = Player.block;
     }
 
@@ -94,6 +109,9 @@ public class Builder : MonoBehaviour
             {
                 direction.x = -direction.x;
                 sprite.flipX = true;
+                Vector3 mirrorXPos = transform.Find("Sprite").localPosition;
+                mirrorXPos.x *= -1;
+                transform.Find("Sprite").localPosition = mirrorXPos;
             }
         }
         tmpCollider = Physics2D.OverlapCircle(checkerPosLeft, 0.3F);
@@ -102,6 +120,9 @@ public class Builder : MonoBehaviour
             {
                 direction.x = -direction.x;
                 sprite.flipX = false;
+                Vector3 mirrorXPos = transform.Find("Sprite").localPosition;
+                mirrorXPos.x *= -1;
+                transform.Find("Sprite").localPosition = mirrorXPos;
             }
         transform.position = Vector3.MoveTowards(transform.position, transform.position + direction, speed * Time.deltaTime);
 
@@ -232,7 +253,7 @@ public class Builder : MonoBehaviour
     {
         Vector3 newBlockPos = transform.position;
         //float offset = System.Math.Abs(newBlockPos.x - transform.position.x);
-        newBlockPos.y += 0.5F;
+        newBlockPos.y += 0.7F;
         newBlockPos.z += 1;
         if (direction.x > 0)
             newBlockPos.x += deltaPosX;

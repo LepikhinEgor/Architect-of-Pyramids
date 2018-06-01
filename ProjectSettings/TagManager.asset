@@ -42,6 +42,7 @@ TagManager:
   - WindStart
   - WindEnd
   - LivesUI
+  - BlockMask
   layers:
   - Default
   - TransparentFX

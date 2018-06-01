@@ -193,6 +193,7 @@ public class Player : MonoBehaviour
     {
         GameObject okButton = GameObject.FindGameObjectWithTag("OK");
         GameObject canvas = GameObject.FindGameObjectWithTag("MainCanvas");
+        currPiramidIsLock = false;
         if (currentPiramidID == 2 && Player.Pir1TotalScore < Player.Pir1TotalScoreMax)
         {
             
@@ -202,11 +203,10 @@ public class Player : MonoBehaviour
             prohibitWindow = GameObject.FindGameObjectWithTag("Window");
             string message = "To unlock this pyramid you need " + (Player.Pir1TotalScoreMax - Pir1TotalScore).ToString() + " more points in first pyramid";
             prohibitWindow.GetComponent<ProhibitWindow>().SetText(message);
-            okButton.SetActive(false);
+            if (okButton != null)
+                okButton.SetActive(false);
         }
-        else
-            currPiramidIsLock = false;
-        Debug.Log(currentPiramidID);
+
         if (currentPiramidID == 3 && Player.Pir2TotalScore < Player.Pir2TotalScoreMax)
         {
             Debug.Log("Window prohibit build 3 pyramid");
@@ -219,8 +219,6 @@ public class Player : MonoBehaviour
             if (okButton!= null)
                 okButton.SetActive(false);
         }
-        else
-            currPiramidIsLock = false;
     }
 
     // Update is called once per frame
@@ -474,7 +472,7 @@ public class Player : MonoBehaviour
             //blockSelectionPos = blockSelection.transform.position;
             blockSelectionPos.x = Camera.main.transform.position.x;
             blockSelection.transform.position = blockSelectionPos;
-
+            Debug.Log(Player.currPiramidIsLock);
             if (Player.currPiramidIsLock == true)
                 Player.AddProhibitSceneMessage();
         }

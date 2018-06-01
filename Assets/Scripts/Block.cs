@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class Block : MonoBehaviour
 {
-
+    public GameObject blockMask;
     public AudioClip catchClip;
     public AudioClip perfectCatchClip;
     public AudioSource catchSound;
@@ -64,6 +64,7 @@ public class Block : MonoBehaviour
 
     private void Awake()
     {
+
         Player.block = this;
         blockSprite = GameObject.FindGameObjectWithTag("BlockSprite");
         blockSpriteActive = GameObject.FindGameObjectWithTag("BlockActiveSprite");
@@ -84,7 +85,8 @@ public class Block : MonoBehaviour
     }
     private void Start()
     {
-        switch(Player.currentBlockMaterialNum)
+        blockMask = GameObject.FindGameObjectWithTag("BlockMask");
+        switch (Player.currentBlockMaterialNum)
         {
             case 0:
                 blockSprite.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/sapphireBlock");
@@ -174,17 +176,22 @@ public class Block : MonoBehaviour
             if (parentBuilder.isSwingRight)
             {
                 if (transform.rotation.z > -swingAngle)
+                {
                     transform.Rotate(back);
+                }
                 else
                     parentBuilder.isSwingRight = false;
             }
             else
             {
                 if (transform.rotation.z < swingAngle)
+                {
                     transform.Rotate(forward);
+                }
                 else
                     parentBuilder.isSwingRight = true;
             }
+            blockMask.transform.rotation = blockSprite.transform.rotation;
         }
     }
 
