@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 
 public class Block : MonoBehaviour
 {
+    public bool isTimerInc;
+    public float timer;
     public GameObject blockMask;
     public AudioClip catchClip;
     public AudioClip perfectCatchClip;
@@ -64,7 +66,8 @@ public class Block : MonoBehaviour
 
     private void Awake()
     {
-
+        isTimerInc = true;
+        timer = 0;
         Player.block = this;
         blockSprite = GameObject.FindGameObjectWithTag("BlockSprite");
         blockSpriteActive = GameObject.FindGameObjectWithTag("BlockActiveSprite");
@@ -134,7 +137,9 @@ public class Block : MonoBehaviour
 
     void Update()
     {
-        if (isFly && transform.position.y + 0.6F < ParentBuilder.transform.position.y)
+        if (isTimerInc)
+            timer += Time.deltaTime;
+        if (isFly && transform.position.y + 1F < ParentBuilder.transform.position.y)
         {
             //блок упал
             cam1.GetComponent<CameraController>().isFollow = false;
@@ -155,10 +160,14 @@ public class Block : MonoBehaviour
             }
             else
             {
+                isTimerInc = false;
                 isFly = false;
                 Debug.Log(Player.lives);
                 Player.score = 0;
                 Player.ShowResultWindow();
+                GameObject.FindGameObjectWithTag("ResultWindow").GetComponent<ResultsWindow>().timer = 10000;
+                parentBuilder.animator.SetBool("IsMoving", false);
+                Destroy(this.gameObject, 0.05F);
             }
         }
         if (isFly)

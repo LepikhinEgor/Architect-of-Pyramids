@@ -3682,7 +3682,8 @@ Prefab:
       propertyPath: m_TagString
       value: FirstBuilder
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 0}
   m_ParentPrefab: {fileID: 100100000, guid: 13dd4bf6afe58a3458191cb787549817, type: 2}
   m_IsPrefabParent: 0
 --- !u!4 &1509863130 stripped

@@ -63,7 +63,7 @@ public class Builder : MonoBehaviour
 
     private void Update()
     {
-        if (block.IsFly)
+        if (block != null && block.IsFly)
         {
             if (System.Math.Abs(block.transform.position.y - transform.position.y) < 5)
             {
@@ -98,10 +98,9 @@ public class Builder : MonoBehaviour
     {
         checkerPosRight = transform.position;
         checkerPosRight.x += 0.5F;
-        checkerPosRight.y -= 0.5F;
         checkerPosLeft = transform.position;
         checkerPosLeft.x -= 0.5F;
-        checkerPosLeft.y -= 0.5F;
+        checkerPosLeft.y += 0.5F;
         tmpCollider = Physics2D.OverlapCircle(checkerPosRight, 0.3F);
         if (tmpCollider)
         {
@@ -215,8 +214,10 @@ public class Builder : MonoBehaviour
 
                 if (tag.Equals("LastBuilder"))
                 {
+                    block.isTimerInc = false;
                     Player.score += (int)(Player.score * Player.lives * 0.05);
                     Player.ShowResultWindow();
+                    GameObject.FindGameObjectWithTag("ResultWindow").GetComponent<ResultsWindow>().timer = block.timer;
                 }
 
                 if (tag.Equals("WindStart"))

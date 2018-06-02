@@ -2413,6 +2413,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 722572acd92b7df4bb6e34a7e3dd4fee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isTimerInc: 0
+  timer: 0
   blockMask: {fileID: 0}
   catchClip: {fileID: 0}
   perfectCatchClip: {fileID: 0}
