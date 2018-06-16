@@ -153,10 +153,12 @@ public class Platform : MonoBehaviour {
 
     private void OnMouseUp()
     {
+        Player.CalcMaxScore(blockMaterialNum);
         GameObject canvas = GameObject.FindGameObjectWithTag("MainCanvas");
 
         if (Player.selectedPlatfomID != -1)
         {
+            Player.CalcMaxScore(blockMaterialNum);
             //GameObject[] platforms = GameObject.FindGameObjectsWithTag("Platform");
             //GameObject selectedPlatform = transform.gameObject;
 
@@ -166,12 +168,37 @@ public class Platform : MonoBehaviour {
             //        selectedPlatform = pl;
             //}
             Destroy(Player.selectedPlatform.transform.Find("YellowLightPrefab(Clone)").gameObject);
+            if (Player.isChoosingPlatform)
+            {
+                if (score < Player.score)
+                    Player.pointer.GetComponent<Image>().color = Color.green;
+                if (score > Player.score)
+                    Player.pointer.GetComponent<Image>().color = Color.red;
+            }
+            else
+            {
+                string text = score.ToString() + " / " + (Player.currentMaxScore).ToString();
+                Player.blScoreUI.GetComponent<Text>().text = text;
+            }
             Player.selectedPlatform.transform.Find("Select").gameObject.SetActive(true);
 
         }
         else
         {
-            Instantiate(Player.blockScorePrefab, canvas.transform);
+            if (Player.isChoosingPlatform)
+            {
+                if (score < Player.score)
+                    Player.pointer.GetComponent<Image>().color = Color.green;
+                if (score > Player.score)
+                    Player.pointer.GetComponent<Image>().color = Color.red;
+                Instantiate(Player.blockScorePrefab, canvas.transform);
+            }
+            else {
+                canvas.transform.Find("BlockMaterial").GetComponent<Text>().text = "";
+                Player.blScoreUI = (GameObject)Instantiate(Player.selectBlockScorePrefab, canvas.transform);
+                string text = score.ToString() + " / " + (Player.currentMaxScore).ToString();
+                Player.blScoreUI.GetComponent<Text>().text = text;
+            }
         }
 
         Player.selectedPlatfomID = ID;
@@ -185,7 +212,8 @@ public class Platform : MonoBehaviour {
         Instantiate(yellowLightPrefab, transform);
         transform.Find("Select").gameObject.SetActive(false);
 
-        canvas.transform.Find("BlockScorePrefab(Clone)").gameObject.GetComponent<Text>().text = score.ToString();
+        if (Player.isChoosingPlatform)
+            canvas.transform.Find("BlockScorePrefab(Clone)").gameObject.GetComponent<Text>().text = score.ToString();
     }
 
    
@@ -211,9 +239,9 @@ public class Platform : MonoBehaviour {
                 sprites[2] = Resources.Load<Sprite>("Sprites/emeraldBlockBottom");
                 break;
             case 3:
-                sprites[0] = Resources.Load<Sprite>("Sprites/silverBlock");
-                sprites[1] = Resources.Load<Sprite>("Sprites/silverBlockRight");
-                sprites[2] = Resources.Load<Sprite>("Sprites/silverBlockBottom");
+                sprites[0] = Resources.Load<Sprite>("Sprites/aquamarineBlock");
+                sprites[1] = Resources.Load<Sprite>("Sprites/aquamarineBlockRight");
+                sprites[2] = Resources.Load<Sprite>("Sprites/aquamarineBlockBottom");
                 break;
             case 4:
                 sprites[0] = Resources.Load<Sprite>("Sprites/goldenBlock");

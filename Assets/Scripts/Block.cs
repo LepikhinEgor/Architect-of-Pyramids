@@ -11,6 +11,8 @@ public class Block : MonoBehaviour
     public GameObject blockMask;
     public AudioClip catchClip;
     public AudioClip perfectCatchClip;
+    public AudioClip lastCatchSound;
+    public AudioClip lastBadCatchSound;
     public AudioSource catchSound;
     public AudioSource perfectCatchSound;
 
@@ -81,6 +83,9 @@ public class Block : MonoBehaviour
 
         catchClip = Resources.Load<AudioClip>("Sounds/catchSound");
         perfectCatchClip = Resources.Load<AudioClip>("Sounds/perfectCatchSound");
+        lastCatchSound = Resources.Load<AudioClip>("Sounds/LastCatch");
+        lastBadCatchSound = Resources.Load<AudioClip>("Sounds/LastBadCatch");
+
         perfectCatchSound = gameObject.AddComponent<AudioSource>();
         perfectCatchSound.clip = perfectCatchClip;
         catchSound = gameObject.AddComponent<AudioSource>();
@@ -107,14 +112,18 @@ public class Block : MonoBehaviour
                 blockSpriteActiveBack.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/emeraldBlockActiveBack");
                 break;
             case 3:
+                blockSprite.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/aquamarineBlock");
+                blockSpriteActive.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/aquamarineBlockActive");
+                blockSpriteActiveBack.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/aquamarineBlockActiveBack");
+                
+                break;
+            case 4:
                 blockSprite.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/silverBlock");
                 blockSpriteActive.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/silverBlockActive");
                 blockSpriteActiveBack.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/silverBlockActiveBack");
-                break;
-            case 4:
-                blockSprite.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/goldenBlock");
-                blockSpriteActive.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/goldenBlockActive");
-                blockSpriteActiveBack.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/goldenBlockActiveBack");
+                //blockSprite.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/goldenBlock");
+                //blockSpriteActive.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/goldenBlockActive");
+                //blockSpriteActiveBack.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/goldenBlockActiveBack");
                 break;
             case 5:
                 blockSprite.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/topazBlock");
@@ -160,6 +169,8 @@ public class Block : MonoBehaviour
             }
             else
             {
+                perfectCatchSound.clip = lastBadCatchSound;
+                perfectCatchSound.Play();
                 isTimerInc = false;
                 isFly = false;
                 Debug.Log(Player.lives);
@@ -167,7 +178,9 @@ public class Block : MonoBehaviour
                 Player.ShowResultWindow();
                 GameObject.FindGameObjectWithTag("ResultWindow").GetComponent<ResultsWindow>().timer = 10000;
                 parentBuilder.animator.SetBool("IsMoving", false);
-                Destroy(this.gameObject, 0.05F);
+                //transform.Find("blockSprite").gameObject.SetActive(false);
+                rigidBodyBlock.gravityScale = 0;
+                rigidBodyBlock.velocity = Vector3.zero;
             }
         }
         if (isFly)

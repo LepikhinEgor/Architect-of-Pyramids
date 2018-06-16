@@ -42,6 +42,8 @@ public class CancelButton : MonoBehaviour
             if (Player.selectedPlatform != null)
                 Destroy(canvas.transform.Find("BlockScorePrefab(Clone)").gameObject);
             player.GetComponent<Player>().ShowSelectBlockUI();
+            if (Player.pointer != null)
+                Destroy(Player.pointer);
         }
     }
 

@@ -50,10 +50,10 @@ public class OkButton : MonoBehaviour {
                     SceneManager.LoadScene("EmeraldFloors1");
                 else
                         if (blockSelection.GetComponent<BlockSelection>().BlockMaterialNum == 4)
-                    SceneManager.LoadScene("GoldenFloors1");
+                    SceneManager.LoadScene("SilverFloors1");
                 else
                             if (blockSelection.GetComponent<BlockSelection>().BlockMaterialNum == 3)
-                    SceneManager.LoadScene("SilverFloors1");
+                    SceneManager.LoadScene("Aquamarine Floors1");
                 else
                                 if (blockSelection.GetComponent<BlockSelection>().BlockMaterialNum == 5)
                     SceneManager.LoadScene("TopazFloors1");
@@ -106,6 +106,8 @@ public class OkButton : MonoBehaviour {
 
                 Player.score = 0;
                 piramid.GetComponent<Piramid>().RefreshPiramidScoreLine();
+
+                Destroy(Player.pointer);
             }
             Debug.Log("UPd");
         }

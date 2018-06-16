@@ -9,7 +9,8 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
-
+    public static GameObject blScoreUI;
+    public static GameObject pointer;
     public static Text ankhLivesUI;
 
     public static UnityEngine.Object smokePrefab;
@@ -21,6 +22,8 @@ public class Player : MonoBehaviour
     public static UnityEngine.Object blockScorePrefab;
     public static UnityEngine.Object sampleScorePrefab;
     public static UnityEngine.Object scoreDiffPrefab;
+    public static UnityEngine.Object pointerPrefab;
+    public static UnityEngine.Object selectBlockScorePrefab;
 
     public static bool currPiramidIsLock = false;
     public static UnityEngine.Object prohibitWindowPrefab;
@@ -109,6 +112,8 @@ public class Player : MonoBehaviour
         resultWindowPrefab = Resources.Load("Prefabs/ResultsWindowPrefab"); 
         blockScorePrefab = Resources.Load("Prefabs/BlockScorePrefab");
         sampleScorePrefab = Resources.Load("Prefabs/SampleScorePrefab");
+        pointerPrefab = Resources.Load("Prefabs/PointerPrefab");
+        selectBlockScorePrefab = Resources.Load("Prefabs/SelectBlockScorePrefab");
         if (!File.Exists(Application.persistentDataPath + "/Save/Save.xml"))
         {
             Debug.Log("FFFF");
@@ -120,7 +125,8 @@ public class Player : MonoBehaviour
             || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("GoldenFloors1")
             || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("rubyFloors1")
             || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("SilverFloors1")
-            || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("TopazFloors1"))
+            || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("TopazFloors1")
+            || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("Aquamarine Floors1"))
         {
             ankhLivesUI = GameObject.FindGameObjectWithTag("LivesUI").GetComponent<Text>();
             ankhLivesUI.text = "3";
@@ -139,6 +145,7 @@ public class Player : MonoBehaviour
             SceneManager.GetActiveScene() == SceneManager.GetSceneByName("Piramid2") ||
             SceneManager.GetActiveScene() == SceneManager.GetSceneByName("Piramid3"))
         {
+            GameObject canvas = GameObject.FindGameObjectWithTag("MainCanvas");
             prohibitWindowPrefab = Resources.Load("Prefabs/ProhibitWindowPrefab");
 
             cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
@@ -163,11 +170,12 @@ public class Player : MonoBehaviour
                 sample.GetComponent<Platform>().SetRandomGoodEdgePositions(goodEdgesCount);
                 sample.GetComponent<Platform>().InsertBlock();
                 piramid.GetComponent<Piramid>().RefreshNeighborEdgesCount();
-                //piramid.GetComponent<Piramid>().HighlightBlocks(sample.GetComponent<Platform>().BlockMaterialNum);
-
+                pointer = (GameObject)Instantiate(Player.pointerPrefab, canvas.transform);
             }
             else
+            {
                 sample.SetActive(false);
+            }
 
             piramid.GetComponent<Piramid>().TurnHighLightsOFF();
             //piramid.GetComponent<Piramid>().HighlightBlocks(sample.GetComponent<Platform>().BlockMaterialNum);
@@ -177,7 +185,6 @@ public class Player : MonoBehaviour
             if (isChoosingPlatform)
                 HideSelectBlockUI();
 
-            GameObject canvas = GameObject.FindGameObjectWithTag("MainCanvas");
             AddProhibitSceneMessage();
             if (isChoosingPlatform)
             {
@@ -186,7 +193,7 @@ public class Player : MonoBehaviour
             }
             Debug.Log("start");
         }
-        CalcMaxScore();
+        CalcMaxScore(currentBlockMaterialNum);
     }
 
     public static void AddProhibitSceneMessage()
@@ -336,7 +343,8 @@ public class Player : MonoBehaviour
         || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("GoldenFloors1")
         || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("rubyFloors1")
         || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("SilverFloors1")
-        || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("TopazFloors1"))
+        || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("TopazFloors1")
+        || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("Aquamarine Floors1"))
         {
             if (perfectTimer)
             {
@@ -472,7 +480,6 @@ public class Player : MonoBehaviour
             //blockSelectionPos = blockSelection.transform.position;
             blockSelectionPos.x = Camera.main.transform.position.x;
             blockSelection.transform.position = blockSelectionPos;
-            Debug.Log(Player.currPiramidIsLock);
             if (Player.currPiramidIsLock == true)
                 Player.AddProhibitSceneMessage();
         }
@@ -488,10 +495,10 @@ public class Player : MonoBehaviour
 
     }
 
-    public void CalcMaxScore()
+    public static void CalcMaxScore(int blockMatrialNumber)
     {
         int floorsNum = 0;
-        switch (currentBlockMaterialNum)
+        switch (blockMatrialNumber)
         {
             case 0: floorsNum = 6; break;
             case 1: floorsNum = 12; break;
@@ -509,7 +516,7 @@ public class Player : MonoBehaviour
             maxScore += i;
         maxScore *= 2;
         maxScore = maxScore + (int)(maxScore * 3 * 0.05);
-        if (currentBlockMaterialNum == 4 || currentBlockMaterialNum == 8)
+        if (blockMatrialNumber == 4 || blockMatrialNumber == 8)
             maxScore += (int)(maxScore*0.5);
         currentMaxScore = maxScore;
     }
@@ -721,8 +728,8 @@ public class Player : MonoBehaviour
             case 0: sceneName = "SaphireFloors1";break;
             case 1: sceneName = "RubyFloors1"; break;
             case 2: sceneName = "EmeraldFloors1"; break;
-            case 3: sceneName = "SilverFloors1"; break;
-            case 4: sceneName = "GoldenFloors1"; break;
+            case 3: sceneName = "Aquamarine Floors1"; break;
+            case 4: sceneName = "SilverFloors1"; break;
             case 5: sceneName = "TopazFloors1"; break;
             case 6: sceneName = "AmetistFloors1"; break;
         }
@@ -753,5 +760,16 @@ public class Player : MonoBehaviour
         string message = "Score: " + (Player.score).ToString() + "/" + (Player.currentMaxScore).ToString();
 
         resultWindow.GetComponent<ProhibitWindow>().SetText(message);
+    }
+
+    public static void LoadLastPiramidScene()
+    {
+        SceneManager.LoadSceneAsync("Piramid1");
+    }
+
+    public static void LoadNewGame()
+    {
+        Player.CreateXML();
+        SceneManager.LoadSceneAsync("Piramid1");
     }
 }

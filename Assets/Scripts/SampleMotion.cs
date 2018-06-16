@@ -42,7 +42,7 @@ public class SampleMotion : MonoBehaviour {
                 speed = 2.8F;
                 break;
             case 3:
-                scale = 0.74F;
+                scale = 0.6F;
                 speed = 3F;
                 break;
         }
@@ -70,9 +70,15 @@ public class SampleMotion : MonoBehaviour {
 
                 string text = "";
                 if (scoreDifferent < 0)
+                {
                     text = "-" + System.Math.Abs(scoreDifferent).ToString();
+                    scoreDiff.GetComponent<Text>().color = Color.red;
+                }
                 if (scoreDifferent > 0)
+                {
                     text = "+" + scoreDifferent.ToString();
+                    scoreDiff.GetComponent<Text>().color = Color.green;
+                }
                 if (scoreDifferent == 0)
                     text = "0";
                 scoreDiff.GetComponent<Text>().text = text;

@@ -5,6 +5,9 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: 0de8365c02b0643428bb59114f1126ad
   - enabled: 0
     path: Assets/Scenes/Piramids.unity
     guid: e9a6fa0186fce2d43a45e9f22064ebcb
@@ -32,6 +35,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TopazFloors1.unity
     guid: 7329fe971d65db446bea42b9446b1c9e
+  - enabled: 1
+    path: Assets/Scenes/Aquamarine Floors1.unity
+    guid: 2e34c4c772173084e996ec2b203e038b
   - enabled: 1
     path: Assets/Scenes/Piramid2.unity
     guid: 529f9602d05bda7488f569c9c5d2a2e3

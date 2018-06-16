@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-
+using UnityEngine.UI;
 
 public class BlockSelection : MonoBehaviour {
 
+    Text blockMaterialText;
     private UnityEngine.Object prohibitWindowPrefab;
     GameObject prohibitWindow;
     GameObject okButton;
@@ -50,6 +51,8 @@ public class BlockSelection : MonoBehaviour {
         prohibitMessages = new string[9];
     }
     void Start () {
+        GameObject canvas = GameObject.FindGameObjectWithTag("MainCanvas");
+        blockMaterialText = canvas.transform.Find("BlockMaterial").GetComponent<Text>();
         Debug.Log("StratBlSel");
         piramid = GameObject.FindGameObjectWithTag("Piramid");
 
@@ -121,7 +124,7 @@ public class BlockSelection : MonoBehaviour {
 
             lastMouseXPos = currentMouseXpos;
         }
-
+        
         if (Input.GetMouseButtonUp(0) && isScrolling)
         {
             isScrolling = false;
@@ -150,7 +153,7 @@ public class BlockSelection : MonoBehaviour {
         {
             if (blockColor.GetComponent<BloсkSprite>().ID == 0)
                 firstBlockColorPosX = blockColor.transform.position.x;
-            if (blockColor.GetComponent<BloсkSprite>().ID == 6)
+            if (blockColor.GetComponent<BloсkSprite>().ID == 8)
                 lastBlockColorPosX = blockColor.transform.position.x;
         }
         bool isEndOfDamping = (firstBlockColorPosX >= 0 && blockDeltaPos > 0) || (lastBlockColorPosX <= 0 && blockDeltaPos < 0);
@@ -212,6 +215,21 @@ public class BlockSelection : MonoBehaviour {
                         prohibitWindow.GetComponent<ProhibitWindow>().SetText(prohibitMessages[id]);
                     }
                 }
+
+                string blockMaterial = "";
+                switch (blockColor.GetComponent<BloсkSprite>().ID)
+                {
+                    case 0: blockMaterial = "Sapphire block";break;
+                    case 1: blockMaterial = "Ruby block"; break;
+                    case 2: blockMaterial = "Emerald block"; break;
+                    case 3: blockMaterial = "Aquamarine block"; break;
+                    case 4: blockMaterial = "Silver block"; break;
+                    case 5: blockMaterial = "Golden block"; break;
+                    case 6: blockMaterial = "Onyx block"; break;
+                    case 7: blockMaterial = "Pearl block"; break;
+                    case 8: blockMaterial = "Amethyst block"; break;
+                }
+                blockMaterialText.text = blockMaterial;
                 piramid.GetComponent<Piramid>().HighlightBlocks(blockMaterialNum);
                 Vector3 blockColorScale = blockColor.transform.localScale;
                 blockColorScale.x = 2.2F;

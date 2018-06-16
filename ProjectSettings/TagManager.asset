@@ -43,6 +43,7 @@ TagManager:
   - WindEnd
   - LivesUI
   - BlockMask
+  - Menu
   layers:
   - Default
   - TransparentFX

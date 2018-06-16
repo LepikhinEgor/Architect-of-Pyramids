@@ -12,7 +12,7 @@ public class Builder : MonoBehaviour
     Vector3 checkerPosLeft;
     public Animator animator;
     //[SerializeField]
-    private float throwForse;
+    public float throwForse;
     Wind wind;
     [SerializeField]
     public bool isSwingRight;
@@ -36,7 +36,6 @@ public class Builder : MonoBehaviour
         block = Player.block;
         animator = transform.Find("Sprite").GetComponent<Animator>();
         //block = GameObject.FindGameObjectWithTag("Block").GetComponent<Block>();
-        throwForse = 11.7F;
         speed = 3.5F;
         sprite = GetComponentInChildren<SpriteRenderer>();
         previousPosX = transform.position.x;
@@ -65,7 +64,8 @@ public class Builder : MonoBehaviour
     {
         if (block != null && block.IsFly)
         {
-            if (System.Math.Abs(block.transform.position.y - transform.position.y) < 5)
+            float offset = transform.position.y - block.transform.position.y;
+            if (offset < 8 && offset > 3 || System.Math.Abs(offset) < 1.2F)
             {
                 animator.SetBool("IsAnimation", true);
             }
@@ -214,6 +214,8 @@ public class Builder : MonoBehaviour
 
                 if (tag.Equals("LastBuilder"))
                 {
+                    block.catchSound.clip = block.lastCatchSound;
+                    block.catchSound.Play();
                     block.isTimerInc = false;
                     Player.score += (int)(Player.score * Player.lives * 0.05);
                     Player.ShowResultWindow();
