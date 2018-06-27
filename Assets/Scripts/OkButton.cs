@@ -39,26 +39,17 @@ public class OkButton : MonoBehaviour {
             Player.currentPiramidID = piramid.GetComponent<Piramid>().ID;
             Player.lives = 3;
 
-            if (blockSelection.GetComponent<BlockSelection>().BlockMaterialNum == 0)
-                SceneManager.LoadScene("SaphireFloors1");
-            else
+            switch (blockSelection.GetComponent<BlockSelection>().BlockMaterialNum)
             {
-                if (blockSelection.GetComponent<BlockSelection>().BlockMaterialNum == 1)
-                    SceneManager.LoadScene("RubyFloors1");
-                else
-                    if (blockSelection.GetComponent<BlockSelection>().BlockMaterialNum == 2)
-                    SceneManager.LoadScene("EmeraldFloors1");
-                else
-                        if (blockSelection.GetComponent<BlockSelection>().BlockMaterialNum == 4)
-                    SceneManager.LoadScene("SilverFloors1");
-                else
-                            if (blockSelection.GetComponent<BlockSelection>().BlockMaterialNum == 3)
-                    SceneManager.LoadScene("Aquamarine Floors1");
-                else
-                                if (blockSelection.GetComponent<BlockSelection>().BlockMaterialNum == 5)
-                    SceneManager.LoadScene("TopazFloors1");
-                //else
-                // SceneManager.LoadScene("mainScene");
+                case 0: SceneManager.LoadSceneAsync("SaphireFloors1");break;
+                case 1: SceneManager.LoadSceneAsync("RubyFloors1"); break;
+                case 2: SceneManager.LoadSceneAsync("EmeraldFloors1"); break;
+                case 3: SceneManager.LoadSceneAsync("Aquamarine Floors1"); break;
+                case 4: SceneManager.LoadSceneAsync("SilverFloors1"); break;
+                case 5: SceneManager.LoadSceneAsync("GoldenFloors1"); break;
+                case 6: SceneManager.LoadSceneAsync("TopazFloors1"); break;
+                case 7: SceneManager.LoadSceneAsync("PearlyFloors1"); break;
+                case 8: SceneManager.LoadSceneAsync("AmethystFloors1"); break;
             }
         }
         if (Player.isChoosingPlatform)
