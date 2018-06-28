@@ -244,14 +244,29 @@ public class Platform : MonoBehaviour {
                 sprites[2] = Resources.Load<Sprite>("Sprites/aquamarineBlockBottom");
                 break;
             case 4:
+                sprites[0] = Resources.Load<Sprite>("Sprites/silverBlock");
+                sprites[1] = Resources.Load<Sprite>("Sprites/silverBlockRight");
+                sprites[2] = Resources.Load<Sprite>("Sprites/silverBlockBottom");
+                break;
+            case 5:
                 sprites[0] = Resources.Load<Sprite>("Sprites/goldenBlock");
                 sprites[1] = Resources.Load<Sprite>("Sprites/goldenBlockRight");
                 sprites[2] = Resources.Load<Sprite>("Sprites/goldenBlockBottom");
                 break;
-            case 5:
+            case 6:
                 sprites[0] = Resources.Load<Sprite>("Sprites/topazBlock");
                 sprites[1] = Resources.Load<Sprite>("Sprites/topazBlockRight");
                 sprites[2] = Resources.Load<Sprite>("Sprites/topazBlockBottom");
+                break;
+            case 7:
+                sprites[0] = Resources.Load<Sprite>("Sprites/pearlyBlock");
+                sprites[1] = Resources.Load<Sprite>("Sprites/pearlyBlockRight");
+                sprites[2] = Resources.Load<Sprite>("Sprites/pearlyBlockBottom");
+                break;
+            case 8:
+                sprites[0] = Resources.Load<Sprite>("Sprites/amethystBlock");
+                sprites[1] = Resources.Load<Sprite>("Sprites/amethystBlockRight");
+                sprites[2] = Resources.Load<Sprite>("Sprites/amethystBlockBottom");
                 break;
         }
 

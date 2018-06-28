@@ -65,7 +65,32 @@ public class OkButton : MonoBehaviour {
             Platform platform = selectedPlatform.GetComponent<Platform>();
             GameObject sample = GameObject.FindGameObjectWithTag("Sample");
             GameObject piramid = GameObject.FindGameObjectWithTag("Piramid");
-            if (Player.selectedPlatfomID != -1 && sample && sample.GetComponent<Platform>().Score != 0 && selectedPlatform.GetComponent<Platform>().NeighborEdgesCount >= sample.GetComponent<Platform>().BlockMaterialNum)
+
+            int neighboresNeedsCount = 0;
+
+            switch (selectedPlatform.GetComponent<Platform>().BlockMaterialNum)
+            {
+                case 0:
+                    neighboresNeedsCount = 0; break;
+                case 1:
+                    neighboresNeedsCount = 1; break;
+                case 2:
+                    neighboresNeedsCount = 2; break;
+                case 3:
+                    neighboresNeedsCount = 3; break;
+                case 4:
+                    neighboresNeedsCount = 4; break;
+                case 5:
+                    neighboresNeedsCount = 4; break;
+                case 6:
+                    neighboresNeedsCount = 5; break;
+                case 7:
+                    neighboresNeedsCount = 6; break;
+                case 8:
+                    neighboresNeedsCount = 6; break;
+            }
+
+            if (Player.selectedPlatfomID != -1 && sample && sample.GetComponent<Platform>().Score != 0 && selectedPlatform.GetComponent<Platform>().NeighborEdgesCount >= neighboresNeedsCount)
             {
                 sample.GetComponent<SampleMotion>().scoreDifferent = sample.GetComponent<Platform>().Score - Player.selectedPlatform.Score;
                 Debug.Log(Player.selectedPlatfomID);

@@ -126,7 +126,9 @@ public class Player : MonoBehaviour
             || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("rubyFloors1")
             || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("SilverFloors1")
             || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("TopazFloors1")
-            || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("Aquamarine Floors1"))
+            || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("Aquamarine Floors1")
+            || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("PearlyFloors1")
+            || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("AmethystFloors1"))
         {
             ankhLivesUI = GameObject.FindGameObjectWithTag("LivesUI").GetComponent<Text>();
             ankhLivesUI.text = "3";
@@ -344,7 +346,9 @@ public class Player : MonoBehaviour
         || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("rubyFloors1")
         || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("SilverFloors1")
         || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("TopazFloors1")
-        || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("Aquamarine Floors1"))
+        || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("Aquamarine Floors1")
+        || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("PearlyFloors1")
+        || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("AmethystFloors1"))
         {
             if (perfectTimer)
             {
@@ -504,7 +508,7 @@ public class Player : MonoBehaviour
             case 1: floorsNum = 12; break;
             case 2: floorsNum = 18; break;
             case 3: floorsNum = 24; break;
-            case 4: floorsNum = 24; break;
+            case 4: floorsNum = 30; break;
             case 5: floorsNum = 30; break;
             case 6: floorsNum = 36; break;
             case 7: floorsNum = 42; break;
@@ -516,7 +520,7 @@ public class Player : MonoBehaviour
             maxScore += i;
         maxScore *= 2;
         maxScore = maxScore + (int)(maxScore * 3 * 0.05);
-        if (blockMatrialNumber == 4 || blockMatrialNumber == 8)
+        if (blockMatrialNumber == 5 || blockMatrialNumber == 8)
             maxScore += (int)(maxScore*0.5);
         currentMaxScore = maxScore;
     }
@@ -730,8 +734,10 @@ public class Player : MonoBehaviour
             case 2: sceneName = "EmeraldFloors1"; break;
             case 3: sceneName = "Aquamarine Floors1"; break;
             case 4: sceneName = "SilverFloors1"; break;
-            case 5: sceneName = "TopazFloors1"; break;
-            case 6: sceneName = "AmetistFloors1"; break;
+            case 5: sceneName = "GoldenFloors1";break;
+            case 6: sceneName = "TopazFloors1"; break;
+            case 7: sceneName = "PearlyFloors1";break;
+            case 8: sceneName = "AmethystFloors1"; break;
         }
         SceneManager.LoadScene(sceneName);
     }

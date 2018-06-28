@@ -182,7 +182,13 @@ public class Builder : MonoBehaviour
                     }
                     Player.score += coef * Player.PerfectCoef;
                     RectTransform scoreLine = GameObject.FindGameObjectWithTag("ScoreLine").GetComponent<RectTransform>();
-                    float val = (float)(Player.score) / ((float)(Player.currentMaxScore)/2F);
+
+                    float val;
+                    if (Player.currentBlockMaterialNum == 5 || Player.currentBlockMaterialNum == 8)
+                        val = (float)(Player.score*1.5F) / ((float)(Player.currentMaxScore) / 2F);
+                    else
+                        val = (float)(Player.score) / ((float)(Player.currentMaxScore) / 2F);
+
                     if (val > 1)
                         val = 1;
                     float lineLenght = Screen.width * (scoreLine.anchorMax.x - scoreLine.anchorMin.x);
@@ -218,6 +224,8 @@ public class Builder : MonoBehaviour
                     block.catchSound.Play();
                     block.isTimerInc = false;
                     Player.score += (int)(Player.score * Player.lives * 0.05);
+                    if (Player.currentBlockMaterialNum == 5 || Player.currentBlockMaterialNum == 8)
+                        Player.score =  (int)(Player.score * 1.5);
                     Player.ShowResultWindow();
                     GameObject.FindGameObjectWithTag("ResultWindow").GetComponent<ResultsWindow>().timer = block.timer;
                 }

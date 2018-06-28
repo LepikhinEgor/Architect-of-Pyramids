@@ -363,7 +363,7 @@ public class BlockSelection : MonoBehaviour {
                             + " more points";
                         break;
                     case 2:
-                        if (piramid.GetComponent<Piramid>().totalScore > 1500)
+                        if (piramid.GetComponent<Piramid>().totalScore > 500)
                         {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
@@ -372,7 +372,7 @@ public class BlockSelection : MonoBehaviour {
                             + " more points";
                         break;
                     case 3:
-                        if (piramid.GetComponent<Piramid>().totalScore > 4000)
+                        if (piramid.GetComponent<Piramid>().totalScore > 500)
                         {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
@@ -381,7 +381,7 @@ public class BlockSelection : MonoBehaviour {
                             + " more points";
                         break;
                     case 4:
-                        if (piramid.GetComponent<Piramid>().totalScore > 5000)
+                        if (piramid.GetComponent<Piramid>().totalScore > 500)
                         {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
@@ -390,7 +390,7 @@ public class BlockSelection : MonoBehaviour {
                             + " more points";
                         break;
                     case 5:
-                        if (piramid.GetComponent<Piramid>().totalScore > 6000)
+                        if (piramid.GetComponent<Piramid>().totalScore > 500)
                         {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
@@ -399,7 +399,7 @@ public class BlockSelection : MonoBehaviour {
                             + " more points";
                         break;
                     case 6:
-                        if (piramid.GetComponent<Piramid>().totalScore > 8000)
+                        if (piramid.GetComponent<Piramid>().totalScore > 500)
                         {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
@@ -408,7 +408,7 @@ public class BlockSelection : MonoBehaviour {
                             + " more points";
                         break;
                     case 7:
-                        if (piramid.GetComponent<Piramid>().totalScore > 10000)
+                        if (piramid.GetComponent<Piramid>().totalScore > 500)
                         {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
@@ -417,7 +417,7 @@ public class BlockSelection : MonoBehaviour {
                             + " more points";
                         break;
                     case 8:
-                        if (piramid.GetComponent<Piramid>().totalScore > 12000)
+                        if (piramid.GetComponent<Piramid>().totalScore > 500)
                         {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;

@@ -104,9 +104,33 @@ public class Piramid : MonoBehaviour
 
     public void HighlightBlocks(int blockMaterialNum)
     {
+        int neighboresNeedsCount = 0;
+
+        switch (blockMaterialNum)
+        {
+            case 0:
+                neighboresNeedsCount = 0; break;
+            case 1:
+                neighboresNeedsCount = 1; break;
+            case 2:
+                neighboresNeedsCount = 2; break;
+            case 3:
+                neighboresNeedsCount = 3; break;
+            case 4:
+                neighboresNeedsCount = 4; break;
+            case 5:
+                neighboresNeedsCount = 4; break;
+            case 6:
+                neighboresNeedsCount = 5; break;
+            case 7:
+                neighboresNeedsCount = 6; break;
+            case 8:
+                neighboresNeedsCount = 6; break;
+        }
+
         foreach (GameObject pl in platforms)
         {
-            if (pl.GetComponent<Platform>().NeighborEdgesCount >= blockMaterialNum)
+            if (pl.GetComponent<Platform>().NeighborEdgesCount >= neighboresNeedsCount)
                 pl.GetComponent<Platform>().backLight.SetActive(true);
             else
                 pl.GetComponent<Platform>().backLight.SetActive(false);

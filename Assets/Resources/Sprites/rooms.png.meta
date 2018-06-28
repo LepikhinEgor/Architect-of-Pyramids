@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: ea1c07ae1924cf646bf4aaf539440744
-timeCreated: 1529188227
+guid: 88c0280cf2524054cbece30cbf582ef8
+timeCreated: 1530174442
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -11,6 +11,8 @@ TextureImporter:
     21300008: rooms_4
     21300010: rooms_5
     21300012: rooms_6
+    21300014: rooms_7
+    21300016: rooms_8
   externalObjects: {}
   serializedVersion: 4
   mipmaps:
@@ -98,7 +100,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 1684
+        y: 1706
         width: 1080
         height: 45
       alignment: 0
@@ -112,6 +114,34 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
+        y: 1536
+        width: 1080
+        height: 150
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: rooms_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1376
+        width: 1080
+        height: 139
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: rooms_3
+      rect:
+        serializedVersion: 2
+        x: 0
         y: 1057
         width: 1080
         height: 301
@@ -122,7 +152,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: rooms_2
+      name: rooms_4
       rect:
         serializedVersion: 2
         x: 0
@@ -136,7 +166,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: rooms_3
+      name: rooms_5
       rect:
         serializedVersion: 2
         x: 0
@@ -150,7 +180,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: rooms_4
+      name: rooms_6
       rect:
         serializedVersion: 2
         x: 0
@@ -164,11 +194,11 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: rooms_5
+      name: rooms_7
       rect:
         serializedVersion: 2
         x: 0
-        y: 178
+        y: 182
         width: 1080
         height: 260
       alignment: 0
@@ -178,7 +208,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: rooms_6
+      name: rooms_8
       rect:
         serializedVersion: 2
         x: 0
