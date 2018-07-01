@@ -44,6 +44,7 @@ TagManager:
   - LivesUI
   - BlockMask
   - Menu
+  - MenuSound
   layers:
   - Default
   - TransparentFX

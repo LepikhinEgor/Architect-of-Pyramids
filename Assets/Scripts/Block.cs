@@ -6,6 +6,10 @@ using UnityEngine.SceneManagement;
 
 public class Block : MonoBehaviour
 {
+    private GameObject firstDamage;
+    private GameObject secondDamage;
+    private GameObject thirdDamage;
+
     public bool isTimerInc;
     public float timer;
     public GameObject blockMask;
@@ -13,8 +17,10 @@ public class Block : MonoBehaviour
     public AudioClip perfectCatchClip;
     public AudioClip lastCatchSound;
     public AudioClip lastBadCatchSound;
+    public AudioClip crackClip;
     public AudioSource catchSound;
     public AudioSource perfectCatchSound;
+    public AudioSource crackSound;
 
     private Builder parentBuilder;
     public Builder ParentBuilder
@@ -68,6 +74,13 @@ public class Block : MonoBehaviour
 
     private void Awake()
     {
+        firstDamage = transform.Find("Defects").Find("firstDefect").gameObject;
+        secondDamage = transform.Find("Defects").Find("secondDefect").gameObject;
+        thirdDamage = transform.Find("Defects").Find("thirdDefect").gameObject;
+
+        firstDamage.SetActive(false);
+        secondDamage.SetActive(false);
+        thirdDamage.SetActive(false);
         isTimerInc = true;
         timer = 0;
         Player.block = this;
@@ -81,14 +94,21 @@ public class Block : MonoBehaviour
         ParentBuilder = GameObject.FindGameObjectWithTag("FirstBuilder").GetComponent<Builder>();
         GetComponentInChildren<SpriteMask>().sprite = Resources.Load<Sprite>("Sprites/mask");
 
+        crackClip = Resources.Load<AudioClip>("Sounds/Crack");
         catchClip = Resources.Load<AudioClip>("Sounds/catchSound");
         perfectCatchClip = Resources.Load<AudioClip>("Sounds/perfectCatchSound");
         lastCatchSound = Resources.Load<AudioClip>("Sounds/LastCatch");
         lastBadCatchSound = Resources.Load<AudioClip>("Sounds/LastBadCatch");
 
+
+        crackSound = gameObject.AddComponent<AudioSource>();
+        crackSound.volume = Player.soundsVolume;
+        crackSound.clip = crackClip;
         perfectCatchSound = gameObject.AddComponent<AudioSource>();
+        perfectCatchSound.volume = Player.soundsVolume;
         perfectCatchSound.clip = perfectCatchClip;
         catchSound = gameObject.AddComponent<AudioSource>();
+        catchSound.volume = Player.soundsVolume;
         catchSound.clip = catchClip;
     }
     private void Start()
@@ -168,8 +188,15 @@ public class Block : MonoBehaviour
             parentBuilder.animator.SetBool("IsMoving", true);
             transform.rotation = ParentBuilder.transform.rotation;
             Player.ankhLivesUI.text = Player.lives.ToString();
-            if (Player.lives > 0)
+            if (Player.lives >= 0)
             {
+                switch (Player.lives)
+                {
+                    case 2: firstDamage.SetActive(true);break;
+                    case 1: secondDamage.SetActive(true); break;
+                    case 0: thirdDamage.SetActive(true); break;
+                }
+                crackSound.Play();
                 rigidBodyBlock.velocity = Vector3.zero;
                 parentBuilder.isKeep = true;
                 parentBuilder.CarryBlock();
@@ -193,6 +220,13 @@ public class Block : MonoBehaviour
                 //transform.Find("blockSprite").gameObject.SetActive(false);
                 rigidBodyBlock.gravityScale = 0;
                 rigidBodyBlock.velocity = Vector3.zero;
+                transform.Find("blockSprite").gameObject.SetActive(false);
+                if (transform.Find("blockActiveSprite") != null &&
+                    transform.Find("blockActiveBackSprite") != null)
+                {
+                    transform.Find("blockActiveSprite").gameObject.SetActive(false);
+                    transform.Find("blockActiveBackSprite").gameObject.SetActive(false);
+                }
             }
         }
         if (isFly)

@@ -41,15 +41,35 @@ public class OkButton : MonoBehaviour {
 
             switch (blockSelection.GetComponent<BlockSelection>().BlockMaterialNum)
             {
-                case 0: SceneManager.LoadSceneAsync("SaphireFloors1");break;
-                case 1: SceneManager.LoadSceneAsync("RubyFloors1"); break;
-                case 2: SceneManager.LoadSceneAsync("EmeraldFloors1"); break;
-                case 3: SceneManager.LoadSceneAsync("Aquamarine Floors1"); break;
-                case 4: SceneManager.LoadSceneAsync("SilverFloors1"); break;
-                case 5: SceneManager.LoadSceneAsync("GoldenFloors1"); break;
-                case 6: SceneManager.LoadSceneAsync("TopazFloors1"); break;
-                case 7: SceneManager.LoadSceneAsync("PearlyFloors1"); break;
-                case 8: SceneManager.LoadSceneAsync("AmethystFloors1"); break;
+                case 0:
+                    SceneManager.LoadSceneAsync("SaphireFloors1");
+                    Destroy(Player.menuSound);
+                    break;
+                case 1:
+                    SceneManager.LoadSceneAsync("RubyFloors1");
+                    Destroy(Player.menuSound);
+                    break;
+                case 2: SceneManager.LoadSceneAsync("EmeraldFloors1");
+                    Destroy(Player.menuSound);
+                    break;
+                case 3: SceneManager.LoadSceneAsync("Aquamarine Floors1");
+                    Destroy(Player.menuSound);
+                    break;
+                case 4: SceneManager.LoadSceneAsync("SilverFloors1");
+                    Destroy(Player.menuSound);
+                    break;
+                case 5: SceneManager.LoadSceneAsync("GoldenFloors1");
+                    Destroy(Player.menuSound);
+                    break;
+                case 6: SceneManager.LoadSceneAsync("TopazFloors1");
+                    Destroy(Player.menuSound);
+                    break;
+                case 7: SceneManager.LoadSceneAsync("PearlyFloors1");
+                    Destroy(Player.menuSound);
+                    break;
+                case 8: SceneManager.LoadSceneAsync("AmethystFloors1");
+                    Destroy(Player.menuSound);
+                    break;
             }
         }
         if (Player.isChoosingPlatform)
@@ -68,7 +88,7 @@ public class OkButton : MonoBehaviour {
 
             int neighboresNeedsCount = 0;
 
-            switch (selectedPlatform.GetComponent<Platform>().BlockMaterialNum)
+            switch (sample.GetComponent<Platform>().BlockMaterialNum)
             {
                 case 0:
                     neighboresNeedsCount = 0; break;

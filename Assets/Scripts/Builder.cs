@@ -142,6 +142,7 @@ public class Builder : MonoBehaviour
             Block newBlock = findedCollider.GetComponent<Block>();
             if (newBlock.rigidBodyBlock.velocity.y <= 0)
             {
+                block.transform.localRotation = Quaternion.AngleAxis(0, Vector3.up);
                 isKeep = true;
                 int coef = 1;
 
@@ -157,14 +158,32 @@ public class Builder : MonoBehaviour
                     coef = 2;
                 }
 
-                if (!(Player.perfectTimer.Timer > 0))
+                if (!(Player.perfectTimer.Timer > 0) || block.ParentBuilder == this)
                     block.catchSound.Play();
                 if (block.ParentBuilder != this)
                 {
                     if (Player.perfectTimer.Timer > 0)
                     {
+                        int floorsNum = 6;
+                        switch (Player.currentBlockMaterialNum)
+                        {
+                            case 0: floorsNum = 6; break;
+                            case 1: floorsNum = 12; break;
+                            case 2: floorsNum = 18; break;
+                            case 3: floorsNum = 24; break;
+                            case 4: floorsNum = 30; break;
+                            case 5: floorsNum = 30; break;
+                            case 6: floorsNum = 36; break;
+                            case 7: floorsNum = 42; break;
+                            case 8: floorsNum = 42; break;
+                        }
+
                         Player.PerfectCoef++;
-                        float bellPitch = (float)System.Math.Pow(2, (Player.PerfectCoef -1) / 12.0);
+                        int note = floorsNum / 12;
+                        if (floorsNum < 10)
+                            note = 1;
+                        note = (Player.PerfectCoef - 1) / note;
+                        float bellPitch = (float)System.Math.Pow(2, note / 12.0);
                         if (bellPitch > 2)
                             bellPitch = 2;
 
@@ -223,7 +242,9 @@ public class Builder : MonoBehaviour
                     block.catchSound.clip = block.lastCatchSound;
                     block.catchSound.Play();
                     block.isTimerInc = false;
-                    Player.score += (int)(Player.score * Player.lives * 0.05);
+                    Player.score = (int)(Player.score *(1+ Player.lives * 0.05));
+                    if (block.timer > (Player.currentBlockMaterialNum + 1) * 6 * 3)
+                        Player.score = (int)(Player.score * 1.05);
                     if (Player.currentBlockMaterialNum == 5 || Player.currentBlockMaterialNum == 8)
                         Player.score =  (int)(Player.score * 1.5);
                     Player.ShowResultWindow();

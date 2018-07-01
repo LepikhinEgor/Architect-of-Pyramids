@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class CancelButton : MonoBehaviour
 {
+    public GameObject blockSelection;
 
     // Use this for initialization
     void Start()
     {
-
+        GetComponent<AudioSource>().volume = Player.soundsVolume;
+        blockSelection = GameObject.FindGameObjectWithTag("BlockSelection");
     }
 
 
@@ -44,6 +46,7 @@ public class CancelButton : MonoBehaviour
             player.GetComponent<Player>().ShowSelectBlockUI();
             if (Player.pointer != null)
                 Destroy(Player.pointer);
+            //blockSelection.GetComponent<BlockSelection>().SetNearestBlockColor();
         }
     }
 

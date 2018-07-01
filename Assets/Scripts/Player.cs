@@ -9,6 +9,9 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
+    public static float musicVolume;
+    public static float soundsVolume;
+    public static GameObject menuSound;
     public static GameObject blScoreUI;
     public static GameObject pointer;
     public static Text ankhLivesUI;
@@ -130,6 +133,8 @@ public class Player : MonoBehaviour
             || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("PearlyFloors1")
             || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("AmethystFloors1"))
         {
+            transform.Find("Sound").GetComponent<AudioSource>().volume = Player.musicVolume;
+
             ankhLivesUI = GameObject.FindGameObjectWithTag("LivesUI").GetComponent<Text>();
             ankhLivesUI.text = "3";
             //block = GameObject.FindGameObjectWithTag("Block").GetComponent<Block>();
@@ -166,6 +171,7 @@ public class Player : MonoBehaviour
             sample.SetActive(true);
             if (Player.score != 0)
             {
+                canvas.transform.Find("BlockMaterial").GetComponent<Text>().text = "";
                 sample.GetComponent<Platform>().Score = Player.score;
                 sample.GetComponent<Platform>().BlockMaterialNum = Player.currentBlockMaterialNum;
                 int goodEdgesCount = CalcGENbyScore();
@@ -519,9 +525,10 @@ public class Player : MonoBehaviour
         for (int i = 2; i <= (floorsNum + 1); i++) //начинается сразу с x2, заканчивается x(n+1)
             maxScore += i;
         maxScore *= 2;
-        maxScore = maxScore + (int)(maxScore * 3 * 0.05);
+        maxScore = (int)(maxScore * 1.15);
+        maxScore = (int)(maxScore* 1.05);
         if (blockMatrialNumber == 5 || blockMatrialNumber == 8)
-            maxScore += (int)(maxScore*0.5);
+            maxScore = (int)(maxScore*1.5);
         currentMaxScore = maxScore;
     }
 

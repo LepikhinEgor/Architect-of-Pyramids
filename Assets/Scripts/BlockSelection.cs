@@ -5,7 +5,7 @@ using System;
 using UnityEngine.UI;
 
 public class BlockSelection : MonoBehaviour {
-
+    GameObject canvas;
     Text blockMaterialText;
     private UnityEngine.Object prohibitWindowPrefab;
     GameObject prohibitWindow;
@@ -51,7 +51,7 @@ public class BlockSelection : MonoBehaviour {
         prohibitMessages = new string[9];
     }
     void Start () {
-        GameObject canvas = GameObject.FindGameObjectWithTag("MainCanvas");
+        canvas = GameObject.FindGameObjectWithTag("MainCanvas");
         blockMaterialText = canvas.transform.Find("BlockMaterial").GetComponent<Text>();
         Debug.Log("StratBlSel");
         piramid = GameObject.FindGameObjectWithTag("Piramid");

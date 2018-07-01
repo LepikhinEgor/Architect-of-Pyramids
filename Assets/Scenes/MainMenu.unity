@@ -398,7 +398,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 296241692}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -69.962006, y: 0, z: 0}
+  m_LocalPosition: {x: 69.962006, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1347848658}
@@ -451,6 +451,7 @@ GameObject:
   m_Component:
   - component: {fileID: 326965372}
   - component: {fileID: 326965373}
+  - component: {fileID: 326965374}
   m_Layer: 5
   m_Name: MusicSlider
   m_TagString: Untagged
@@ -521,7 +522,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -538,6 +539,17 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Slider+SliderEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &326965374
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 326965371}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 667a57e7d7d95c34d8c2607017662daa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &485491613
 GameObject:
   m_ObjectHideFlags: 0
@@ -547,6 +559,7 @@ GameObject:
   m_Component:
   - component: {fileID: 485491614}
   - component: {fileID: 485491615}
+  - component: {fileID: 485491616}
   m_Layer: 5
   m_Name: SoundSlider
   m_TagString: Untagged
@@ -595,8 +608,8 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_HighlightedColor: {r: 1, g: 1, b: 1, a: 1}
+    m_PressedColor: {r: 1, g: 1, b: 1, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -617,12 +630,23 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.UI.Slider+SliderEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &485491616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 485491613}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55c3c9ae85662cb45a69ad52e2244806, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &569204101
 GameObject:
   m_ObjectHideFlags: 0
@@ -809,7 +833,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 683585094}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -69.962006, y: 0, z: 0}
+  m_LocalPosition: {x: 69.962006, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1494617104}
@@ -877,7 +901,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 841023490}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -69.962006, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 615143785}
@@ -921,6 +945,52 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 841023490}
+--- !u!1001 &851005260
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4989161243168052, guid: 9ae8dcdfa26d14641b39210fe3c41586, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 397.82996
+      objectReference: {fileID: 0}
+    - target: {fileID: 4989161243168052, guid: 9ae8dcdfa26d14641b39210fe3c41586, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 162.89001
+      objectReference: {fileID: 0}
+    - target: {fileID: 4989161243168052, guid: 9ae8dcdfa26d14641b39210fe3c41586, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4989161243168052, guid: 9ae8dcdfa26d14641b39210fe3c41586, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4989161243168052, guid: 9ae8dcdfa26d14641b39210fe3c41586, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4989161243168052, guid: 9ae8dcdfa26d14641b39210fe3c41586, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4989161243168052, guid: 9ae8dcdfa26d14641b39210fe3c41586, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4989161243168052, guid: 9ae8dcdfa26d14641b39210fe3c41586, type: 2}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1403039386645974, guid: 9ae8dcdfa26d14641b39210fe3c41586, type: 2}
+      propertyPath: m_TagString
+      value: MenuSound
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 9ae8dcdfa26d14641b39210fe3c41586, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &1058128405
 GameObject:
   m_ObjectHideFlags: 0
@@ -1595,7 +1665,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1995743334}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -69.962006, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 679364765}

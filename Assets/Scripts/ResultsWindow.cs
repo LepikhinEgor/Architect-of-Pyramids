@@ -32,10 +32,13 @@ public class ResultsWindow : ProhibitWindow {
             bonus2.GetComponent<Text>().text = "+ 5%";
         }
 
-        if (Player.currentBlockMaterialNum == 5 && Player.currentBlockMaterialNum == 8)
+        if (Player.currentBlockMaterialNum == 5 || Player.currentBlockMaterialNum == 8)
             bonus3.GetComponent<Text>().text = "+ 50%";
         else
+        {
+            transform.Find("Premium").gameObject.SetActive(false);
             bonus3.SetActive(false);
+        }
 
         scoreLine = GameObject.FindGameObjectWithTag("ScoreLine").GetComponent<RectTransform>();
         float val = (float)(Player.score) / ((float)(Player.currentMaxScore) / 2F);
