@@ -5,6 +5,8 @@ using System;
 using UnityEngine.UI;
 
 public class BlockSelection : MonoBehaviour {
+    GameObject donateWindow;
+    private GameObject watchBtn;
     GameObject canvas;
     Text blockMaterialText;
     private UnityEngine.Object prohibitWindowPrefab;
@@ -79,6 +81,8 @@ public class BlockSelection : MonoBehaviour {
 
         if (Input.GetMouseButtonDown(0))
         {
+            if (donateWindow != null)
+                Destroy(donateWindow);
             lastMouseXPos = Camera.main.ScreenToWorldPoint(Input.mousePosition).x;
             mouseYPos = Camera.main.ScreenToWorldPoint(Input.mousePosition).y;
             if (mouseYPos > transform.position.y - 0.9 && mouseYPos < transform.position.y + 0.9 && !Player.isChoosingPlatform)
@@ -188,7 +192,8 @@ public class BlockSelection : MonoBehaviour {
             {
                 minDeltaX = blockColors[i].transform.position.x;
             }
-
+        if (watchBtn != null)
+            Destroy(watchBtn);
         foreach (GameObject blockColor in blockColors)
         {
             Vector3 tmp = blockColor.transform.position;
@@ -198,6 +203,13 @@ public class BlockSelection : MonoBehaviour {
             {
                 if (blockColor.GetComponent<BloсkSprite>().isUnlocked)
                 {
+                    if (blockColor.GetComponent<BloсkSprite>().ID == 5 || blockColor.GetComponent<BloсkSprite>().ID == 8)
+                    {
+                        watchBtn = (GameObject)Instantiate(Player.watchAdsBtn, canvas.transform);
+                        donateWindow = (GameObject)Instantiate(prohibitWindowPrefab, canvas.transform);
+                        string s1 = "This is premium block.To get it you need to watch the video. This is Pharaoh's demand";
+                        donateWindow.transform.Find("Text").GetComponent<Text>().text = s1;
+                    }
                     blockMaterialNum = blockColor.GetComponent<BloсkSprite>().ID;
                     Player.currentBlockMaterialNum = blockColor.GetComponent<BloсkSprite>().ID;
                 }
@@ -223,11 +235,11 @@ public class BlockSelection : MonoBehaviour {
                     case 1: blockMaterial = "Ruby block"; break;
                     case 2: blockMaterial = "Emerald block"; break;
                     case 3: blockMaterial = "Aquamarine block"; break;
-                    case 4: blockMaterial = "Silver block"; break;
-                    case 5: blockMaterial = "Golden block"; break;
+                    case 4:blockMaterial = "Silver block";break;
+                    case 5:blockMaterial = "Golden block";break;
                     case 6: blockMaterial = "Onyx block"; break;
                     case 7: blockMaterial = "Pearl block"; break;
-                    case 8: blockMaterial = "Amethyst block"; break;
+                    case 8:blockMaterial = "Amethyst block";break;
                 }
                 blockMaterialText.text = blockMaterial;
                 piramid.GetComponent<Piramid>().HighlightBlocks(blockMaterialNum);

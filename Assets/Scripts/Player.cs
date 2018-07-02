@@ -6,9 +6,11 @@ using System;
 using System.Xml;
 using System.IO;
 using UnityEngine.UI;
+using UnityEngine.Advertisements;
 
 public class Player : MonoBehaviour
 {
+    public static bool isWatchedAds;
     public static float musicVolume;
     public static float soundsVolume;
     public static GameObject menuSound;
@@ -27,6 +29,7 @@ public class Player : MonoBehaviour
     public static UnityEngine.Object scoreDiffPrefab;
     public static UnityEngine.Object pointerPrefab;
     public static UnityEngine.Object selectBlockScorePrefab;
+    public static UnityEngine.Object watchAdsBtn;
 
     public static bool currPiramidIsLock = false;
     public static UnityEngine.Object prohibitWindowPrefab;
@@ -99,6 +102,7 @@ public class Player : MonoBehaviour
     private bool isLight = false;
     private void Awake()
     {
+        isWatchedAds = false;
         Pir1TotalScore = LoadPiramidTotalScoreFromXML(1);
         Pir2TotalScore = LoadPiramidTotalScoreFromXML(2);
         Pir3TotalScore = LoadPiramidTotalScoreFromXML(3);
@@ -117,6 +121,7 @@ public class Player : MonoBehaviour
         sampleScorePrefab = Resources.Load("Prefabs/SampleScorePrefab");
         pointerPrefab = Resources.Load("Prefabs/PointerPrefab");
         selectBlockScorePrefab = Resources.Load("Prefabs/SelectBlockScorePrefab");
+        watchAdsBtn = Resources.Load("Prefabs/WatchAdsBtn");
         if (!File.Exists(Application.persistentDataPath + "/Save/Save.xml"))
         {
             Debug.Log("FFFF");

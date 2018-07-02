@@ -56,6 +56,7 @@ public class SampleMotion : MonoBehaviour {
 
             if (transform.localScale.x <= scale + 0.04F && !isAnimated)
             {
+                GameObject.FindGameObjectWithTag("OK").GetComponent<AudioSource>().Play();
                 isAnimated = true;
                 GameObject smokeAnim = (GameObject)Instantiate(Player.smokePrefab, Player.selectedPlatform.transform);
                 Vector3 smokePosition = smokeAnim.transform.position;

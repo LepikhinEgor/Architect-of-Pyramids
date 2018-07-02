@@ -18,6 +18,7 @@ public class OkButton : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        GetComponent<AudioSource>().volume = Player.soundsVolume;
     }
 	
 	// Update is called once per frame
@@ -58,8 +59,12 @@ public class OkButton : MonoBehaviour {
                 case 4: SceneManager.LoadSceneAsync("SilverFloors1");
                     Destroy(Player.menuSound);
                     break;
-                case 5: SceneManager.LoadSceneAsync("GoldenFloors1");
-                    Destroy(Player.menuSound);
+                case 5:
+                    if (Player.isWatchedAds)
+                    {
+                        SceneManager.LoadSceneAsync("GoldenFloors1");
+                        Destroy(Player.menuSound);
+                    }
                     break;
                 case 6: SceneManager.LoadSceneAsync("TopazFloors1");
                     Destroy(Player.menuSound);
@@ -67,8 +72,12 @@ public class OkButton : MonoBehaviour {
                 case 7: SceneManager.LoadSceneAsync("PearlyFloors1");
                     Destroy(Player.menuSound);
                     break;
-                case 8: SceneManager.LoadSceneAsync("AmethystFloors1");
-                    Destroy(Player.menuSound);
+                case 8:
+                    if (Player.isWatchedAds)
+                    {
+                        SceneManager.LoadSceneAsync("AmethystFloors1");
+                        Destroy(Player.menuSound);
+                    }
                     break;
             }
         }

@@ -16,8 +16,6 @@ public class MainMenu : MonoBehaviour {
         menuCanvas = GameObject.FindGameObjectWithTag("Menu");
         newGameButton = menuCanvas.transform.Find("NewGameButton").gameObject;
         continueGameButton = menuCanvas.transform.Find("ContinueGameButton").gameObject;
-        HTPButton = menuCanvas.transform.Find("HTPButton").gameObject;
-        autorsButton = menuCanvas.transform.Find("AutorsButton").gameObject;
         soundSlider = menuCanvas.transform.Find("SoundSlider").gameObject;
         musicSlider = menuCanvas.transform.Find("MusicSlider").gameObject;
 

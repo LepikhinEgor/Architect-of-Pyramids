@@ -97,10 +97,9 @@ public class Builder : MonoBehaviour
     private void Run()
     {
         checkerPosRight = transform.position;
-        checkerPosRight.x += 0.5F;
+        checkerPosRight.x += 0.3F;
         checkerPosLeft = transform.position;
-        checkerPosLeft.x -= 0.5F;
-        checkerPosLeft.y += 0.5F;
+        checkerPosLeft.x -= 0.3F;
         tmpCollider = Physics2D.OverlapCircle(checkerPosRight, 0.3F);
         if (tmpCollider)
         {
