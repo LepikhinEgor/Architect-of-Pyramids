@@ -45,6 +45,7 @@ public class BlockSelection : MonoBehaviour {
     // Use this for initialization
     private void Awake()
     {
+        Player.blockSelection = this.gameObject;
         isScrolling = false;
         prohibitWindowPrefab = Resources.Load("Prefabs/ProhibitWindowPrefab");
         dampingFrameNum = 10;
@@ -81,12 +82,12 @@ public class BlockSelection : MonoBehaviour {
 
         if (Input.GetMouseButtonDown(0))
         {
-            if (donateWindow != null)
-                Destroy(donateWindow);
             lastMouseXPos = Camera.main.ScreenToWorldPoint(Input.mousePosition).x;
             mouseYPos = Camera.main.ScreenToWorldPoint(Input.mousePosition).y;
             if (mouseYPos > transform.position.y - 0.9 && mouseYPos < transform.position.y + 0.9 && !Player.isChoosingPlatform)
             {
+                if (donateWindow != null)
+                    Destroy(donateWindow);
                 isScrolling = true;
                 if (!Player.currPiramidIsLock && prohibitWindow != null)
                     Destroy(prohibitWindow);

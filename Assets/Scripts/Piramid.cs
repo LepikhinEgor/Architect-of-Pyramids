@@ -54,6 +54,8 @@ public class Piramid : MonoBehaviour
         RefreshNeighborEdgesCount();
         RefreshPiramidScoreLine();
         HighlightBlocks(Player.currentBlockMaterialNum);
+
+        PlayerPrefs.SetInt("Piramid", ID);
     }
 
     public void RefreshPiramidScoreLine()

@@ -18,7 +18,8 @@ public class MainMenu : MonoBehaviour {
         continueGameButton = menuCanvas.transform.Find("ContinueGameButton").gameObject;
         soundSlider = menuCanvas.transform.Find("SoundSlider").gameObject;
         musicSlider = menuCanvas.transform.Find("MusicSlider").gameObject;
-
+        soundSlider.GetComponent<Slider>().value = PlayerPrefs.GetFloat("SoundVolume");
+        musicSlider.GetComponent<Slider>().value = PlayerPrefs.GetFloat("MusicVolume");
 
         newGameButton.GetComponent<Button>().onClick.AddListener(Player.LoadNewGame);
         continueGameButton.GetComponent<Button>().onClick.AddListener(Player.LoadLastPiramidScene);

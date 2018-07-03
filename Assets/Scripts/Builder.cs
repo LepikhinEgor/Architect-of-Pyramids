@@ -37,7 +37,7 @@ public class Builder : MonoBehaviour
         animator = transform.Find("Sprite").GetComponent<Animator>();
         //block = GameObject.FindGameObjectWithTag("Block").GetComponent<Block>();
         speed = 3.5F;
-        sprite = GetComponentInChildren<SpriteRenderer>();
+        sprite = transform.Find("Sprite").gameObject.GetComponent<SpriteRenderer>();
         previousPosX = transform.position.x;
     }
     private void Start()
@@ -135,6 +135,7 @@ public class Builder : MonoBehaviour
         leftCorner.x -= catchSkill;
         rightCorner = transform.position;
         rightCorner.x += catchSkill;
+        rightCorner.y -= 0.3F;
         Collider2D findedCollider = Physics2D.OverlapArea(leftCorner, rightCorner);
         if (findedCollider != null && findedCollider.GetComponent<Block>())
         {

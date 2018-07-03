@@ -49,7 +49,7 @@ public class Player : MonoBehaviour
     public static bool isFirst = true;
     GameObject sample;
     GameObject backButton;
-    static GameObject blockSelection;
+    public static GameObject blockSelection;
     GameObject okButton;
     GameObject cancelButton;
 
@@ -138,7 +138,7 @@ public class Player : MonoBehaviour
             || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("PearlyFloors1")
             || SceneManager.GetActiveScene() == SceneManager.GetSceneByName("AmethystFloors1"))
         {
-            transform.Find("Sound").GetComponent<AudioSource>().volume = Player.musicVolume;
+            transform.Find("ActiveMusic").GetComponent<AudioSource>().volume = Player.musicVolume;
 
             ankhLivesUI = GameObject.FindGameObjectWithTag("LivesUI").GetComponent<Text>();
             ankhLivesUI.text = "3";
@@ -782,7 +782,20 @@ public class Player : MonoBehaviour
 
     public static void LoadLastPiramidScene()
     {
-        SceneManager.LoadSceneAsync("Piramid1");
+        PlayerPrefs.SetFloat("SoundVolume", soundsVolume);
+        PlayerPrefs.SetFloat("MusicVolume", musicVolume);
+        switch (PlayerPrefs.GetInt("Piramid"))
+        {
+            case 1:
+                SceneManager.LoadSceneAsync("Piramid1");
+                break;
+            case 2:
+                SceneManager.LoadSceneAsync("Piramid2");
+                break;
+            case 3:
+                SceneManager.LoadSceneAsync("Piramid3");
+                break;
+        }
     }
 
     public static void LoadNewGame()

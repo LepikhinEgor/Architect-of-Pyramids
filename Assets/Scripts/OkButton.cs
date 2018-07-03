@@ -6,12 +6,17 @@ using UnityEngine.UI;
 
 public class OkButton : MonoBehaviour {
     public GameObject blockSelection;
+    public AudioSource audioSource;
     Button btn;
+    AudioClip fallingClip;
+    public AudioClip insertClip;
 
     private void Awake()
     {
         blockSelection = GameObject.FindGameObjectWithTag("BlockSelection");
-
+        audioSource = GetComponent<AudioSource>();
+        fallingClip = Resources.Load<AudioClip>("Sounds/Falling");
+        insertClip = Resources.Load<AudioClip>("Sounds/Insert");
         btn = GetComponent<Button>();
         //btn.onClick.AddListener(OkButtonAction);
     }
@@ -121,6 +126,8 @@ public class OkButton : MonoBehaviour {
 
             if (Player.selectedPlatfomID != -1 && sample && sample.GetComponent<Platform>().Score != 0 && selectedPlatform.GetComponent<Platform>().NeighborEdgesCount >= neighboresNeedsCount)
             {
+                audioSource.clip = fallingClip;
+                audioSource.Play();
                 sample.GetComponent<SampleMotion>().scoreDifferent = sample.GetComponent<Platform>().Score - Player.selectedPlatform.Score;
                 Debug.Log(Player.selectedPlatfomID);
                 platform.InsertBlock(sample);
@@ -152,12 +159,17 @@ public class OkButton : MonoBehaviour {
                 Player.score = 0;
                 piramid.GetComponent<Piramid>().RefreshPiramidScoreLine();
 
+                Invoke("RefreshBlockSelection", 0.5F);
                 Destroy(Player.pointer);
             }
             Debug.Log("UPd");
         }
     }
 
+    void RefreshBlockSelection()
+    {
+        Player.blockSelection.GetComponent<BlockSelection>().SetNearestBlockColor();
+    }
     //private void OnMouseDown()
     //{ 
 

@@ -8,11 +8,15 @@ public class MenuSound : MonoBehaviour {
 	void Start () {
         if (Player.menuSound == null)
         {
+            GetComponent<AudioSource>().pitch /= (float)System.Math.Sqrt(System.Math.Pow(2, 2.0/12.0));
             Player.menuSound = this.gameObject;
             DontDestroyOnLoad(this);
         }
         else
+        {
+            Debug.Log("Dont needed");
             Destroy(this.gameObject);
+        }
 	}
 	
 	// Update is called once per frame
