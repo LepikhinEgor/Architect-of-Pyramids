@@ -128,6 +128,8 @@ public class Piramid : MonoBehaviour
                 neighboresNeedsCount = 6; break;
             case 8:
                 neighboresNeedsCount = 6; break;
+            default:
+                neighboresNeedsCount = 100;break;
         }
 
         foreach (GameObject pl in platforms)

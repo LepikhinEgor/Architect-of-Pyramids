@@ -10,6 +10,7 @@ public class MenuSound : MonoBehaviour {
         {
             GetComponent<AudioSource>().pitch /= (float)System.Math.Sqrt(System.Math.Pow(2, 2.0/12.0));
             Player.menuSound = this.gameObject;
+            GetComponent<AudioSource>().volume = Player.musicVolume;
             DontDestroyOnLoad(this);
         }
         else

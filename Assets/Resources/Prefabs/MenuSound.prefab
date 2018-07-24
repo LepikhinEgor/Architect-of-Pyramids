@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 114352080012661232}
   m_Layer: 0
   m_Name: MenuSound
-  m_TagString: Untagged
+  m_TagString: MenuSound
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -50,7 +50,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 59845928e75187241b6eeeb661e4bc5e, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 114b4eed73758ae46944a28ac33791e1, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1

@@ -1,9 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class CancelButton : MonoBehaviour
 {
+    Sprite toMenuSprite;
+    Sprite removeBlock;
     public GameObject blockSelection;
 
     // Use this for initialization
@@ -11,6 +15,12 @@ public class CancelButton : MonoBehaviour
     {
         GetComponent<AudioSource>().volume = Player.soundsVolume;
         blockSelection = GameObject.FindGameObjectWithTag("BlockSelection");
+        toMenuSprite = Resources.Load<Sprite>("Sprites/RetryButton2");
+        removeBlock = Resources.Load<Sprite>("Sprites/cancelButton");
+        if (Player.isChoosingPlatform)
+            GetComponent<Image>().sprite = removeBlock;
+        else
+            GetComponent<Image>().sprite = toMenuSprite;
     }
 
 
@@ -46,7 +56,13 @@ public class CancelButton : MonoBehaviour
             player.GetComponent<Player>().ShowSelectBlockUI();
             if (Player.pointer != null)
                 Destroy(Player.pointer);
+            GetComponent<Image>().sprite = toMenuSprite;
             //blockSelection.GetComponent<BlockSelection>().SetNearestBlockColor();
+        }
+        else
+        {
+            Player.score = 0;
+            SceneManager.LoadSceneAsync("MainMenu");
         }
     }
 

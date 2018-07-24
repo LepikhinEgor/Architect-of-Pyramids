@@ -45,6 +45,8 @@ TagManager:
   - BlockMask
   - Menu
   - MenuSound
+  - FogStart
+  - FogEnd
   layers:
   - Default
   - TransparentFX

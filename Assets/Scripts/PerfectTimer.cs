@@ -21,5 +21,7 @@ public class PerfectTimer : MonoBehaviour
     {
         if (timer > 0)
             timer -= Time.deltaTime;
+        else
+            Player.illumRadius = 0.25F;
     }
 }

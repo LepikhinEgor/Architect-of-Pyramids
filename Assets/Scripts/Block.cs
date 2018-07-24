@@ -6,13 +6,16 @@ using UnityEngine.SceneManagement;
 
 public class Block : MonoBehaviour
 {
+    //ссылки на объекты трещин блока
     private GameObject firstDamage;
     private GameObject secondDamage;
     private GameObject thirdDamage;
 
+    //таймер продолжает работу
     public bool isTimerInc;
     public float timer;
     public GameObject blockMask;
+#region AudioVariables
     public AudioClip catchClip;
     public AudioClip perfectCatchClip;
     public AudioClip lastCatchSound;
@@ -21,6 +24,7 @@ public class Block : MonoBehaviour
     public AudioSource catchSound;
     public AudioSource perfectCatchSound;
     public AudioSource crackSound;
+#endregion
 
     private Builder parentBuilder;
     public Builder ParentBuilder
@@ -45,6 +49,7 @@ public class Block : MonoBehaviour
 
     private Camera cam1;
   
+    //ссылки на спрайты блока
     public GameObject blockSprite;
     public GameObject blockSpriteActive;
     public GameObject blockSpriteActiveBack;
@@ -74,39 +79,52 @@ public class Block : MonoBehaviour
 
     private void Awake()
     {
-        firstDamage = transform.Find("Defects").Find("firstDefect").gameObject;
-        secondDamage = transform.Find("Defects").Find("secondDefect").gameObject;
-        thirdDamage = transform.Find("Defects").Find("thirdDefect").gameObject;
+        InitialSprites();
+        InitialSounds();
 
-        firstDamage.SetActive(false);
-        secondDamage.SetActive(false);
-        thirdDamage.SetActive(false);
         isTimerInc = true;
         timer = 0;
+
         Player.block = this;
-        blockSprite = GameObject.FindGameObjectWithTag("BlockSprite");
-        blockSpriteActive = GameObject.FindGameObjectWithTag("BlockActiveSprite");
-        blockSpriteActiveBack = GameObject.FindGameObjectWithTag("BlockActiveSpriteBack");
         
         rigidBodyBlock = GetComponent<Rigidbody2D>();
         cam1 = Camera.main;
 
         ParentBuilder = GameObject.FindGameObjectWithTag("FirstBuilder").GetComponent<Builder>();
-        GetComponentInChildren<SpriteMask>().sprite = Resources.Load<Sprite>("Sprites/mask");
+    }
 
+    void InitialSprites()
+    {
+        firstDamage = transform.Find("Defects").Find("firstDefect").gameObject;
+        secondDamage = transform.Find("Defects").Find("secondDefect").gameObject;
+        thirdDamage = transform.Find("Defects").Find("thirdDefect").gameObject;
+        firstDamage.SetActive(false);
+        secondDamage.SetActive(false);
+        thirdDamage.SetActive(false);
+
+        blockSprite = GameObject.FindGameObjectWithTag("BlockSprite");
+        blockSpriteActive = GameObject.FindGameObjectWithTag("BlockActiveSprite");
+        blockSpriteActiveBack = GameObject.FindGameObjectWithTag("BlockActiveSpriteBack");
+
+        GetComponentInChildren<SpriteMask>().sprite = Resources.Load<Sprite>("Sprites/mask");
+    }
+
+    void InitialSounds()
+    {
         crackClip = Resources.Load<AudioClip>("Sounds/Crack");
         catchClip = Resources.Load<AudioClip>("Sounds/catchSound");
         perfectCatchClip = Resources.Load<AudioClip>("Sounds/perfectCatchSound");
         lastCatchSound = Resources.Load<AudioClip>("Sounds/LastCatch");
         lastBadCatchSound = Resources.Load<AudioClip>("Sounds/LastBadCatch");
 
-
         crackSound = gameObject.AddComponent<AudioSource>();
         crackSound.volume = Player.soundsVolume;
         crackSound.clip = crackClip;
+
         perfectCatchSound = gameObject.AddComponent<AudioSource>();
         perfectCatchSound.volume = Player.soundsVolume;
         perfectCatchSound.clip = perfectCatchClip;
+
         catchSound = gameObject.AddComponent<AudioSource>();
         catchSound.volume = Player.soundsVolume;
         catchSound.clip = catchClip;
@@ -114,55 +132,72 @@ public class Block : MonoBehaviour
     private void Start()
     {
         blockMask = GameObject.FindGameObjectWithTag("BlockMask");
+        SetBlockSpritesColor();
+    }
+
+    void SetBlockSpritesColor()
+    {
+        string mainSpritePath;
+        string activeSpritePath;
+        string fillingSpritePath;
         switch (Player.currentBlockMaterialNum)
         {
             case 0:
-                blockSprite.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/sapphireBlock");
-                blockSpriteActive.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/sapphireBlockActive");
-                blockSpriteActiveBack.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/sapphireBlockActiveBack");
+                mainSpritePath = "Sprites/sapphireBlock";
+                activeSpritePath = "Sprites/sapphireBlockActive";
+                fillingSpritePath = "Sprites/sapphireBlockActiveBack";
                 break;
             case 1:
-                blockSprite.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/rubyBlock");
-                blockSpriteActive.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/rubyBlockActive");
-                blockSpriteActiveBack.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/rubyBlockActiveBack");
+                mainSpritePath = "Sprites/rubyBlock";
+                activeSpritePath = "Sprites/rubyBlockActive";
+                fillingSpritePath = "Sprites/rubyBlockActiveBack";
                 break;
             case 2:
-                blockSprite.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/emeraldBlock");
-                blockSpriteActive.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/emeraldBlockActive");
-                blockSpriteActiveBack.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/emeraldBlockActiveBack");
+                mainSpritePath = "Sprites/emeraldBlock";
+                activeSpritePath = "Sprites/emeraldBlockActive";
+                fillingSpritePath = "Sprites/emeraldBlockActiveBack";
                 break;
             case 3:
-                blockSprite.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/aquamarineBlock");
-                blockSpriteActive.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/aquamarineBlockActive");
-                blockSpriteActiveBack.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/aquamarineBlockActiveBack");
-                
+                mainSpritePath = "Sprites/aquamarineBlock";
+                activeSpritePath = "Sprites/aquamarineBlockActive";
+                fillingSpritePath = "Sprites/aquamarineBlockActiveBack";
                 break;
             case 4:
-                blockSprite.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/silverBlock");
-                blockSpriteActive.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/silverBlockActive");
-                blockSpriteActiveBack.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/silverBlockActiveBack");
+                mainSpritePath = "Sprites/silverBlock";
+                activeSpritePath = "Sprites/silverBlockActive";
+                fillingSpritePath = "Sprites/silverBlockActiveBack";
                 break;
             case 5:
-                blockSprite.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/goldenBlock");
-                blockSpriteActive.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/goldenBlockActive");
-                blockSpriteActiveBack.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/goldenBlockActiveBack");
+                mainSpritePath = "Sprites/goldenBlock";
+                activeSpritePath = "Sprites/goldenBlockActive";
+                fillingSpritePath = "Sprites/goldenBlockActiveBack";
                 break;
             case 6:
-                blockSprite.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/topazBlock");
-                blockSpriteActive.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/topazBlockActive");
-                blockSpriteActiveBack.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/topazBlockActiveBack");
+                mainSpritePath = "Sprites/topazBlock";
+                activeSpritePath = "Sprites/topazBlockActive";
+                fillingSpritePath = "Sprites/topazBlockActiveBack";
                 break;
             case 7:
-                blockSprite.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/pearlyBlock");
-                blockSpriteActive.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/pearlyBlockActive");
-                blockSpriteActiveBack.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/pearlyBlockActiveBack");
+                mainSpritePath = "Sprites/pearlyBlock";
+                activeSpritePath = "Sprites/pearlyBlockActive";
+                fillingSpritePath = "Sprites/pearlyBlockActiveBack";
                 break;
             case 8:
-                blockSprite.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/amethystBlock");
-                blockSpriteActive.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/amethystBlockActive");
-                blockSpriteActiveBack.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/amethystBlockActiveBack");
+                mainSpritePath = "Sprites/amethystBlock";
+                activeSpritePath = "Sprites/amethystBlockActive";
+                fillingSpritePath = "Sprites/amethystBlockActiveBack";
+                break;
+            default:
+                mainSpritePath = "Sprites/sapphireBlock";
+                activeSpritePath = "Sprites/sapphireBlockActive";
+                fillingSpritePath = "Sprites/sapphireBlockActiveBack";
+                Debug.Log("Initialize of block sprite was failure");
                 break;
         }
+
+        blockSprite.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(mainSpritePath);
+        blockSpriteActive.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(activeSpritePath);
+        blockSpriteActiveBack.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(fillingSpritePath);
 
         blockSpriteActive.SetActive(false);
         blockSpriteActiveBack.SetActive(false);
@@ -183,51 +218,16 @@ public class Block : MonoBehaviour
         if (isFly && transform.position.y + 1F < ParentBuilder.transform.position.y)
         {
             //блок упал
-            cam1.GetComponent<CameraController>().isFollow = false;
             Player.lives--;
             parentBuilder.animator.SetBool("IsMoving", true);
             transform.rotation = ParentBuilder.transform.rotation;
-            Player.ankhLivesUI.text = Player.lives.ToString();
+
             if (Player.lives >= 0)
-            {
-                switch (Player.lives)
-                {
-                    case 2: firstDamage.SetActive(true);break;
-                    case 1: secondDamage.SetActive(true); break;
-                    case 0: thirdDamage.SetActive(true); break;
-                }
-                crackSound.Play();
-                rigidBodyBlock.velocity = Vector3.zero;
-                parentBuilder.isKeep = true;
-                parentBuilder.CarryBlock();
-                swingAngle = 0.2F;
-                swingSpeed = swingAngle * 1.5F;
-                maxRotationAngle = 40;
-                cam1.GetComponent<CameraController>().isFollow = true;
-                isFly = false;
-            }
+                Drop();
             else
-            {
-                perfectCatchSound.clip = lastBadCatchSound;
-                perfectCatchSound.Play();
-                isTimerInc = false;
-                isFly = false;
-                Debug.Log(Player.lives);
-                Player.score = 0;
-                Player.ShowResultWindow();
-                GameObject.FindGameObjectWithTag("ResultWindow").GetComponent<ResultsWindow>().timer = 10000;
-                parentBuilder.animator.SetBool("IsMoving", false);
-                //transform.Find("blockSprite").gameObject.SetActive(false);
-                rigidBodyBlock.gravityScale = 0;
-                rigidBodyBlock.velocity = Vector3.zero;
-                transform.Find("blockSprite").gameObject.SetActive(false);
-                if (transform.Find("blockActiveSprite") != null &&
-                    transform.Find("blockActiveBackSprite") != null)
-                {
-                    transform.Find("blockActiveSprite").gameObject.SetActive(false);
-                    transform.Find("blockActiveBackSprite").gameObject.SetActive(false);
-                }
-            }
+                Crash();
+
+            Player.ankhLivesUI.text = Player.lives.ToString();
         }
         if (isFly)
         {
@@ -261,6 +261,67 @@ public class Block : MonoBehaviour
             }
             blockMask.transform.rotation = blockSprite.transform.rotation;
         }
+    }
+
+    void Drop()
+    {
+        //вызывается когда блок уронили, но ещё остались жизни
+        //отнимает жизнь, возвращает блок уронившему строителю, задает небольшое покачиваение
+        switch (Player.lives)
+        {
+            case 2: firstDamage.SetActive(true); break;
+            case 1: secondDamage.SetActive(true); break;
+            case 0: thirdDamage.SetActive(true); break;
+        }
+
+        crackSound.Play();
+
+        //возвращение блока уронившему строителю
+        parentBuilder.isKeep = true;
+        parentBuilder.CarryBlock();
+        rigidBodyBlock.velocity = Vector3.zero;
+
+        //небольшое покачивание после падения
+        swingAngle = 0.2F;
+        swingSpeed = swingAngle * 1.5F;
+        maxRotationAngle = 40;
+        isFly = false;
+    }
+
+    void Crash()
+    {
+        // вызывается при последнем падении блока(когда не осталось жизней, lives = -1)
+        // делает замирание камеры, вызывает окно с результатами, скрывает блок
+        // обнуляет все результаты сцены
+
+        Debug.Log("Block has crached");
+        cam1.GetComponent<CameraController>().isFollow = false;
+
+        perfectCatchSound.clip = lastBadCatchSound;
+        perfectCatchSound.Play();
+
+        isTimerInc = false;
+        isFly = false;
+
+        //обнуление результатов
+        Player.lives = 0;
+        Player.score = 0;
+        Player.ShowResultWindow();
+        GameObject.FindGameObjectWithTag("ResultWindow").GetComponent<ResultsWindow>().timer = 10000;
+
+        parentBuilder.animator.SetBool("IsMoving", false);
+
+        //зависание блока в вохдухе
+        rigidBodyBlock.gravityScale = 0;
+        rigidBodyBlock.velocity = Vector3.zero;
+
+        //скрывание спрайтов
+        transform.Find("blockSprite").gameObject.SetActive(false);
+        transform.Find("Defects").gameObject.SetActive(false);
+        if (transform.Find("blockActiveSprite") != null)
+            transform.Find("blockActiveSprite").gameObject.SetActive(false);
+        if (transform.Find("blockActiveBackSprite") != null)
+            transform.Find("blockActiveBackSprite").gameObject.SetActive(false);
     }
 
     void Fly()

@@ -10,13 +10,15 @@ using UnityEngine.Advertisements;
 
 public class Player : MonoBehaviour
 {
-    public static bool isWatchedAds;
+    public static bool isAnimate;
+    public static bool InsertNow;
     public static float musicVolume;
     public static float soundsVolume;
     public static GameObject menuSound;
     public static GameObject blScoreUI;
     public static GameObject pointer;
     public static Text ankhLivesUI;
+
 
     public static UnityEngine.Object smokePrefab;
     public static bool isLoadingScene = false;
@@ -29,11 +31,13 @@ public class Player : MonoBehaviour
     public static UnityEngine.Object scoreDiffPrefab;
     public static UnityEngine.Object pointerPrefab;
     public static UnityEngine.Object selectBlockScorePrefab;
-    public static UnityEngine.Object watchAdsBtn;
+    public static UnityEngine.Object windPrefab;
+    public static UnityEngine.Object splashPrefab;
+    public static UnityEngine.Object effectNamePrefab;
 
     public static bool currPiramidIsLock = false;
     public static UnityEngine.Object prohibitWindowPrefab;
-    GameObject prohibitWindow;
+    public static GameObject prohibitWindow;
 
     Vector3 blockSelectionPos;
     static bool isMoving;
@@ -47,6 +51,8 @@ public class Player : MonoBehaviour
     public static int currentPiramidID;
     public static int currentMaxScore;
     public static bool isFirst = true;
+    public static float illumRadius;
+
     GameObject sample;
     GameObject backButton;
     public static GameObject blockSelection;
@@ -102,14 +108,13 @@ public class Player : MonoBehaviour
     private bool isLight = false;
     private void Awake()
     {
-        isWatchedAds = false;
         Pir1TotalScore = LoadPiramidTotalScoreFromXML(1);
         Pir2TotalScore = LoadPiramidTotalScoreFromXML(2);
         Pir3TotalScore = LoadPiramidTotalScoreFromXML(3);
 
-        Pir1TotalScoreMax = 500;
-        Pir2TotalScoreMax = 1000;
-        Pir3TotalScoreMax = 5000;
+        Pir1TotalScoreMax = 800;
+        Pir2TotalScoreMax = 5000;
+        Pir3TotalScoreMax = 25000;
 }
     private void Start()
     {
@@ -121,7 +126,9 @@ public class Player : MonoBehaviour
         sampleScorePrefab = Resources.Load("Prefabs/SampleScorePrefab");
         pointerPrefab = Resources.Load("Prefabs/PointerPrefab");
         selectBlockScorePrefab = Resources.Load("Prefabs/SelectBlockScorePrefab");
-        watchAdsBtn = Resources.Load("Prefabs/WatchAdsBtn");
+        windPrefab = Resources.Load("Prefabs/Wind");
+        splashPrefab = Resources.Load("Prefabs/Splash");
+        effectNamePrefab = Resources.Load("Prefabs/EffectName");
         if (!File.Exists(Application.persistentDataPath + "/Save/Save.xml"))
         {
             Debug.Log("FFFF");
@@ -176,6 +183,8 @@ public class Player : MonoBehaviour
             sample.SetActive(true);
             if (Player.score != 0)
             {
+                if (currentBlockMaterialNum == 2 || currentBlockMaterialNum == 5|| currentBlockMaterialNum == 8)
+                    InsertNow = true;
                 canvas.transform.Find("BlockMaterial").GetComponent<Text>().text = "";
                 sample.GetComponent<Platform>().Score = Player.score;
                 sample.GetComponent<Platform>().BlockMaterialNum = Player.currentBlockMaterialNum;
@@ -187,6 +196,7 @@ public class Player : MonoBehaviour
             }
             else
             {
+                InsertNow = false;
                 sample.SetActive(false);
             }
 
@@ -219,7 +229,7 @@ public class Player : MonoBehaviour
             
             Debug.Log("Window prohibit build 2 pyramid");
             currPiramidIsLock = true;
-            GameObject prohibitWindow = (GameObject)Instantiate(prohibitWindowPrefab, canvas.transform);
+            prohibitWindow = (GameObject)Instantiate(prohibitWindowPrefab, canvas.transform);
             prohibitWindow = GameObject.FindGameObjectWithTag("Window");
             string message = "To unlock this pyramid you need " + (Player.Pir1TotalScoreMax - Pir1TotalScore).ToString() + " more points in first pyramid";
             prohibitWindow.GetComponent<ProhibitWindow>().SetText(message);
@@ -248,8 +258,9 @@ public class Player : MonoBehaviour
             SceneManager.GetActiveScene() == SceneManager.GetSceneByName("Piramid2") ||
             SceneManager.GetActiveScene() == SceneManager.GetSceneByName("Piramid3"))
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && !isAnimate)
             {
+
                 lastXPos = Camera.main.ScreenToWorldPoint(Input.mousePosition).x;
                 float mouseYPos = Camera.main.ScreenToWorldPoint(Input.mousePosition).y;
                 //deltaXPos = lastXPos - cam.transform.position.x;
@@ -259,8 +270,9 @@ public class Player : MonoBehaviour
                 prohibitWindow = GameObject.FindGameObjectWithTag("Window");
             }
 
-            if (Input.GetMouseButton(0) && isScrolling)
+            if (Input.GetMouseButton(0) && isScrolling && !isAnimate)
             {
+                
                 if (!Player.currPiramidIsLock && prohibitWindow != null)
                     Destroy(prohibitWindow);
                 Vector3 camPos = cam.transform.position;
@@ -313,7 +325,7 @@ public class Player : MonoBehaviour
                 blockSelection.transform.position = blockSelectionPos;
             }
 
-            if (Input.GetMouseButtonUp(0) && isScrolling)
+            if (Input.GetMouseButtonUp(0) && isScrolling && !isAnimate)
             {
                 target = cam.transform.position;
                 target.z = -20;
@@ -532,7 +544,7 @@ public class Player : MonoBehaviour
         maxScore *= 2;
         maxScore = (int)(maxScore * 1.15);
         maxScore = (int)(maxScore* 1.05);
-        if (blockMatrialNumber == 5 || blockMatrialNumber == 8)
+        if (blockMatrialNumber == 5 || blockMatrialNumber == 8 || blockMatrialNumber == 2)
             maxScore = (int)(maxScore*1.5);
         currentMaxScore = maxScore;
     }
@@ -734,7 +746,7 @@ public class Player : MonoBehaviour
     public static void ReloadFloors()
     {
         Player.score = 0;
-        Player.PerfectCoef = 0;
+        Player.PerfectCoef = 1;
         Player.perfectTimer.Timer = 0;
         Player.lives = 3;
 
@@ -800,6 +812,8 @@ public class Player : MonoBehaviour
 
     public static void LoadNewGame()
     {
+        PlayerPrefs.SetFloat("SoundVolume", soundsVolume);
+        PlayerPrefs.SetFloat("MusicVolume", musicVolume);
         Player.CreateXML();
         SceneManager.LoadSceneAsync("Piramid1");
     }

@@ -32,7 +32,7 @@ public class ResultsWindow : ProhibitWindow {
             bonus2.GetComponent<Text>().text = "+ 5%";
         }
 
-        if (Player.currentBlockMaterialNum == 5 || Player.currentBlockMaterialNum == 8)
+        if (Player.currentBlockMaterialNum == 5 || Player.currentBlockMaterialNum == 8 || Player.currentBlockMaterialNum == 2)
             bonus3.GetComponent<Text>().text = "+ 50%";
         else
         {

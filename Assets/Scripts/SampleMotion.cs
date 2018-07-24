@@ -60,6 +60,7 @@ public class SampleMotion : MonoBehaviour {
                 ok.audioSource.clip = ok.insertClip;
                 ok.audioSource.Play();
                 isAnimated = true;
+                Player.isAnimate = true;
                 GameObject smokeAnim = (GameObject)Instantiate(Player.smokePrefab, Player.selectedPlatform.transform);
                 Vector3 smokePosition = smokeAnim.transform.position;
                 smokePosition.x = Player.selectedPlatform.transform.position.x;
@@ -93,6 +94,8 @@ public class SampleMotion : MonoBehaviour {
             }
             if (transform.localScale.x <= scale + 0.005F)
             {
+                Player.InsertNow = false;
+                Player.isAnimate = false;
                 transform.gameObject.SetActive(false);
             }
         }

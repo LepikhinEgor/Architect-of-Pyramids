@@ -41,7 +41,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_EffectColor: {r: 0.2647059, g: 0.22661081, b: 0.013624566, a: 0.5}
-  m_EffectDistance: {x: 1.9, y: -2.28}
+  m_EffectDistance: {x: 0.72, y: -1.45}
   m_UseGraphicAlpha: 1
 --- !u!114 &114981729415271912
 MonoBehaviour:

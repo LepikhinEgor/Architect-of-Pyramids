@@ -135,10 +135,11 @@ public class Builder : MonoBehaviour
         leftCorner.x -= catchSkill;
         rightCorner = transform.position;
         rightCorner.x += catchSkill;
-        rightCorner.y -= 0.3F;
+        rightCorner.y += 0.2F;
         Collider2D findedCollider = Physics2D.OverlapArea(leftCorner, rightCorner);
         if (findedCollider != null && findedCollider.GetComponent<Block>())
         {
+            GameObject canvas = GameObject.FindGameObjectWithTag("MainCanvas");
             Block newBlock = findedCollider.GetComponent<Block>();
             if (newBlock.rigidBodyBlock.velocity.y <= 0)
             {
@@ -156,6 +157,7 @@ public class Builder : MonoBehaviour
                     block.blockSpriteActiveBack.SetActive(true);
                     block.transform.rotation = transform.rotation;
                     coef = 2;
+                    Player.illumRadius = 0.4F;
                 }
 
                 if (!(Player.perfectTimer.Timer > 0) || block.ParentBuilder == this)
@@ -189,7 +191,6 @@ public class Builder : MonoBehaviour
 
                         block.perfectCatchSound.pitch = bellPitch;
                         block.perfectCatchSound.Play();
-                        GameObject canvas = GameObject.FindGameObjectWithTag("MainCanvas");
                         Camera cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
                         Vector3 textPos = RectTransformUtility.WorldToScreenPoint(cam, transform.position);
                         Instantiate(Player.perfectCoefPrefab, canvas.transform);
@@ -199,11 +200,13 @@ public class Builder : MonoBehaviour
                         string text = "x" + (Player.PerfectCoef).ToString();
                         perfCoef.GetComponent<PerfectCoef>().SetText(text);
                     }
+                    else
+                        Player.illumRadius = 0.3F;
                     Player.score += coef * Player.PerfectCoef;
                     RectTransform scoreLine = GameObject.FindGameObjectWithTag("ScoreLine").GetComponent<RectTransform>();
 
                     float val;
-                    if (Player.currentBlockMaterialNum == 5 || Player.currentBlockMaterialNum == 8)
+                    if (Player.currentBlockMaterialNum == 5 || Player.currentBlockMaterialNum == 8 || Player.currentBlockMaterialNum == 2)
                         val = (float)(Player.score*1.5F) / ((float)(Player.currentMaxScore) / 2F);
                     else
                         val = (float)(Player.score) / ((float)(Player.currentMaxScore) / 2F);
@@ -239,33 +242,68 @@ public class Builder : MonoBehaviour
 
                 if (tag.Equals("LastBuilder"))
                 {
+                    Destroy(transform.Find("Sprite").gameObject.GetComponent<Animator>());
+                    speed = 0;
                     block.catchSound.clip = block.lastCatchSound;
                     block.catchSound.Play();
                     block.isTimerInc = false;
+                    Debug.Log(Player.score);
                     Player.score = (int)(Player.score *(1+ Player.lives * 0.05));
-                    if (block.timer > (Player.currentBlockMaterialNum + 1) * 6 * 3)
+                    Debug.Log("ForLives");Debug.Log(Player.score);
+                    if (block.timer < (Player.currentBlockMaterialNum + 1) * 6 * 3)
                         Player.score = (int)(Player.score * 1.05);
-                    if (Player.currentBlockMaterialNum == 5 || Player.currentBlockMaterialNum == 8)
+                    Debug.Log("ForTime"); Debug.Log(Player.score);
+                    if (Player.currentBlockMaterialNum == 5 || Player.currentBlockMaterialNum == 8 || Player.currentBlockMaterialNum == 2)
                         Player.score =  (int)(Player.score * 1.5);
+                    Debug.Log("ForPrem"); Debug.Log(Player.score);
                     Player.ShowResultWindow();
                     GameObject.FindGameObjectWithTag("ResultWindow").GetComponent<ResultsWindow>().timer = block.timer;
                 }
 
                 if (tag.Equals("WindStart"))
                 {
+                    if (canvas.transform.Find("EffectName(Clone)") != null)
+                        Destroy(canvas.transform.Find("EffectName(Clone)").gameObject);
+                    Instantiate(Player.windPrefab, Camera.main.transform);
                     wind = block.gameObject.AddComponent<Wind>();
+
+                    GameObject effName = (GameObject)Instantiate(Player.effectNamePrefab, canvas.transform);
+                    effName.GetComponent<Text>().text = "WIND";
                 }
                 wind = block.GetComponent<Wind>();
-
-                animator.SetBool("IsMoving", true);
+                if (!tag.Equals("LastBuilder"))
+                    animator.SetBool("IsMoving", true);
 
                 if (wind != null)
                     wind.isActiveWind = false;
 
                 if (tag.Equals("WindEnd"))
                 {
+                    Destroy(canvas.transform.Find("EffectName(Clone)").gameObject);
                     Debug.Log("Destroy Wind");
                     Destroy(wind);
+                    ParticleSystem parSys = Camera.main.transform.Find("Wind(Clone)").gameObject.GetComponent<ParticleSystem>();
+                    var newEmmision = parSys.emission;
+                    newEmmision.rateOverTime = 0;
+                    Destroy(Camera.main.transform.Find("Wind(Clone)").gameObject, 10);
+                }
+
+                if (tag.Equals("FogStart"))
+                {
+                    if (canvas.transform.Find("EffectName(Clone)")!= null)
+                        Destroy(canvas.transform.Find("EffectName(Clone)").gameObject);
+                    FogController fogContr = Camera.main.gameObject.AddComponent<FogController>();
+                    fogContr.block = block;
+
+                    GameObject effName = (GameObject)Instantiate(Player.effectNamePrefab, canvas.transform);
+                    effName.GetComponent<Text>().text = "FOG";
+                }
+
+                if (tag.Equals("FogEnd"))
+                {
+                    Destroy(canvas.transform.Find("EffectName(Clone)").gameObject);
+                    FogController fogContr = Camera.main.gameObject.GetComponent<FogController>();
+                    fogContr.isDissipating = true;
                 }
 
                 float swingSpeedCoef = 2F;

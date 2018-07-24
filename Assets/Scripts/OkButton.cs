@@ -55,7 +55,8 @@ public class OkButton : MonoBehaviour {
                     SceneManager.LoadSceneAsync("RubyFloors1");
                     Destroy(Player.menuSound);
                     break;
-                case 2: SceneManager.LoadSceneAsync("EmeraldFloors1");
+                case 2:
+                    SceneManager.LoadSceneAsync("EmeraldFloors1");
                     Destroy(Player.menuSound);
                     break;
                 case 3: SceneManager.LoadSceneAsync("Aquamarine Floors1");
@@ -65,11 +66,8 @@ public class OkButton : MonoBehaviour {
                     Destroy(Player.menuSound);
                     break;
                 case 5:
-                    if (Player.isWatchedAds)
-                    {
-                        SceneManager.LoadSceneAsync("GoldenFloors1");
-                        Destroy(Player.menuSound);
-                    }
+                    SceneManager.LoadSceneAsync("GoldenFloors1");
+                    Destroy(Player.menuSound);
                     break;
                 case 6: SceneManager.LoadSceneAsync("TopazFloors1");
                     Destroy(Player.menuSound);
@@ -78,11 +76,8 @@ public class OkButton : MonoBehaviour {
                     Destroy(Player.menuSound);
                     break;
                 case 8:
-                    if (Player.isWatchedAds)
-                    {
-                        SceneManager.LoadSceneAsync("AmethystFloors1");
-                        Destroy(Player.menuSound);
-                    }
+                    SceneManager.LoadSceneAsync("AmethystFloors1");
+                    Destroy(Player.menuSound);
                     break;
             }
         }
@@ -159,7 +154,7 @@ public class OkButton : MonoBehaviour {
                 Player.score = 0;
                 piramid.GetComponent<Piramid>().RefreshPiramidScoreLine();
 
-                Invoke("RefreshBlockSelection", 0.5F);
+                Invoke("RefreshBlockSelection", 2F);
                 Destroy(Player.pointer);
             }
             Debug.Log("UPd");
