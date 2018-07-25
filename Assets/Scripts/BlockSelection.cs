@@ -5,26 +5,31 @@ using System;
 using UnityEngine.UI;
 
 public class BlockSelection : MonoBehaviour {
-    public GameObject donateWindow;
-    public GameObject watchBtn;
+
+    public GameObject[] blockColors;
+    public GameObject piramid;
+
     GameObject canvas;
     Text blockMaterialText;
-    private UnityEngine.Object prohibitWindowPrefab;
+    UnityEngine.Object prohibitWindowPrefab;
     GameObject prohibitWindow;
     GameObject okButton;
-    private bool isScrolling;
+
+    //сообщения для каждого блока, показываюшие сколько ещё нужно очков
     string[] prohibitMessages;
-    float mouseYPos;
-    float blockDeltaPos = 0;
-    private bool isDamping = false;
+
+    //переменные для прокрутки списка блоков
+    bool isScrolling;
+    bool isDamping = false;
+
     int dampingFrameNum;
     int currentDampingFrame;
-    private static float lastMouseXPos;
-    private float currentMouseXpos;
-    private float deltaXPos;
-    public GameObject[] blockColors;
 
-    public GameObject piramid;
+    float mouseYPos;
+    float blockDeltaPos = 0;
+    float lastMouseXPos;
+    float currentMouseXpos;
+    float deltaXPos;
 
     [SerializeField]
     private int blockMaterialNum;
@@ -34,7 +39,7 @@ public class BlockSelection : MonoBehaviour {
         get { return this.blockMaterialNum; }
     }
 
-    // Use this for initialization
+
     private void Awake()
     {
         Player.blockSelection = this.gameObject;
@@ -46,15 +51,24 @@ public class BlockSelection : MonoBehaviour {
         prohibitMessages = new string[9];
     }
     void Start () {
+
         canvas = GameObject.FindGameObjectWithTag("MainCanvas");
         blockMaterialText = canvas.transform.Find("BlockMaterial").GetComponent<Text>();
-        Debug.Log("StratBlSel");
-        piramid = GameObject.FindGameObjectWithTag("Piramid");
 
+        piramid = GameObject.FindGameObjectWithTag("Piramid");
+        SetBlocksPosition();
+        RefreshBlocksLock();
+        SetNearestBlockColor();
+    }
+
+    void SetBlocksPosition()
+    {
         blockColors = GameObject.FindGameObjectsWithTag("BlockColor");
+
         foreach (GameObject blockColor in blockColors)
         {
             Vector3 blockColorPos = blockColor.transform.position;
+            //ставим текущий блок в центре и увеличиваем в размере
             blockColorPos.x -= Player.currentBlockMaterialNum * 1.4F;
             blockColor.transform.position = blockColorPos;
             if (Math.Abs(blockColor.transform.position.x) < 0.2F)
@@ -65,8 +79,6 @@ public class BlockSelection : MonoBehaviour {
                 blockColor.transform.localScale = tmp;
             }
         }
-        RefreshBlocksLock();
-        SetNearestBlockColor();
     }
 	
 	// Update is called once per frame
@@ -78,58 +90,15 @@ public class BlockSelection : MonoBehaviour {
             mouseYPos = Camera.main.ScreenToWorldPoint(Input.mousePosition).y;
             if (mouseYPos > transform.position.y - 0.9 && mouseYPos < transform.position.y + 0.9 && !Player.isChoosingPlatform)
             {
-                if (donateWindow != null)
-                    Destroy(donateWindow);
-                if (watchBtn != null)
-                {
-                    Destroy(watchBtn);
-                }
                 isScrolling = true;
                 if (!Player.currPiramidIsLock && prohibitWindow != null)
                     Destroy(prohibitWindow);
             }
-            //Debug.Log(.mouseYPos);
-            
         }
 
         if (Input.GetMouseButton(0) && isScrolling)
         {
-            currentMouseXpos =  Camera.main.ScreenToWorldPoint(Input.mousePosition).x;
-            deltaXPos = currentMouseXpos - lastMouseXPos;
-
-            foreach (GameObject blockColor in blockColors)
-            {
-
-                Vector3 tmp = blockColor.transform.position;
-                tmp.x += deltaXPos;
-                blockColor.transform.position = tmp;
-
-                tmp = blockColor.transform.localScale;
-                float blockScale;
-                if (Math.Abs(blockColor.transform.position.x) < 0.7F)
-                {
-                    if (Math.Abs(blockColor.transform.position.x) < 0.15F)
-                    {
-                        tmp.x = 2.3F;
-                        tmp.y = 2.3F;
-                        blockColor.transform.localScale = tmp;
-                    }
-                    else{
-                        blockScale = 1.8F + 0.65F - Math.Abs(blockColor.transform.position.x);// здесь получше бы алгоритм
-                        tmp.x = blockScale;
-                        tmp.y = blockScale;
-                        blockColor.transform.localScale = tmp; }
-                }
-                else
-                {
-                    tmp.x = 1.8F;
-                    tmp.y = 1.8F;
-                    blockColor.transform.localScale = tmp;
-                }
-
-            }
-
-            lastMouseXPos = currentMouseXpos;
+            MoveBlocks();
         }
         
         if (Input.GetMouseButtonUp(0) && isScrolling)
@@ -137,6 +106,7 @@ public class BlockSelection : MonoBehaviour {
             isScrolling = false;
             isDamping = true;
             blockDeltaPos = deltaXPos;
+
             if (Math.Abs(deltaXPos) < 0.1F)
                 dampingFrameNum = currentDampingFrame = 4;
             if (Math.Abs(deltaXPos) > 0.1F && Math.Abs(deltaXPos) < 0.5F)
@@ -149,8 +119,54 @@ public class BlockSelection : MonoBehaviour {
             DampingScroll();
         }
     }
+
+    void MoveBlocks()
+    {
+        //вызывается при удерживании пальца на списке блоков
+        //перемещает блоки в зависимости от движения пальца
+        currentMouseXpos = Camera.main.ScreenToWorldPoint(Input.mousePosition).x;
+        deltaXPos = currentMouseXpos - lastMouseXPos;
+
+        foreach (GameObject blockColor in blockColors)
+        {
+            Vector3 tmp = blockColor.transform.position;
+            tmp.x += deltaXPos;
+            blockColor.transform.position = tmp;
+
+            tmp = blockColor.transform.localScale;
+            float blockScale;
+            if (Math.Abs(blockColor.transform.position.x) < 0.7F)
+            {
+                if (Math.Abs(blockColor.transform.position.x) < 0.15F)
+                {
+                    tmp.x = 2.3F;
+                    tmp.y = 2.3F;
+                    blockColor.transform.localScale = tmp;
+                }
+                else
+                {
+                    blockScale = 1.8F + 0.65F - Math.Abs(blockColor.transform.position.x);// здесь получше бы алгоритм
+                    tmp.x = blockScale;
+                    tmp.y = blockScale;
+                    blockColor.transform.localScale = tmp;
+                }
+            }
+            else
+            {
+                tmp.x = 1.8F;
+                tmp.y = 1.8F;
+                blockColor.transform.localScale = tmp;
+            }
+
+        }
+
+        lastMouseXPos = currentMouseXpos;
+    }
+
     public void DampingScroll()
     {
+        //Вызывается при отпускании пальца от экрана
+        //Делает плавное затухание прокрутки списка блоков
         Vector3 blockColorPos;
 
         float firstBlockColorPosX = 0;
@@ -163,6 +179,7 @@ public class BlockSelection : MonoBehaviour {
             if (blockColor.GetComponent<BloсkSprite>().ID == 8)
                 lastBlockColorPosX = blockColor.transform.position.x;
         }
+
         bool isEndOfDamping = (firstBlockColorPosX >= 0 && blockDeltaPos > 0) || (lastBlockColorPosX <= 0 && blockDeltaPos < 0);
         if (!isEndOfDamping)
             foreach (GameObject blockColor in blockColors)
@@ -177,6 +194,7 @@ public class BlockSelection : MonoBehaviour {
             currentDampingFrame = dampingFrameNum;
             SetNearestBlockColor();
         }
+
         currentDampingFrame--;
         blockDeltaPos -= blockDeltaPos / dampingFrameNum;
         if (currentDampingFrame == 0)
@@ -189,7 +207,9 @@ public class BlockSelection : MonoBehaviour {
 
     public void SetNearestBlockColor()
     {
-        float minDeltaX = 100;
+        //Делает самый близкий блок к центру текущим, увеличивает его в размере
+        float minDeltaX = 100;// ближайший к центру блок
+
         for (int i = 0; i < blockColors.Length; i++)
             if (Math.Abs(blockColors[i].transform.position.x) < Math.Abs(minDeltaX))
             {
@@ -212,16 +232,9 @@ public class BlockSelection : MonoBehaviour {
                 {
                     piramid.GetComponent<Piramid>().TurnHighLightsOFF();
                     BlockMaterialNum = 100;
-                    prohibitWindow = GameObject.FindGameObjectWithTag("Window");
-                    if (prohibitWindow == null && !Player.currPiramidIsLock)
-                    {
-                        Debug.Log("Window prohibit choose block");
-                        GameObject canvas = GameObject.FindGameObjectWithTag("MainCanvas");
-                        Instantiate(prohibitWindowPrefab, canvas.transform);
-                        prohibitWindow = GameObject.FindGameObjectWithTag("Window");
-                        int id = blockColor.GetComponent<BloсkSprite>().ID;
-                        prohibitWindow.GetComponent<ProhibitWindow>().SetText(prohibitMessages[id]);
-                    }
+                    int id = blockColor.GetComponent<BloсkSprite>().ID;
+                    CreateProhibitWindow(id);
+                    Debug.Log(prohibitMessages[id]);
                 }
 
                 string blockMaterial = "";
@@ -231,209 +244,228 @@ public class BlockSelection : MonoBehaviour {
                     case 1: blockMaterial = "Ruby block"; break;
                     case 2: blockMaterial = "Emerald block"; break;
                     case 3: blockMaterial = "Aquamarine block"; break;
-                    case 4:blockMaterial = "Silver block";break;
-                    case 5:blockMaterial = "Golden block";break;
+                    case 4: blockMaterial = "Silver block";break;
+                    case 5: blockMaterial = "Golden block";break;
                     case 6: blockMaterial = "Onyx block"; break;
                     case 7: blockMaterial = "Pearl block"; break;
-                    case 8:blockMaterial = "Amethyst block";break;
+                    case 8: blockMaterial = "Amethyst block";break;
+                    default:
+                        blockMaterial = "Unknown block";
+                        Debug.Log("Cannot identify block color");
+                        break;
                 }
                 blockMaterialText.text = blockMaterial;
+
                 piramid.GetComponent<Piramid>().HighlightBlocks(blockMaterialNum);
-                Vector3 blockColorScale = blockColor.transform.localScale;
-                blockColorScale.x = 2.2F;
-                blockColorScale.y = 2.2F;
-                blockColor.transform.localScale = blockColorScale;
+
+                blockColor.transform.localScale = new Vector3(2.2F,2.2F, 1);
             }
             else
             {
-                Vector3 blockColorScale = blockColor.transform.localScale;
-                blockColorScale.x = 1.8F;
-                blockColorScale.y = 1.8F;
-                blockColor.transform.localScale = blockColorScale;
+                blockColor.transform.localScale = new Vector3(1.8F, 1.8F, 1);
             }
         }
     }
 
+    void CreateProhibitWindow(int messageID)
+    {
+        //создает окно, указывающее сколько очков нехватает для блока
+        prohibitWindow = GameObject.FindGameObjectWithTag("Window");
+        if (prohibitWindow == null && !Player.currPiramidIsLock)
+        {
+            Debug.Log("Create prohibit window, when lock block selected");
+            canvas = GameObject.FindGameObjectWithTag("MainCanvas");
+            prohibitWindow = (GameObject)Instantiate(prohibitWindowPrefab, canvas.transform);
+            prohibitWindow.GetComponent<ProhibitWindow>().SetText(prohibitMessages[messageID]);
+        }
+        else
+            Debug.Log("Cannot create prohibit window, when lock block selected");
+    }
+
     public void RefreshBlocksLock()
     {
+        //Вызывается при изменении очков в пирамиде
+        // Обновляет информацию о блоках, указывающую на их доступность
+
+        int piramidID = Player.currentPiramidID;
+        piramidID--;
+
         foreach (GameObject blockColor in blockColors)
         {
-            int PirId = piramid.GetComponent<Piramid>().ID;
-            if (piramid.GetComponent<Piramid>().ID == 1)
+            int blockID = blockColor.GetComponent<BloсkSprite>().ID;
+            if (piramidID == 0)
             {
-                switch (blockColor.GetComponent<BloсkSprite>().ID)
+                switch (blockID)
                 {
                     case 0:
                         blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                         blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
-                        prohibitMessages[0] = "ERRRRRROORRRRRRRRR AAAAAAAAAAAA";
                         break;
                     case 1:
-                        if (piramid.GetComponent<Piramid>().totalScore > 200)
+                        if (piramid.GetComponent<Piramid>().totalScore > Player.needScoreCount[piramidID][1])
                         {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
                         }
-                        prohibitMessages[1] = "To open this block you need " + (200 -Player.Pir1TotalScore).ToString()
-                            + " more points";
                         break;
                     case 2:
-                        if (piramid.GetComponent<Piramid>().totalScore > 300)
+                        if (piramid.GetComponent<Piramid>().totalScore > Player.needScoreCount[piramidID][2])
                         {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
                         }
-                        prohibitMessages[2] = "To open this block you need " + (300 - Player.Pir1TotalScore).ToString()
-                            + " more points";
                         break;
                 }
-                prohibitMessages[3] = "This block will be unlocked during the construction of the second pyramid";
-                prohibitMessages[4] = "This block will be unlocked during the construction of the second pyramid";
-                prohibitMessages[5] = "This block will be unlocked during the construction of the second pyramid";
-                prohibitMessages[6] = "This block will be unlocked during the construction of the third pyramid";
-                prohibitMessages[7] = "This block will be unlocked during the construction of the third pyramid";
-                prohibitMessages[8] = "This block will be unlocked during the construction of the third pyramid";
+
+                prohibitMessages[0] = "First block locked, it's error, please tell us about this in Google Play";
+                for (int i = 1; i < 9; i++)
+                {
+                    if (i < 3)
+                    {
+                        string needMoreScore = (Player.needScoreCount[piramidID][i] - Player.Pir1TotalScore).ToString();
+                        prohibitMessages[i] = "To open this block you need " + needMoreScore + " more points";
+                    }
+                    
+                    if (i >= 3)
+                    {
+                        prohibitMessages[i] = "This block will be unlocked during the construction of the second pyramid";
+                    }
+                    if (i >= 6)
+                    {
+                        prohibitMessages[i] = "This block will be unlocked during the construction of the third pyramid";
+                    }
+                }
             }
-            if (piramid.GetComponent<Piramid>().ID == 2)
+            if (piramidID == 1)
             {
-                switch (blockColor.GetComponent<BloсkSprite>().ID)
+                switch (blockID)
                 {
                     case 0:
                         blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                         blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
-                        prohibitMessages[0] = "ERRRRRROORRRRRRRRR AAAAAAAAAAAA";
                         break;
                     case 1:
-                        if (piramid.GetComponent<Piramid>().totalScore > 250)
+                        if (piramid.GetComponent<Piramid>().totalScore > Player.needScoreCount[piramidID][1])
                         {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
                         }
-                        prohibitMessages[1] = "To open this block you need " + (250 - Player.Pir2TotalScore).ToString()
-                            + " more points";
                         break;
                     case 2:
-                        if (piramid.GetComponent<Piramid>().totalScore > 500)
+                        if (piramid.GetComponent<Piramid>().totalScore > Player.needScoreCount[piramidID][2])
                         {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
                         }
-                        prohibitMessages[2] = "To open this block you need " + (500 - Player.Pir2TotalScore).ToString()
-                            + " more points";
                         break;
                     case 3:
-                        if (piramid.GetComponent<Piramid>().totalScore > 2500)
+                        if (piramid.GetComponent<Piramid>().totalScore > Player.needScoreCount[piramidID][3])
                         {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
                         }
-                        prohibitMessages[3] = "To open this block you need " + (2500 - Player.Pir2TotalScore).ToString()
-                            + " more points";
                         break;
                     case 4:
-                        if (piramid.GetComponent<Piramid>().totalScore > 3000)
+                        if (piramid.GetComponent<Piramid>().totalScore > Player.needScoreCount[piramidID][4])
                         {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
                         }
-                        prohibitMessages[4] = "To open this block you need " + (3000 - Player.Pir2TotalScore).ToString()
-                            + " more points";
                         break;
                     case 5:
-                        if (piramid.GetComponent<Piramid>().totalScore > 4500)
+                        if (piramid.GetComponent<Piramid>().totalScore > Player.needScoreCount[piramidID][5])
                         {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
                         }
-                        prohibitMessages[5] = "To open this block you need " + (4500 - Player.Pir2TotalScore).ToString()
-                            + " more points";
                         break;
                 }
-                prohibitMessages[6] = "This block will be unlocked during the construction of the third pyramid";
-                prohibitMessages[7] = "This block will be unlocked during the construction of the third pyramid";
-                prohibitMessages[8] = "This block will be unlocked during the construction of the third pyramid";
+                prohibitMessages[0] = "First block locked, it's error, please tell us about this in Google Play";
+                for (int i = 1; i < 9; i++)
+                {
+                    if (i < 6)
+                    {
+                        string needMoreScore = (Player.needScoreCount[piramidID][i] - Player.Pir2TotalScore).ToString();
+                        prohibitMessages[i] = "To open this block you need " + needMoreScore + " more points";
+                    }
+
+                    if (i >= 6)
+                    {
+                        prohibitMessages[i] = "This block will be unlocked during the construction of the third pyramid";
+                    }
+                }
             }
-            if (piramid.GetComponent<Piramid>().ID == 3)
+            if (piramidID == 2)
             {
-                switch (blockColor.GetComponent<BloсkSprite>().ID)
+                Debug.Log("Third");
+                switch (blockID)
                 {
                     case 0:
                         blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                         blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
-                        prohibitMessages[0] = "ERRRRRROORRRRRRRRR AAAAAAAAAAAA";
                         break;
                     case 1:
-                        if (piramid.GetComponent<Piramid>().totalScore > 300)
+                        if (piramid.GetComponent<Piramid>().totalScore > Player.needScoreCount[piramidID][1])
                         {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
                         }
-                        prohibitMessages[1] = "To open this block you need " + (300 - Player.Pir3TotalScore).ToString()
-                            + " more points";
                         break;
                     case 2:
-                        if (piramid.GetComponent<Piramid>().totalScore > 500)
+                        if (piramid.GetComponent<Piramid>().totalScore > Player.needScoreCount[piramidID][2])
                         {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
                         }
-                        prohibitMessages[2] = "To open this block you need " + (500 - Player.Pir3TotalScore).ToString()
-                            + " more points";
                         break;
                     case 3:
-                        if (piramid.GetComponent<Piramid>().totalScore > 3000)
+                        if (piramid.GetComponent<Piramid>().totalScore > Player.needScoreCount[piramidID][3])
                         {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
                         }
-                        prohibitMessages[3] = "To open this block you need " + (3000 - Player.Pir3TotalScore).ToString()
-                            + " more points";
                         break;
                     case 4:
-                        if (piramid.GetComponent<Piramid>().totalScore > 8000)
+                        if (piramid.GetComponent<Piramid>().totalScore > Player.needScoreCount[piramidID][4])
                         {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
                         }
-                        prohibitMessages[4] = "To open this block you need " + (8000 - Player.Pir3TotalScore).ToString()
-                            + " more points";
                         break;
                     case 5:
-                        if (piramid.GetComponent<Piramid>().totalScore > 9000)
+                        if (piramid.GetComponent<Piramid>().totalScore > Player.needScoreCount[piramidID][5])
                         {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
                         }
-                        prohibitMessages[5] = "To open this block you need " + (9000 - Player.Pir3TotalScore).ToString()
-                            + " more points";
                         break;
                     case 6:
-                        if (piramid.GetComponent<Piramid>().totalScore > 12000)
+                        if (piramid.GetComponent<Piramid>().totalScore > Player.needScoreCount[piramidID][6])
                         {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
                         }
-                        prohibitMessages[6] = "To open this block you need " + (12000 - Player.Pir3TotalScore).ToString()
-                            + " more points";
                         break;
                     case 7:
-                        if (piramid.GetComponent<Piramid>().totalScore > 15000)
+                        if (piramid.GetComponent<Piramid>().totalScore > Player.needScoreCount[piramidID][7])
                         {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
                         }
-                        prohibitMessages[7] = "To open this block you need " + (15000 - Player.Pir3TotalScore).ToString()
-                            + " more points";
                         break;
                     case 8:
-                        if (piramid.GetComponent<Piramid>().totalScore > 16000)
+                        if (piramid.GetComponent<Piramid>().totalScore > Player.needScoreCount[piramidID][8])
                         {
                             blockColor.transform.Find("LockSprite").gameObject.SetActive(false);
                             blockColor.GetComponent<BloсkSprite>().isUnlocked = true;
                         }
-                        prohibitMessages[8] = "To open this block you need " + (16000 - Player.Pir3TotalScore).ToString()
-                            + " more points";
                         break;
+                }
+                prohibitMessages[0] = "First block locked, it's error, please tell us about this in Google Play";
+                for (int i = 1; i < 9; i++)
+                {
+                    string needMoreScore = (Player.needScoreCount[piramidID][i] - Player.Pir3TotalScore).ToString();
+                    prohibitMessages[i] = "To open this block you need " + needMoreScore + " more points";
                 }
             }
         }

@@ -10,6 +10,7 @@ using UnityEngine.Advertisements;
 
 public class Player : MonoBehaviour
 {
+    public static int[][] needScoreCount;
     public static bool isAnimate;
     public static bool InsertNow;
     public static float musicVolume;
@@ -18,12 +19,31 @@ public class Player : MonoBehaviour
     public static GameObject blScoreUI;
     public static GameObject pointer;
     public static Text ankhLivesUI;
-
-
-    public static UnityEngine.Object smokePrefab;
+    public static bool currPiramidIsLock = false;
+    public static GameObject prohibitWindow;
+    public static int currentPiramidID;
+    public static int currentMaxScore;
+    public static bool isFirst = true;
+    public static float illumRadius;
     public static bool isLoadingScene = false;
     public static Platform selectedPlatform;
     public static int selectedPlatfomID = -1;
+    public static GameObject blockSelection;
+    public static int Pir1TotalScore = 0;
+    public static int Pir2TotalScore = 0;
+    public static int Pir3TotalScore = 0;
+
+    public static int Pir1TotalScoreMax = 0;
+    public static int Pir2TotalScoreMax = 0;
+    public static int Pir3TotalScoreMax = 0;
+    static bool isMoving;
+    public static int score = 0;
+    public static int PerfectCoef = 1;
+    public static PerfectTimer perfectTimer;
+    public static Block block;
+
+    #region Prefabs
+    public static UnityEngine.Object smokePrefab;
     public static UnityEngine.Object perfectCoefPrefab;
     public static UnityEngine.Object resultWindowPrefab;
     public static UnityEngine.Object blockScorePrefab;
@@ -34,13 +54,10 @@ public class Player : MonoBehaviour
     public static UnityEngine.Object windPrefab;
     public static UnityEngine.Object splashPrefab;
     public static UnityEngine.Object effectNamePrefab;
-
-    public static bool currPiramidIsLock = false;
     public static UnityEngine.Object prohibitWindowPrefab;
-    public static GameObject prohibitWindow;
+#endregion
 
     Vector3 blockSelectionPos;
-    static bool isMoving;
     Vector3 target, camPos;
     bool isMovingToNextPiramid = false;
     bool isMovingToPrevPiramid = false;
@@ -48,26 +65,14 @@ public class Player : MonoBehaviour
     Camera cam;
     float deltaXPos;
     bool isScrolling;
-    public static int currentPiramidID;
-    public static int currentMaxScore;
-    public static bool isFirst = true;
-    public static float illumRadius;
 
     GameObject sample;
     GameObject backButton;
-    public static GameObject blockSelection;
     GameObject okButton;
     GameObject cancelButton;
 
     GameObject piramid;
 
-    public static int Pir1TotalScore = 0;
-    public static int Pir2TotalScore = 0;
-    public static int Pir3TotalScore = 0;
-
-    public static int Pir1TotalScoreMax = 0;
-    public static int Pir2TotalScoreMax = 0;
-    public static int Pir3TotalScoreMax = 0;
 
     [SerializeField]
     public static bool isChoosingPlatform = false;
@@ -88,12 +93,6 @@ public class Player : MonoBehaviour
     }
 
     [SerializeField]
-    public static int score = 0;
-
-    [SerializeField]
-    public static int PerfectCoef = 1;
-
-    [SerializeField]
     private bool isWindy = false;
     public bool IsWindy
     {
@@ -101,13 +100,11 @@ public class Player : MonoBehaviour
         get { return isWindy; }
     }
 
-    public static PerfectTimer perfectTimer;
-    public static Block block;
-
     private float lightSpeed = 0.2F;
     private bool isLight = false;
     private void Awake()
     {
+        FillNeedScoreCount();
         Pir1TotalScore = LoadPiramidTotalScoreFromXML(1);
         Pir2TotalScore = LoadPiramidTotalScoreFromXML(2);
         Pir3TotalScore = LoadPiramidTotalScoreFromXML(3);
@@ -217,6 +214,39 @@ public class Player : MonoBehaviour
             Debug.Log("start");
         }
         CalcMaxScore(currentBlockMaterialNum);
+    }
+
+    void FillNeedScoreCount()
+    {
+        //Заполнение необходимых значений количества очков для каждого блока для каждой пирамиды
+        needScoreCount = new int[3][];
+        for (int i = 0; i < 3; i++)
+        {
+            needScoreCount[i] = new int[9];
+            for (int j = 0; j < 9; j++)
+                needScoreCount[i][j] = 99999;
+        }
+
+        needScoreCount[0][0] = 0;
+        needScoreCount[0][1] = 200;
+        needScoreCount[0][2] = 400;
+
+        needScoreCount[1][0] = 0;
+        needScoreCount[1][1] = 250;
+        needScoreCount[1][2] = 500;
+        needScoreCount[1][3] = 2000;
+        needScoreCount[1][4] = 3000;
+        needScoreCount[1][5] = 4500;
+
+        needScoreCount[2][0] = 0;
+        needScoreCount[2][1] = 300;
+        needScoreCount[2][2] = 500;
+        needScoreCount[2][3] = 3000;
+        needScoreCount[2][4] = 6000;
+        needScoreCount[2][5] = 9000;
+        needScoreCount[2][6] = 12000;
+        needScoreCount[2][7] = 15000;
+        needScoreCount[2][8] = 20000;
     }
 
     public static void AddProhibitSceneMessage()
@@ -398,12 +428,7 @@ public class Player : MonoBehaviour
                 }
             }
         }
-        //if (isMoving)
-        //{
-        //    blockSelectionPos = blockSelection.transform.position;
-        //    blockSelectionPos.x = target.x;
-        //    blockSelection.transform.position = Vector3.Lerp(blockSelection.transform.position, blockSelectionPos, 10);
-        //}
+
         if (Player.currentPiramidID == 1 && isMoving)
         {
             if (isMovingToNextPiramid)

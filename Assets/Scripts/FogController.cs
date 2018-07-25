@@ -41,6 +41,5 @@ public class FogController : MonoBehaviour {
 
         illumUv.x = Camera.main.WorldToScreenPoint(block.transform.position).x / Screen.width;
         illumUv.y = Camera.main.WorldToScreenPoint(block.transform.position).y / Screen.height;
-        Debug.Log(illumUv);
     }
 }

@@ -24,12 +24,6 @@ public class CancelButton : MonoBehaviour
     }
 
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     public void CancelButtonAction()
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
@@ -57,7 +51,6 @@ public class CancelButton : MonoBehaviour
             if (Player.pointer != null)
                 Destroy(Player.pointer);
             GetComponent<Image>().sprite = toMenuSprite;
-            //blockSelection.GetComponent<BlockSelection>().SetNearestBlockColor();
         }
         else
         {
@@ -65,32 +58,4 @@ public class CancelButton : MonoBehaviour
             SceneManager.LoadSceneAsync("MainMenu");
         }
     }
-
-
-    //private void OnMouseDown()
-    //{
-    //    GameObject player = GameObject.FindGameObjectWithTag("Player");
-
-
-    //    if (Player.isChoosingPlatform)
-    //    {
-    //        GetComponent<AudioSource>().Play();
-    //        Player.isChoosingPlatform = false;
-    //        if (Player.selectedPlatfomID != -1)
-    //        {
-
-    //            Destroy(Player.selectedPlatform.transform.Find("YellowLightPrefab(Clone)").gameObject);
-    //            Player.selectedPlatform.transform.Find("Select").gameObject.SetActive(true);
-    //        }
-    //        GameObject sample = GameObject.FindGameObjectWithTag("Sample");
-    //        sample.SetActive(false);
-    //        Player.selectedPlatfomID = -1;
-    //        Player.score = 0;
-    //        GameObject canvas = GameObject.FindGameObjectWithTag("MainCanvas");
-    //        Destroy(canvas.transform.Find("SampleScorePrefab(Clone)").gameObject);
-    //        if (Player.selectedPlatform!= null)
-    //            Destroy(canvas.transform.Find("BlockScorePrefab(Clone)").gameObject);
-    //        player.GetComponent<Player>().ShowSelectBlockUI();
-    //    }
-    //}
 }
